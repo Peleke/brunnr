@@ -20,6 +20,14 @@ The user will provide one or more tool descriptions. These may come from:
 
 If no description is provided, ask for one. If the user says "score my tools" or similar, ask them to paste the descriptions or point you at the source file.
 
+**File mode**: If the user provides a file path instead of a description, read the file and extract tool descriptions from it. Look for:
+- MCP tool definitions (JSON with `name` and `description` fields)
+- Python docstrings on functions decorated with `@tool`, `@mcp.tool()`, or similar
+- OpenAPI/Swagger `description` fields on endpoints
+- SKILL.md frontmatter `description` fields
+
+Score each extracted description individually.
+
 ## Phase 1: Score
 
 Score each description against five criteria. Binary pass/fail on each:

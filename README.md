@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="assets/hero.png" alt="brunnr — the well agents drink from" width="100%" />
+
 # brunnr
 
 **The well agents drink from.**
@@ -16,7 +18,7 @@
 
 > *Beneath the world tree there is a well. Odin gave an eye to drink from it.*
 >
-> *Your agent just needs a good tool description.*
+>*Your agent won't need to. We bottled the water.*
 
 ---
 
@@ -24,7 +26,9 @@
 
 **brunnr** is a skills marketplace for [Claude Code](https://docs.anthropic.com/en/docs/claude-code). Install it once, get access to every skill in the collection.
 
-The first skill is the **AX Description Rubric** — a tool that scores your agent-facing tool descriptions against [five criteria](https://peleke.me/writing/ax-04-tool-descriptions) that determine whether an agent will ever call your tool.
+### AX Description Rubric
+
+The first skill: the **AX Description Rubric** — a tool that scores your agent-facing tool descriptions against [five criteria](https://peleke.me/writing/ax-04-tool-descriptions) that determine whether an agent will ever call your tool.
 
 Most tool descriptions score 1-2 out of 5. The rubric tells you why, then rewrites them to score 5.
 
