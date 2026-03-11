@@ -1,4 +1,5 @@
 site_name: brunnr
+site_url: https://peleke.github.io/brunnr/
 site_description: Security scanner and skill registry for agent tool descriptions
 site_author: Peleke Sengstacke
 repo_url: https://github.com/Peleke/brunnr
@@ -40,5 +41,14 @@ markdown_extensions:
   - attr_list
   - pymdownx.highlight:
       anchor_linenums: true
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.inlinehilite
+  - pymdownx.details
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - md_in_html
