@@ -80,6 +80,29 @@ def run(args) -> int:
         print(f"ERROR: Could not fetch {skill_url}", file=sys.stderr)
         return 1
 
+    # Review before install (unless --yes)
+    skip_review = getattr(args, "yes", False) or getattr(args, "force", False)
+    if not skip_review and sys.stdin.isatty():
+        lines = content.splitlines()
+        preview = "\n".join(lines[:30])
+        print(f"\n--- {slug}/SKILL.md (first 30 of {len(lines)} lines) ---")
+        print(preview)
+        if len(lines) > 30:
+            print(f"  ... ({len(lines) - 30} more lines)")
+        print(f"---")
+        # Show GitHub link for full review
+        repo_parts = base.replace(f"{_GITHUB_RAW}/", "").split("/")
+        if len(repo_parts) >= 2:
+            print(f"\nFull source: https://github.com/{repo_parts[0]}/{repo_parts[1]}/tree/main/skills/{slug}")
+        try:
+            answer = input(f"\nInstall {slug} to ./skills/{slug}/? [y/N] ").strip().lower()
+        except (EOFError, KeyboardInterrupt):
+            print("\nAborted.", file=sys.stderr)
+            return 1
+        if answer not in ("y", "yes"):
+            print("Aborted.", file=sys.stderr)
+            return 1
+
     dest.mkdir(parents=True, exist_ok=True)
     skill_file.write_text(content)
     print(f"  -> {skill_file} ({len(content.splitlines())} lines)")

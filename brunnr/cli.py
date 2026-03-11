@@ -31,6 +31,7 @@ def main() -> int:
     inst_p.add_argument("--with-tests", action="store_true", help="Also fetch test fixtures")
     inst_p.add_argument("--force", action="store_true", help="Overwrite existing skill")
     inst_p.add_argument("--list", action="store_true", dest="list_skills", help="List available skills")
+    inst_p.add_argument("-y", "--yes", action="store_true", help="Skip review prompt, install immediately")
 
     # --- brunnr eval ---
     eval_p = sub.add_parser("eval", help="Run eval harness for a skill")
