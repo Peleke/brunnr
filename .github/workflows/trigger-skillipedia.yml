@@ -1,0 +1,22 @@
+# When skills change on main, trigger a Skillipedia site rebuild.
+# Requires CROSS_REPO_TOKEN secret with repo dispatch permissions.
+name: Trigger Skillipedia Rebuild
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'skills/**'
+  workflow_dispatch:
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch to Skillipedia
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.CROSS_REPO_TOKEN }}
+          repository: Peleke/skillipedia
+          event-type: brunnr-skills-updated
+          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'

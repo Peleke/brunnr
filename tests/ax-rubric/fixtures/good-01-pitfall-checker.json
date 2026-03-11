@@ -1,0 +1,7 @@
+{
+  "tool_name": "check_pitfalls",
+  "input": "Score this tool description:\n\n**check_pitfalls**: Check for known pitfalls before starting work. Returns 3-5 specific warnings for your tech stack. ~500 tokens. Call once at session start.",
+  "description": "Check for known pitfalls before starting work. Returns 3-5 specific warnings for your tech stack. ~500 tokens. Call once at session start.",
+  "expected_score_band": "4-5",
+  "rationale": "This is the reference 5/5 example from the rubric itself. Output shape (3-5 warnings), cost signal (~500 tokens), trigger (session start, once), specificity (pitfalls for your tech stack), differentiation (no other tool says 'pitfalls at session start')."
+}

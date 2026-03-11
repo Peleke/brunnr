@@ -1,0 +1,90 @@
+{
+  "version": "1.0",
+  "skill": "ax-rubric",
+  "description": "Eval suite for the AX Description Rubric skill. Tests score accuracy on known-bad (should score 0-2) and known-good (should score 4-5) tool descriptions, plus output format conformance.",
+  "model": "claude-sonnet-4-20250514",
+  "cases": [
+    {
+      "id": "bad-01-generic-knowledge-base",
+      "description": "Classic vague 'knowledge base query' — should score 0-2",
+      "fixture": "fixtures/bad-01-generic-knowledge-base.json",
+      "assertions": [
+        { "type": "score_range", "expected": { "min": 0, "max": 2 } },
+        { "type": "has_table", "expected": true },
+        { "type": "has_rewrite", "expected": true },
+        { "type": "format_valid", "expected": true },
+        { "type": "criteria_fail", "expected": ["output shape", "cost signal", "trigger clarity"] }
+      ]
+    },
+    {
+      "id": "bad-02-analyze-data",
+      "description": "Vague 'analyze data' with no specifics — should score 0-2",
+      "fixture": "fixtures/bad-02-analyze-data.json",
+      "assertions": [
+        { "type": "score_range", "expected": { "min": 0, "max": 2 } },
+        { "type": "has_table", "expected": true },
+        { "type": "has_rewrite", "expected": true },
+        { "type": "format_valid", "expected": true }
+      ]
+    },
+    {
+      "id": "bad-03-get-context",
+      "description": "Unbounded 'get relevant context' — should score 0-2",
+      "fixture": "fixtures/bad-03-get-context.json",
+      "assertions": [
+        { "type": "score_range", "expected": { "min": 0, "max": 2 } },
+        { "type": "format_valid", "expected": true },
+        { "type": "criteria_fail", "expected": ["cost signal", "specificity"] }
+      ]
+    },
+    {
+      "id": "bad-04-process-input",
+      "description": "Meaningless 'process input and return output' — should score 0-1",
+      "fixture": "fixtures/bad-04-process-input.json",
+      "assertions": [
+        { "type": "score_range", "expected": { "min": 0, "max": 1 } },
+        { "type": "format_valid", "expected": true },
+        { "type": "has_rewrite", "expected": true }
+      ]
+    },
+    {
+      "id": "good-01-pitfall-checker",
+      "description": "Well-specified pitfall checker from the rubric itself — should score 4-5",
+      "fixture": "fixtures/good-01-pitfall-checker.json",
+      "assertions": [
+        { "type": "score_range", "expected": { "min": 4, "max": 5 } },
+        { "type": "has_table", "expected": true },
+        { "type": "format_valid", "expected": true }
+      ]
+    },
+    {
+      "id": "good-02-rate-limiter",
+      "description": "Precise rate-limit check tool — should score 4-5",
+      "fixture": "fixtures/good-02-rate-limiter.json",
+      "assertions": [
+        { "type": "score_range", "expected": { "min": 4, "max": 5 } },
+        { "type": "format_valid", "expected": true }
+      ]
+    },
+    {
+      "id": "good-03-deploy-preflight",
+      "description": "Deploy preflight with clear trigger and cost — should score 4-5",
+      "fixture": "fixtures/good-03-deploy-preflight.json",
+      "assertions": [
+        { "type": "score_range", "expected": { "min": 4, "max": 5 } },
+        { "type": "format_valid", "expected": true },
+        { "type": "criteria_pass", "expected": ["output shape", "cost signal", "trigger clarity"] }
+      ]
+    },
+    {
+      "id": "format-01-single-tool",
+      "description": "Verify output follows the markdown format spec for a single tool",
+      "fixture": "fixtures/bad-01-generic-knowledge-base.json",
+      "assertions": [
+        { "type": "format_valid", "expected": true },
+        { "type": "contains", "expected": "Score:" },
+        { "type": "contains", "expected": "Criterion" }
+      ]
+    }
+  ]
+}

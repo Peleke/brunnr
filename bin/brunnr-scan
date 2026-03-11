@@ -1,105 +1,16 @@
 #!/usr/bin/env python3
-"""brunnr-scan — 7-class SKILL.md security scanner.
+"""Compatibility wrapper — use `brunnr scan` instead.
 
-Usage:
-    brunnr-scan SKILL.md [SKILL.md ...]
-    brunnr-scan skills/                    # scan directory
-    brunnr-scan SKILL.md --verbose
-    brunnr-scan SKILL.md --json
+This script delegates to `brunnr scan` with the same arguments.
+It will be removed in a future version.
 """
 from __future__ import annotations
 
-import argparse
-import json
 import sys
-from pathlib import Path
+import os
 
-# Add repo root to path for scanner import
-REPO_ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(REPO_ROOT))
+# Warn about deprecation
+print("NOTE: brunnr-scan is deprecated. Use `brunnr scan` instead.", file=sys.stderr)
 
-from tests.scanner.scan import Severity, scan_skill_md
-
-# ANSI colors
-_TTY = sys.stdout.isatty()
-def _c(code: str, t: str) -> str: return f"\033[{code}m{t}\033[0m" if _TTY else t
-def _green(t: str) -> str: return _c("32", t)
-def _yellow(t: str) -> str: return _c("33", t)
-def _red(t: str) -> str: return _c("31", t)
-
-_SEV = {Severity.BLOCK: _red, Severity.FLAG: _yellow, Severity.INFO: _yellow, Severity.CLEAN: _green}
-
-
-def collect_files(paths: list[str]) -> list[Path]:
-    files: list[Path] = []
-    for p in paths:
-        path = Path(p)
-        if path.is_file():
-            files.append(path)
-        elif path.is_dir():
-            files.extend(sorted(path.rglob("*.md")))
-        else:
-            print(f"WARNING: {p} not found", file=sys.stderr)
-    return files
-
-
-def main() -> int:
-    ap = argparse.ArgumentParser(description="Scan SKILL.md files for security threats.")
-    ap.add_argument("paths", nargs="+", help="SKILL.md files or directories to scan")
-    ap.add_argument("-v", "--verbose", action="store_true", help="Show finding details")
-    ap.add_argument("--json", action="store_true", dest="json_out", help="JSON output")
-    ap.add_argument("--no-color", action="store_true", help="Disable color output")
-    args = ap.parse_args()
-
-    global _TTY
-    if args.no_color:
-        _TTY = False
-
-    files = collect_files(args.paths)
-    if not files:
-        print("No files found.", file=sys.stderr)
-        return 1
-
-    results = []
-    n_clean = n_flag = n_block = 0
-
-    for path in files:
-        content = path.read_text(encoding="utf-8")
-        result = scan_skill_md(content)
-
-        if result.blocked:
-            n_block += 1
-        elif result.flagged:
-            n_flag += 1
-        else:
-            n_clean += 1
-
-        results.append({"file": str(path), "result": result})
-
-    if args.json_out:
-        print(json.dumps([{"file": r["file"], **r["result"].to_dict()} for r in results], indent=2))
-        return 1 if n_block else 0
-
-    for r in results:
-        res = r["result"]
-        color = _SEV.get(res.severity, _green)
-        label = color(res.severity.value.upper().ljust(5))
-        name = Path(r["file"]).stem
-        suffix = f" -- {len(res.findings)} findings" if res.findings else ""
-        print(f"  {label}  {name}{suffix}")
-
-        if args.verbose and res.findings:
-            for f in res.findings:
-                sev = _red("BLOCK") if f.severity == Severity.BLOCK else (
-                    _yellow("FLAG") if f.severity == Severity.FLAG else "INFO")
-                print(f"         {sev}: [{f.threat_class}] {f.description}")
-                if f.evidence:
-                    print(f"               {f.evidence[:80]}")
-
-    print()
-    print(f"  Scanned {len(files)} files: {_green(f'{n_clean} clean')}, {_yellow(f'{n_flag} flagged')}, {_red(f'{n_block} blocked')}")
-    return 1 if n_block else 0
-
-
-if __name__ == "__main__":
-    sys.exit(main())
+# Delegate to brunnr scan
+os.execvp("brunnr", ["brunnr", "scan"] + sys.argv[1:])
