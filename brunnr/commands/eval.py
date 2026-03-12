@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 import json
-import re
 import sys
 import time
 from pathlib import Path
 from typing import Any
+
+from brunnr.assertions import parse_frontmatter, run_assertion
+
 
 def _skills_dir() -> Path:
     return Path.cwd() / "skills"
@@ -15,20 +17,6 @@ def _skills_dir() -> Path:
 
 def _tests_dir() -> Path:
     return Path.cwd() / "tests"
-
-
-def _parse_frontmatter(text: str) -> dict[str, str]:
-    if not text.startswith("---"):
-        return {}
-    parts = text.split("---", 2)
-    if len(parts) < 3:
-        return {}
-    fm = {}
-    for line in parts[1].strip().splitlines():
-        if ":" in line:
-            key, val = line.split(":", 1)
-            fm[key.strip()] = val.strip().strip('"').strip("'")
-    return fm
 
 
 def _load_skill_prompt(slug: str) -> str:
@@ -71,69 +59,6 @@ def _call_claude(system_prompt: str, user_message: str, model: str) -> str:
         messages=[{"role": "user", "content": user_message}],
     )
     return response.content[0].text
-
-
-def _extract_score(text: str) -> int | None:
-    match = re.search(r"[Ss]core:\s*\**\s*(\d)\s*/\s*5", text)
-    return int(match.group(1)) if match else None
-
-
-def _extract_criteria(text: str) -> dict[str, str]:
-    results = {}
-    for match in re.finditer(r"\|\s*([\w\s]+?)\s*\|\s*(pass|fail)\s*\|", text, re.IGNORECASE):
-        results[match.group(1).strip().lower()] = match.group(2).strip().lower()
-    return results
-
-
-def _run_assertion(assertion: dict, output: str) -> dict:
-    atype = assertion["type"]
-    expected = assertion["expected"]
-    result = {"assertion": assertion, "passed": False, "detail": ""}
-
-    if atype == "score_range":
-        score = _extract_score(output)
-        if score is None:
-            result["detail"] = "Could not extract score"
-        elif expected["min"] <= score <= expected["max"]:
-            result["passed"] = True
-            result["detail"] = f"Score {score} in [{expected['min']}, {expected['max']}]"
-        else:
-            result["detail"] = f"Score {score} NOT in [{expected['min']}, {expected['max']}]"
-
-    elif atype == "has_table":
-        has = bool(re.search(r"\|.*\|.*\|.*\|", output))
-        result["passed"] = has == expected
-        result["detail"] = f"Table {'found' if has else 'missing'}"
-
-    elif atype == "has_rewrite":
-        has = bool(re.search(r"[Rr]ewr(itten|ite)", output))
-        result["passed"] = has == expected
-        result["detail"] = f"Rewrite {'found' if has else 'missing'}"
-
-    elif atype == "contains":
-        found = expected.lower() in output.lower()
-        result["passed"] = found
-        result["detail"] = f"{'Contains' if found else 'Missing'} '{expected}'"
-
-    elif atype == "format_valid":
-        has_header = bool(re.search(r"^###?\s+", output, re.MULTILINE))
-        has_score = _extract_score(output) is not None
-        has_table = bool(re.search(r"\|.*[Cc]riterion.*\|", output))
-        result["passed"] = all([has_header, has_score, has_table])
-        result["detail"] = f"header={has_header} score={has_score} table={has_table}"
-
-    elif atype in ("criteria_pass", "criteria_fail"):
-        criteria = _extract_criteria(output)
-        target = "pass" if atype == "criteria_pass" else "fail"
-        missing = []
-        for crit in expected:
-            matched = any(crit.lower() in k and v == target for k, v in criteria.items())
-            if not matched:
-                missing.append(crit)
-        result["passed"] = len(missing) == 0
-        result["detail"] = f"{'All match' if not missing else 'Missing: ' + ', '.join(missing)}"
-
-    return result
 
 
 def run(args) -> int:
@@ -179,7 +104,7 @@ def run(args) -> int:
         duration = time.time() - start
         assertion_results = []
         for assertion in case.get("assertions", []):
-            r = _run_assertion(assertion, output)
+            r = run_assertion(assertion, output)
             status = "PASS" if r["passed"] else "FAIL"
             print(f"    {status}: [{assertion['type']}] {r['detail']}")
             assertion_results.append(r)

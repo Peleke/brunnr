@@ -137,7 +137,7 @@ def run(args) -> int:
                     print(f"  WARNING: skipping suspicious fixture path: {fixture_rel}", file=sys.stderr)
                     continue
                 fixture_path = (test_dest / fixture_rel).resolve()
-                if not str(fixture_path).startswith(str(test_dest.resolve())):
+                if not fixture_path.is_relative_to(test_dest.resolve()):
                     print(f"  WARNING: fixture escapes test dir: {fixture_rel}", file=sys.stderr)
                     continue
                 fixture_url = f"{base}/tests/{slug}/{fixture_rel}"

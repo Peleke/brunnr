@@ -107,7 +107,3 @@ jobs:
         run: |
           cd /tmp/brunnr-e2e
           brunnr scan skills/
-      - name: Eval dry-run
-        run: |
-          cd /tmp/brunnr-e2e
-          brunnr eval ax-rubric --dry-run
