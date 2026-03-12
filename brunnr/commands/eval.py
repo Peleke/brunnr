@@ -9,8 +9,12 @@ import time
 from pathlib import Path
 from typing import Any
 
-SKILLS_DIR = Path.cwd() / "skills"
-TESTS_DIR = Path.cwd() / "tests"
+def _skills_dir() -> Path:
+    return Path.cwd() / "skills"
+
+
+def _tests_dir() -> Path:
+    return Path.cwd() / "tests"
 
 
 def _parse_frontmatter(text: str) -> dict[str, str]:
@@ -28,14 +32,14 @@ def _parse_frontmatter(text: str) -> dict[str, str]:
 
 
 def _load_skill_prompt(slug: str) -> str:
-    path = SKILLS_DIR / slug / "SKILL.md"
+    path = _skills_dir() / slug / "SKILL.md"
     if not path.exists():
         raise FileNotFoundError(f"Skill not found: {path}")
     return path.read_text()
 
 
 def _load_test_spec(slug: str) -> dict[str, Any]:
-    path = TESTS_DIR / slug / "test-spec.json"
+    path = _tests_dir() / slug / "test-spec.json"
     if not path.exists():
         raise FileNotFoundError(f"Test spec not found: {path}")
     return json.loads(path.read_text())
@@ -45,7 +49,7 @@ def _load_fixtures(slug: str) -> list[dict[str, Any]]:
     spec = _load_test_spec(slug)
     cases = []
     for case in spec.get("cases", []):
-        fixture_path = TESTS_DIR / slug / case.get("fixture", "")
+        fixture_path = _tests_dir() / slug / case.get("fixture", "")
         if fixture_path.exists():
             case["_fixture_data"] = json.loads(fixture_path.read_text())
         cases.append(case)

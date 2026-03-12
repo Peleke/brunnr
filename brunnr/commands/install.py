@@ -130,14 +130,22 @@ def run(args) -> int:
             spec = json.loads(spec_content)
             for case in spec.get("cases", []):
                 fixture_rel = case.get("fixture", "")
-                if fixture_rel:
-                    fixture_url = f"{base}/tests/{slug}/{fixture_rel}"
-                    fixture_content = _fetch(fixture_url)
-                    if fixture_content:
-                        fixture_path = test_dest / fixture_rel
-                        fixture_path.parent.mkdir(parents=True, exist_ok=True)
-                        fixture_path.write_text(fixture_content)
-                        print(f"  -> tests/{slug}/{fixture_rel}")
+                if not fixture_rel:
+                    continue
+                # Sanitize: reject path traversal and absolute paths
+                if ".." in fixture_rel or fixture_rel.startswith("/"):
+                    print(f"  WARNING: skipping suspicious fixture path: {fixture_rel}", file=sys.stderr)
+                    continue
+                fixture_path = (test_dest / fixture_rel).resolve()
+                if not str(fixture_path).startswith(str(test_dest.resolve())):
+                    print(f"  WARNING: fixture escapes test dir: {fixture_rel}", file=sys.stderr)
+                    continue
+                fixture_url = f"{base}/tests/{slug}/{fixture_rel}"
+                fixture_content = _fetch(fixture_url)
+                if fixture_content:
+                    fixture_path.parent.mkdir(parents=True, exist_ok=True)
+                    fixture_path.write_text(fixture_content)
+                    print(f"  -> tests/{slug}/{fixture_rel}")
 
     print(f"\nInstalled {slug} to ./{dest}/")
     print(f"\nTip: Run `brunnr eval {slug} --dry-run` to validate locally.")

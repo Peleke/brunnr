@@ -76,7 +76,7 @@ def run(args) -> int:
     for slug in eval_slugs:
         eval_args = Namespace(
             skill=slug,
-            model="claude-sonnet-4-20250514",
+            model=getattr(args, "model", "claude-sonnet-4-20250514"),
             output=f"tests/{slug}/results.json",
             dry_run=False,
         )

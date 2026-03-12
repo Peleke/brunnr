@@ -10,20 +10,16 @@ from brunnr.scanner import Severity, scan_skill_md
 from brunnr.discovery import collect_scan_files, discover_skill_files
 
 # ANSI colors
-_TTY = sys.stdout.isatty()
-def _c(code: str, t: str) -> str: return f"\033[{code}m{t}\033[0m" if _TTY else t
-def _green(t: str) -> str: return _c("32", t)
-def _yellow(t: str) -> str: return _c("33", t)
-def _red(t: str) -> str: return _c("31", t)
-def _bold(t: str) -> str: return _c("1", t)
-
-_SEV = {Severity.BLOCK: _red, Severity.FLAG: _yellow, Severity.INFO: _yellow, Severity.CLEAN: _green}
+def _c(code: str, t: str, use_color: bool = True) -> str: return f"\033[{code}m{t}\033[0m" if use_color else t
 
 
 def run(args) -> int:
-    global _TTY
-    if getattr(args, "no_color", False):
-        _TTY = False
+    use_color = sys.stdout.isatty() and not getattr(args, "no_color", False)
+    def _green(t: str) -> str: return _c("32", t, use_color)
+    def _yellow(t: str) -> str: return _c("33", t, use_color)
+    def _red(t: str) -> str: return _c("31", t, use_color)
+    def _bold(t: str) -> str: return _c("1", t, use_color)
+    _SEV = {Severity.BLOCK: _red, Severity.FLAG: _yellow, Severity.INFO: _yellow, Severity.CLEAN: _green}
 
     # Discover files
     if args.paths:
