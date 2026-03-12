@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AX Interview Report",
+  "description": "Structured output from an AX Interview session analysis",
+  "type": "object",
+  "required": ["report_title", "pcs", "implicature_index", "findings", "fixes"],
+  "properties": {
+    "report_title": {
+      "type": "string",
+      "description": "AX Interview Report: [Tool/Session Name]"
+    },
+    "pcs": {
+      "type": "object",
+      "description": "Pragmatic Coherence Score across five dimensions",
+      "required": ["quantity", "quality", "relation", "manner", "cot_faithfulness", "composite"],
+      "properties": {
+        "quantity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "quality": { "type": "number", "minimum": 0, "maximum": 1 },
+        "relation": { "type": "number", "minimum": 0, "maximum": 1 },
+        "manner": { "type": "number", "minimum": 0, "maximum": 1 },
+        "cot_faithfulness": { "type": "number", "minimum": 0, "maximum": 1 },
+        "composite": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "implicature_index": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Count of behavioral signals not explained by explicit failures"
+    },
+    "findings": {
+      "type": "object",
+      "properties": {
+        "critical": { "type": "array", "items": { "$ref": "#/$defs/finding" } },
+        "major": { "type": "array", "items": { "$ref": "#/$defs/finding" } },
+        "minor": { "type": "array", "items": { "$ref": "#/$defs/finding" } }
+      }
+    },
+    "fixes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["description", "maxim", "expected_impact", "effort"],
+        "properties": {
+          "description": { "type": "string" },
+          "maxim": { "type": "string", "enum": ["Quantity", "Quality", "Relation", "Manner"] },
+          "expected_impact": { "type": "string" },
+          "effort": { "type": "string", "enum": ["S", "M", "L"] }
+        }
+      }
+    },
+    "methodology": {
+      "type": "object",
+      "properties": {
+        "mode": { "type": "string", "enum": ["full_trace_and_dialog", "dialog_only", "trace_only"] },
+        "cot_corroborated": { "type": "string", "description": "e.g., '3/5 explanations corroborated'" },
+        "implicatures_summary": { "type": "string" },
+        "tools_evaluated": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  },
+  "$defs": {
+    "finding": {
+      "type": "object",
+      "required": ["description", "maxim", "side", "evidence"],
+      "properties": {
+        "description": { "type": "string" },
+        "maxim": { "type": "string", "enum": ["Quantity", "Quality", "Relation", "Manner"] },
+        "side": { "type": "string", "enum": ["tool", "agent"] },
+        "evidence": { "type": "string" },
+        "implicature_type": { "type": "string", "enum": ["tool_to_agent", "agent_to_researcher", "researcher_to_agent", "none"] }
+      }
+    }
+  }
+}

@@ -238,7 +238,7 @@ jobs:
             SKILL=$(basename "$(dirname "$schema_file")")
 
             echo "Validating schema for $SKILL..."
-            if ajv compile -s "$schema_file" --strict=false 2>/dev/null; then
+            if ajv compile -s "$schema_file" --spec=draft2020 --strict=false 2>/dev/null; then
               echo "OK: $SKILL schema is valid JSON Schema"
             else
               echo "FAIL: $SKILL schema is not valid JSON Schema"
