@@ -24,6 +24,21 @@
       "keywords": ["agent-tools", "mcp", "discoverability", "scoring", "tool-descriptions"],
       "category": "code-quality",
       "tags": ["ax", "rubric", "agent-experience", "mcp-tools"]
+    },
+    {
+      "name": "ax-interview",
+      "source": "ax-interview",
+      "description": "Run a structured AX Interview on agent-tool sessions. Gricean maxim analysis, implicature detection, CoT faithfulness check, Pragmatic Coherence Score with ranked fixes.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Peleke Sengstacke"
+      },
+      "homepage": "https://peleke.me/writing/ax-07-the-ax-interview",
+      "repository": "https://github.com/Peleke/brunnr",
+      "license": "MIT",
+      "keywords": ["agent-experience", "ax", "tool-design", "implicature", "grice", "research"],
+      "category": "research",
+      "tags": ["ax", "interview", "pragmatic-coherence", "agent-experience"]
     }
   ]
 }
