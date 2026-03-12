@@ -1,0 +1,43 @@
+{
+  "version": "1.0",
+  "skill": "ax-interview",
+  "description": "Eval suite for the AX Interview skill. Tests report structure, PCS scoring, implicature detection, and maxim classification on known session scenarios.",
+  "model": "claude-sonnet-4-20250514",
+  "cases": [
+    {
+      "id": "session-01-good-tool",
+      "description": "Clean session with well-designed tool — should produce high PCS (0.7+), minimal findings",
+      "fixture": "fixtures/session-01-good-tool.json",
+      "assertions": [
+        { "type": "format_valid", "expected": true },
+        { "type": "has_table", "expected": true },
+        { "type": "contains", "expected": "Pragmatic Coherence Score" },
+        { "type": "contains", "expected": "Composite PCS" },
+        { "type": "contains", "expected": "Implicature Index" }
+      ]
+    },
+    {
+      "id": "session-02-67kb-payload",
+      "description": "Session with oversized payload (67KB config) — should detect Quantity violation, low Quantity score",
+      "fixture": "fixtures/session-02-67kb-payload.json",
+      "assertions": [
+        { "type": "format_valid", "expected": true },
+        { "type": "has_table", "expected": true },
+        { "type": "contains", "expected": "Quantity" },
+        { "type": "contains", "expected": "Pragmatic Coherence Score" },
+        { "type": "contains", "expected": "Fixes" }
+      ]
+    },
+    {
+      "id": "session-03-silent-avoidance",
+      "description": "Session where agent had access to a tool but never used it — should detect implicature",
+      "fixture": "fixtures/session-03-silent-avoidance.json",
+      "assertions": [
+        { "type": "format_valid", "expected": true },
+        { "type": "contains", "expected": "Implicature Index" },
+        { "type": "contains", "expected": "Relation" },
+        { "type": "contains", "expected": "avoi" }
+      ]
+    }
+  ]
+}
