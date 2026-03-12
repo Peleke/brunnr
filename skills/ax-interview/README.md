@@ -121,7 +121,7 @@ PCS is a behavioral proxy for what Anthropic measures with attribution graphs. T
 
 ## Part of the AX series
 
-This skill accompanies [The AX Interview](https://peleke.dev/writing/ax-07-the-ax-interview) article on the portfolio site. The article provides the theory; this skill provides the protocol.
+This skill accompanies [The AX Interview](https://peleke.me/writing/ax-07-the-ax-interview) article on the portfolio site. The article provides the theory; this skill provides the protocol.
 
 ---
 

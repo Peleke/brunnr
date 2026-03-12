@@ -33,7 +33,7 @@
       "author": {
         "name": "Peleke Sengstacke"
       },
-      "homepage": "https://peleke.dev/writing/ax-07-the-ax-interview",
+      "homepage": "https://peleke.me/writing/ax-07-the-ax-interview",
       "repository": "https://github.com/Peleke/brunnr",
       "license": "MIT",
       "keywords": ["agent-experience", "ax", "tool-design", "implicature", "grice", "research"],
