@@ -22,6 +22,18 @@
 
 ---
 
+## Contents
+
+- [AX Description Rubric](#ax-description-rubric) — score your tool descriptions
+- [Install](#install) — one command
+- [What you get](#what-you-get) — example output
+- [The Rubric](#the-rubric) — five criteria, explained
+- [Skills](#skills) — what's available
+- [Why "brunnr"](#why-brunnr)
+- [Contributing](#contributing)
+
+---
+
 ## What this is
 
 **brunnr** is a skills marketplace for [Claude Code](https://docs.anthropic.com/en/docs/claude-code). Install it once, get access to every skill in the collection.
@@ -50,23 +62,21 @@ Paste your tool description when prompted. Or pass it inline:
 
 ## What you get
 
-```
-### knowledge_base_query
+#### `knowledge_base_query`
 
-Score: 1/5
+**Score: 1/5**
 
-| Criterion       | Result | Notes                                                        |
-|-----------------|--------|--------------------------------------------------------------|
-| Output shape    | fail   | "structured learnings, patterns, and skills" — how many?     |
-| Cost signal     | fail   | No indication of response size                               |
-| Trigger clarity | fail   | "relevant to your current work context" — always true        |
-| Specificity     | fail   | Lists categories, solves no named problem                    |
-| Differentiation | fail   | Half your tools say "relevant to current context"            |
+| Criterion | Result | Notes |
+|-----------|--------|-------|
+| Output shape | fail | "structured learnings, patterns, and skills" — how many? |
+| Cost signal | fail | No indication of response size |
+| Trigger clarity | fail | "relevant to your current work context" — always true |
+| Specificity | fail | Lists categories, solves no named problem |
+| Differentiation | fail | Half your tools say "relevant to current context" |
 
-Rewritten (5/5):
-> "Check for known pitfalls before starting work. Returns 3-5 specific
-> warnings for your tech stack. ~500 tokens. Call once at session start."
-```
+**Rewritten (5/5):**
+
+> "Check for known pitfalls before starting work. Returns 3-5 specific warnings for your tech stack. ~500 tokens. Call once at session start."
 
 One input, five scores, one rewrite. The rewrite is ready to paste into your tool definition.
 
@@ -76,13 +86,7 @@ One input, five scores, one rewrite. The rewrite is ready to paste into your too
 
 Five criteria. Binary pass/fail. Most descriptions fail.
 
-| # | Criterion | What agents need |
-|---|-----------|------------------|
-| 1 | **Output shape** | Can the agent picture the response before calling? |
-| 2 | **Cost signal** | Does the agent know what this costs in tokens? |
-| 3 | **Trigger clarity** | Does the agent know exactly when to call this? |
-| 4 | **Specificity** | Does this solve one named problem? |
-| 5 | **Differentiation** | Can the agent distinguish this from every other tool? |
+<img src="assets/rubric.svg" alt="The AX Description Rubric — five criteria for agent-facing tool descriptions" width="100%" />
 
 **0-1 pass** = invisible (agent will never call it). **2-3** = marginal. **4-5** = habitual.
 

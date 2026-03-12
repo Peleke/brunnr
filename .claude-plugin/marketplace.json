@@ -1,0 +1,29 @@
+{
+  "name": "brunnr-skills",
+  "owner": {
+    "name": "Peleke Sengstacke",
+    "email": "peleke@hey.com"
+  },
+  "metadata": {
+    "description": "Security-scanned agent skills from the brunnr registry. Every skill passes a 7-class deterministic security scanner before distribution.",
+    "version": "0.1.0",
+    "pluginRoot": "./skills"
+  },
+  "plugins": [
+    {
+      "name": "ax-rubric",
+      "source": "ax-rubric",
+      "description": "Score agent-facing tool descriptions 0-5 on discoverability. Takes a tool description, explains failures against 5 criteria, and rewrites it to pass.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Peleke Sengstacke"
+      },
+      "homepage": "https://peleke.github.io/brunnr/skills/ax-rubric/",
+      "repository": "https://github.com/Peleke/brunnr",
+      "license": "MIT",
+      "keywords": ["agent-tools", "mcp", "discoverability", "scoring", "tool-descriptions"],
+      "category": "code-quality",
+      "tags": ["ax", "rubric", "agent-experience", "mcp-tools"]
+    }
+  ]
+}

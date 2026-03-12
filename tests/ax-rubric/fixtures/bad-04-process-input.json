@@ -1,0 +1,7 @@
+{
+  "tool_name": "process_input",
+  "input": "Score this tool description:\n\n**process_input**: Process the given input and return the appropriate output. This tool handles various types of processing tasks and returns results in a suitable format.",
+  "description": "Process the given input and return the appropriate output. This tool handles various types of processing tasks and returns results in a suitable format.",
+  "expected_score_band": "0-1",
+  "rationale": "This is the worst possible description. It says nothing about what the tool does, what it returns, when to call it, or how it differs from literally any other tool. 'Process input and return output' describes every function ever written."
+}

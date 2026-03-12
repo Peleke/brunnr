@@ -1,0 +1,7 @@
+{
+  "tool_name": "check_rate_limits",
+  "input": "Score this tool description:\n\n**check_rate_limits**: Before making external API calls, check remaining rate-limit budget. Returns a single JSON object with `remaining_calls` (int), `reset_at` (ISO 8601), and `should_throttle` (bool). ~120 tokens. Call before any batch of 5+ API requests.",
+  "description": "Before making external API calls, check remaining rate-limit budget. Returns a single JSON object with `remaining_calls` (int), `reset_at` (ISO 8601), and `should_throttle` (bool). ~120 tokens. Call before any batch of 5+ API requests.",
+  "expected_score_band": "4-5",
+  "rationale": "Output shape (single JSON with 3 named fields), cost signal (~120 tokens), trigger (before batch of 5+ API calls), specificity (rate-limit budget), differentiation (only tool that checks rate limits)."
+}
