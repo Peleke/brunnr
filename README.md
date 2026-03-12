@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/hero.png" alt="brunnr — the well agents drink from" width="100%" />
+<img src="https://raw.githubusercontent.com/Peleke/brunnr/main/assets/hero.png" alt="brunnr — the well agents drink from" width="100%" />
 
 # brunnr
 
@@ -8,6 +8,7 @@
 
 *Skills marketplace for Claude Code and agent-facing tools.*
 
+[![PyPI](https://img.shields.io/pypi/v/brunnr)](https://pypi.org/project/brunnr/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Skills](https://img.shields.io/badge/skills-1-4ade80)](skills/)
 [![AX Rubric](https://img.shields.io/badge/ax--rubric-v1.0-e88072)](skills/ax-rubric/)
@@ -46,11 +47,16 @@ Most tool descriptions score 1-2 out of 5. The rubric tells you why, then rewrit
 
 ## Install
 
+### Option 1 — Claude Code (recommended)
+
 ```bash
-# Add the marketplace
+# Add the brunnr marketplace
 /plugin marketplace add Peleke/brunnr
 
-# Use the skill
+# Install a skill
+/plugin install ax-rubric@brunnr-skills
+
+# Use it
 /ax-rubric
 ```
 
@@ -58,6 +64,30 @@ Paste your tool description when prompted. Or pass it inline:
 
 ```
 /ax-rubric "Query the knowledge base for structured learnings, patterns, and skills relevant to your current work context."
+```
+
+### Option 2 — CLI
+
+```bash
+# uv (recommended)
+uv tool install brunnr
+
+# or pipx
+pipx install brunnr
+
+# or pip
+pip install brunnr
+```
+
+```bash
+# Install a skill from the registry
+brunnr install ax-rubric
+
+# Scan your skills for threats
+brunnr scan skills/
+
+# Run the eval harness
+brunnr eval ax-rubric --dry-run
 ```
 
 ## What you get
@@ -86,7 +116,7 @@ One input, five scores, one rewrite. The rewrite is ready to paste into your too
 
 Five criteria. Binary pass/fail. Most descriptions fail.
 
-<img src="assets/rubric.svg" alt="The AX Description Rubric — five criteria for agent-facing tool descriptions" width="100%" />
+<img src="https://raw.githubusercontent.com/Peleke/brunnr/main/assets/rubric.svg" alt="The AX Description Rubric — five criteria for agent-facing tool descriptions" width="100%" />
 
 **0-1 pass** = invisible (agent will never call it). **2-3** = marginal. **4-5** = habitual.
 
