@@ -4,6 +4,22 @@ All notable changes to brunnr will be documented in this file.
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-03-12
+
+### Fixed
+- **Critical:** Path traversal defense in install command now uses `Path.is_relative_to()` instead of fragile string `startswith()` comparison
+- Version mismatch between `__init__.py` and `pyproject.toml` (now single-source)
+- Smoke test: removed eval step that fails without test fixtures
+
+### Changed
+- Extracted shared assertion logic to `brunnr/assertions.py` — eval.py and harness.py now share one implementation (eliminates 150+ lines of duplication)
+- README restructured: proper intro explaining scan/install/eval/pipeline, skill detail moved to `skills/ax-rubric/README.md`
+
+### Added
+- `skills/ax-rubric/README.md` with custom SVG flow diagram, badges, before/after examples
+- Real integration tests for path traversal defense (6 tests, 4 new — exercises actual sanitization logic)
+- 78 tests total (up from 74)
+
 ## [0.1.1] - 2026-03-11
 
 ### Fixed
@@ -30,6 +46,7 @@ All notable changes to brunnr will be documented in this file.
 - GitHub Release with auto-generated changelog on tag push
 - 74 tests (55 scanner + 19 CLI)
 
-[Unreleased]: https://github.com/Peleke/brunnr/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/Peleke/brunnr/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/Peleke/brunnr/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/Peleke/brunnr/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/Peleke/brunnr/releases/tag/v0.1.0
