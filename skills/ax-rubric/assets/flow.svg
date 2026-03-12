@@ -1,0 +1,179 @@
+<svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="ax-glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <linearGradient id="ax-flow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e88072" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#e88072" stop-opacity="0.15"/>
+    </linearGradient>
+    <linearGradient id="ax-pass" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#4ade80" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#4ade80" stop-opacity="0.02"/>
+    </linearGradient>
+    <linearGradient id="ax-fail" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#e88072" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#e88072" stop-opacity="0.02"/>
+    </linearGradient>
+    <pattern id="ax-grid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#334155" stroke-width="0.3" opacity="0.4"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="700" height="420" rx="8" fill="#0f0f1a"/>
+  <rect width="700" height="420" rx="8" fill="url(#ax-grid)" opacity="0.5"/>
+
+  <!-- Title -->
+  <text x="350" y="30" text-anchor="middle"
+        font-family="'Caveat', 'Comic Sans MS', cursive"
+        font-size="18" fill="#eee0cc" font-weight="bold" letter-spacing="0.05em">
+    How ax-rubric works
+  </text>
+  <path d="M 260,36 C 300,38 400,35 440,37"
+        stroke="#e88072" stroke-width="1.2" fill="none"
+        stroke-linecap="round" opacity="0.4"/>
+
+  <!-- Step 1: Input -->
+  <g>
+    <rect x="30" y="55" width="200" height="80" rx="6"
+          fill="rgba(232,128,114,0.06)" stroke="#e88072" stroke-width="1.5" filter="url(#ax-glow)"/>
+    <text x="50" y="76" font-family="'JetBrains Mono', 'Fira Code', monospace" font-size="9"
+          fill="#e88072" letter-spacing="0.08em" font-weight="bold">INPUT</text>
+    <text x="50" y="96" font-family="'Caveat', cursive" font-size="14" fill="#eee0cc">
+      Your tool description
+    </text>
+    <text x="50" y="118" font-family="'JetBrains Mono', monospace" font-size="9" fill="#64748b">
+      "Query the knowledge base..."
+    </text>
+  </g>
+
+  <!-- Arrow 1→2 -->
+  <line x1="230" y1="95" x2="270" y2="95"
+        stroke="url(#ax-flow)" stroke-width="1.5" stroke-dasharray="4 3">
+    <animate attributeName="stroke-dashoffset" from="0" to="-14" dur="2s" repeatCount="indefinite"/>
+  </line>
+  <polygon points="268,95 262,91 262,99" fill="#e88072" opacity="0.6"/>
+
+  <!-- Step 2: Score -->
+  <g>
+    <rect x="275" y="55" width="150" height="80" rx="6"
+          fill="rgba(251,191,36,0.06)" stroke="#fbbf24" stroke-width="1.5"/>
+    <text x="295" y="76" font-family="'JetBrains Mono', 'Fira Code', monospace" font-size="9"
+          fill="#fbbf24" letter-spacing="0.08em" font-weight="bold">SCORE</text>
+    <text x="295" y="96" font-family="'Caveat', cursive" font-size="14" fill="#eee0cc">
+      5 criteria, pass/fail
+    </text>
+    <text x="295" y="118" font-family="'Caveat', cursive" font-size="12" fill="#64748b">
+      binary · deterministic
+    </text>
+  </g>
+
+  <!-- Arrow 2→3 -->
+  <line x1="425" y1="95" x2="465" y2="95"
+        stroke="url(#ax-flow)" stroke-width="1.5" stroke-dasharray="4 3">
+    <animate attributeName="stroke-dashoffset" from="0" to="-14" dur="2s" repeatCount="indefinite"/>
+  </line>
+  <polygon points="463,95 457,91 457,99" fill="#e88072" opacity="0.6"/>
+
+  <!-- Step 3: Rewrite -->
+  <g>
+    <rect x="470" y="55" width="200" height="80" rx="6"
+          fill="rgba(74,222,128,0.06)" stroke="#4ade80" stroke-width="1.5" filter="url(#ax-glow)"/>
+    <text x="490" y="76" font-family="'JetBrains Mono', 'Fira Code', monospace" font-size="9"
+          fill="#4ade80" letter-spacing="0.08em" font-weight="bold">REWRITE</text>
+    <text x="490" y="96" font-family="'Caveat', cursive" font-size="14" fill="#eee0cc">
+      Ready to paste
+    </text>
+    <text x="490" y="118" font-family="'JetBrains Mono', monospace" font-size="9" fill="#64748b">
+      "Check for known pitfalls..."
+    </text>
+  </g>
+
+  <!-- Divider -->
+  <line x1="50" y1="155" x2="650" y2="155" stroke="#334155" stroke-width="0.5" opacity="0.5"/>
+
+  <!-- Before/After comparison -->
+  <text x="350" y="178" text-anchor="middle"
+        font-family="'Caveat', cursive" font-size="15" fill="#64748b">
+    Before &amp; After
+  </text>
+
+  <!-- Before box -->
+  <g>
+    <rect x="30" y="195" width="310" height="200" rx="6"
+          fill="url(#ax-fail)" stroke="#e88072" stroke-width="1" opacity="0.8"/>
+    <text x="50" y="218" font-family="'JetBrains Mono', monospace" font-size="9"
+          fill="#e88072" letter-spacing="0.08em" font-weight="bold">BEFORE · 1/5</text>
+
+    <!-- Fail indicators -->
+    <text x="50" y="245" font-family="'Caveat', cursive" font-size="12" fill="#ef4444">✗</text>
+    <text x="68" y="245" font-family="'Caveat', cursive" font-size="12" fill="#94a3b8">Output shape — "learnings, patterns, skills" — how many?</text>
+
+    <text x="50" y="268" font-family="'Caveat', cursive" font-size="12" fill="#ef4444">✗</text>
+    <text x="68" y="268" font-family="'Caveat', cursive" font-size="12" fill="#94a3b8">Cost signal — no indication of response size</text>
+
+    <text x="50" y="291" font-family="'Caveat', cursive" font-size="12" fill="#ef4444">✗</text>
+    <text x="68" y="291" font-family="'Caveat', cursive" font-size="12" fill="#94a3b8">Trigger clarity — "relevant to context" = always true</text>
+
+    <text x="50" y="314" font-family="'Caveat', cursive" font-size="12" fill="#ef4444">✗</text>
+    <text x="68" y="314" font-family="'Caveat', cursive" font-size="12" fill="#94a3b8">Specificity — lists categories, solves no named problem</text>
+
+    <text x="50" y="337" font-family="'Caveat', cursive" font-size="12" fill="#ef4444">✗</text>
+    <text x="68" y="337" font-family="'Caveat', cursive" font-size="12" fill="#94a3b8">Differentiation — half your tools say the same thing</text>
+
+    <text x="50" y="375" font-family="'JetBrains Mono', monospace" font-size="8" fill="#475569" opacity="0.7">
+      "Query the knowledge base for structured
+    </text>
+    <text x="50" y="387" font-family="'JetBrains Mono', monospace" font-size="8" fill="#475569" opacity="0.7">
+      learnings, patterns, and skills relevant
+    </text>
+  </g>
+
+  <!-- Arrow between boxes -->
+  <line x1="345" y1="295" x2="355" y2="295"
+        stroke="#e88072" stroke-width="1" opacity="0.4"/>
+  <text x="350" y="298" text-anchor="middle"
+        font-family="'Caveat', cursive" font-size="20" fill="#e88072" opacity="0.6">→</text>
+
+  <!-- After box -->
+  <g>
+    <rect x="360" y="195" width="310" height="200" rx="6"
+          fill="url(#ax-pass)" stroke="#4ade80" stroke-width="1" opacity="0.8"/>
+    <text x="380" y="218" font-family="'JetBrains Mono', monospace" font-size="9"
+          fill="#4ade80" letter-spacing="0.08em" font-weight="bold">AFTER · 5/5</text>
+
+    <!-- Pass indicators -->
+    <text x="380" y="245" font-family="'Caveat', cursive" font-size="12" fill="#4ade80">✓</text>
+    <text x="398" y="245" font-family="'Caveat', cursive" font-size="12" fill="#94a3b8">Output shape — "3-5 specific warnings"</text>
+
+    <text x="380" y="268" font-family="'Caveat', cursive" font-size="12" fill="#4ade80">✓</text>
+    <text x="398" y="268" font-family="'Caveat', cursive" font-size="12" fill="#94a3b8">Cost signal — "~500 tokens"</text>
+
+    <text x="380" y="291" font-family="'Caveat', cursive" font-size="12" fill="#4ade80">✓</text>
+    <text x="398" y="291" font-family="'Caveat', cursive" font-size="12" fill="#94a3b8">Trigger clarity — "once at session start"</text>
+
+    <text x="380" y="314" font-family="'Caveat', cursive" font-size="12" fill="#4ade80">✓</text>
+    <text x="398" y="314" font-family="'Caveat', cursive" font-size="12" fill="#94a3b8">Specificity — "known pitfalls for your tech stack"</text>
+
+    <text x="380" y="337" font-family="'Caveat', cursive" font-size="12" fill="#4ade80">✓</text>
+    <text x="398" y="337" font-family="'Caveat', cursive" font-size="12" fill="#94a3b8">Differentiation — unique trigger + unique output</text>
+
+    <text x="380" y="375" font-family="'JetBrains Mono', monospace" font-size="8" fill="#86efac" opacity="0.7">
+      "Check for known pitfalls before starting
+    </text>
+    <text x="380" y="387" font-family="'JetBrains Mono', monospace" font-size="8" fill="#86efac" opacity="0.7">
+      work. Returns 3-5 specific warnings..."
+    </text>
+  </g>
+
+  <!-- Bottom note -->
+  <text x="350" y="413" text-anchor="middle"
+        font-family="'Caveat', cursive" font-size="11" fill="#64748b" opacity="0.6">
+    One input · five scores · one rewrite · ready to paste
+  </text>
+</svg>
