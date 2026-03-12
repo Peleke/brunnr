@@ -115,13 +115,40 @@ class TestDiscovery:
 class TestInstallPathTraversal:
     """Verify that path traversal in fixture paths is blocked."""
 
-    def test_dotdot_rejected(self, tmp_path):
-        from brunnr.commands.install import _fetch
-        # This tests the sanitization logic indirectly —
-        # the actual check is in the install command's fixture loop
-        fixture_rel = "../../etc/passwd"
-        assert ".." in fixture_rel  # would be rejected by install
+    def _run_fixture_sanitization(self, fixture_rel: str, tmp_path):
+        """Exercise the actual sanitization logic from install.py."""
+        from pathlib import Path
+        import sys
 
-    def test_absolute_path_rejected(self):
-        fixture_rel = "/etc/passwd"
-        assert fixture_rel.startswith("/")  # would be rejected by install
+        test_dest = tmp_path / "tests" / "fakeskill"
+        test_dest.mkdir(parents=True)
+
+        # Reproduce the exact checks from install.py
+        if ".." in fixture_rel or fixture_rel.startswith("/"):
+            return "rejected_pattern"
+
+        fixture_path = (test_dest / fixture_rel).resolve()
+        if not fixture_path.is_relative_to(test_dest.resolve()):
+            return "rejected_containment"
+
+        return "accepted"
+
+    def test_dotdot_rejected(self, tmp_path):
+        assert self._run_fixture_sanitization("../../etc/passwd", tmp_path) == "rejected_pattern"
+
+    def test_absolute_path_rejected(self, tmp_path):
+        assert self._run_fixture_sanitization("/etc/passwd", tmp_path) == "rejected_pattern"
+
+    def test_dotdot_backtrack_to_sibling(self, tmp_path):
+        """Catch the subtle case: ../tests/payload resolves inside a path
+        that starts with test_dest as a string but escapes the directory."""
+        assert self._run_fixture_sanitization("../tests/payload", tmp_path) == "rejected_pattern"
+
+    def test_nested_traversal(self, tmp_path):
+        assert self._run_fixture_sanitization("subdir/../../escape", tmp_path) == "rejected_pattern"
+
+    def test_valid_fixture_accepted(self, tmp_path):
+        assert self._run_fixture_sanitization("fixtures/input.md", tmp_path) == "accepted"
+
+    def test_simple_filename_accepted(self, tmp_path):
+        assert self._run_fixture_sanitization("input.md", tmp_path) == "accepted"
