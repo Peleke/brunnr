@@ -12,7 +12,7 @@
   "plugins": [
     {
       "name": "ax-rubric",
-      "source": "./skills/ax-rubric",
+      "source": "ax-rubric",
       "description": "Score agent-facing tool descriptions 0-5 on discoverability. Takes a tool description, explains failures against 5 criteria, and rewrites it to pass.",
       "version": "1.0.0",
       "author": {
