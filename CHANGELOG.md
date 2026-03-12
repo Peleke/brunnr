@@ -4,6 +4,16 @@ All notable changes to brunnr will be documented in this file.
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-03-11
+
+### Fixed
+- README images now render on PyPI (absolute URLs instead of relative paths)
+- README install section shows both Claude Code marketplace and CLI paths
+
+### Added
+- Post-publish E2E smoke test in CI (installs from PyPI, runs install/scan/eval)
+- PyPI version badge
+
 ## [0.1.0] - 2026-03-11
 
 ### Added
@@ -20,5 +30,6 @@ All notable changes to brunnr will be documented in this file.
 - GitHub Release with auto-generated changelog on tag push
 - 74 tests (55 scanner + 19 CLI)
 
-[Unreleased]: https://github.com/Peleke/brunnr/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/Peleke/brunnr/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/Peleke/brunnr/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/Peleke/brunnr/releases/tag/v0.1.0

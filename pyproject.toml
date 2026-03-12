@@ -1,6 +1,6 @@
 [project]
 name = "brunnr"
-version = "0.1.0"
+version = "0.1.1"
 description = "Security scanner and skill registry for agent tool descriptions"
 requires-python = ">=3.12"
 license = "MIT"
