@@ -10,7 +10,7 @@
 
 [![PyPI](https://img.shields.io/pypi/v/brunnr)](https://pypi.org/project/brunnr/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Skills](https://img.shields.io/badge/skills-1-4ade80)](skills/)
+[![Skills](https://img.shields.io/badge/skills-2-4ade80)](skills/)
 
 </div>
 
@@ -79,8 +79,9 @@ brunnr eval ax-rubric --dry-run
 | Skill | What it does | Based on |
 |-------|-------------|----------|
 | **[ax-rubric](skills/ax-rubric/)** | Score tool descriptions 0-5 on agent discoverability. Five criteria, pass/fail, rewrite. | [I Don't Deliberate About This](https://peleke.me/writing/ax-04-tool-descriptions) |
+| **[ax-interview](skills/ax-interview/)** | Run a structured AX Interview on agent-tool sessions. Gricean maxim analysis, implicature detection, CoT faithfulness check, Pragmatic Coherence Score with ranked fixes. | [The AX Interview](https://peleke.me/writing/ax-07-the-ax-interview) |
 
-More skills coming. Each one ships alongside an article in the [AX series](https://peleke.me/writing/ax-series).
+Each skill ships alongside an article in the [AX series](https://peleke.me/writing/ax-series).
 
 ---
 
