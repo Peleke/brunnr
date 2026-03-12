@@ -1,0 +1,18 @@
+[project]
+name = "brunnr"
+version = "0.1.0"
+description = "Security scanner and skill registry for agent tool descriptions"
+requires-python = ">=3.12"
+license = "MIT"
+readme = "README.md"
+dependencies = []
+
+[project.optional-dependencies]
+eval = ["anthropic>=0.40"]
+
+[project.scripts]
+brunnr = "brunnr.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

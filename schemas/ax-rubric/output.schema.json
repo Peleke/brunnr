@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ax-rubric-output-v1",
+  "title": "AX Rubric Output",
+  "description": "Structured representation of an ax-rubric skill evaluation. The skill outputs markdown, but this schema defines the extractable structure for programmatic validation.",
+  "type": "object",
+  "required": ["tool_name", "score", "criteria", "rewrite"],
+  "properties": {
+    "tool_name": {
+      "type": "string",
+      "description": "Name of the tool being evaluated."
+    },
+    "score": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 5,
+      "description": "Overall score out of 5 (count of passing criteria)."
+    },
+    "criteria": {
+      "type": "object",
+      "required": ["output_shape", "cost_signal", "trigger_clarity", "specificity", "differentiation"],
+      "properties": {
+        "output_shape": {
+          "$ref": "#/$defs/criterion_result"
+        },
+        "cost_signal": {
+          "$ref": "#/$defs/criterion_result"
+        },
+        "trigger_clarity": {
+          "$ref": "#/$defs/criterion_result"
+        },
+        "specificity": {
+          "$ref": "#/$defs/criterion_result"
+        },
+        "differentiation": {
+          "$ref": "#/$defs/criterion_result"
+        }
+      },
+      "additionalProperties": false
+    },
+    "original_description": {
+      "type": "string",
+      "description": "The original tool description that was evaluated."
+    },
+    "rewrite": {
+      "type": "string",
+      "description": "Rewritten description targeting 5/5.",
+      "maxLength": 1024
+    },
+    "key_changes": {
+      "type": "string",
+      "description": "2-3 sentences explaining what changed and why."
+    }
+  },
+  "$defs": {
+    "criterion_result": {
+      "type": "object",
+      "required": ["result", "notes"],
+      "properties": {
+        "result": {
+          "type": "string",
+          "enum": ["pass", "fail"]
+        },
+        "notes": {
+          "type": "string",
+          "description": "One-line explanation of why this criterion passed or failed."
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

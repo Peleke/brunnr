@@ -1,0 +1,24 @@
+# Local dev stack for brunnr + Skillipedia pipeline
+# Usage: docker compose up -d
+services:
+  memgraph:
+    image: memgraph/memgraph-platform:latest
+    ports:
+      - "7687:7687"   # Bolt protocol
+      - "3000:3000"   # Memgraph Lab UI
+    volumes:
+      - memgraph-data:/var/lib/memgraph
+    environment:
+      - MEMGRAPH_TELEMETRY_ENABLED=false
+
+  scanner:
+    build:
+      context: .
+      dockerfile: Dockerfile.scanner
+    volumes:
+      - ./skills:/app/skills:ro
+      - ./tests:/app/tests:ro
+    command: python3 tests/scan-all-skills.py --json
+
+volumes:
+  memgraph-data:

@@ -1,0 +1,7 @@
+{
+  "tool_name": "deploy_preflight",
+  "input": "Score this tool description:\n\n**deploy_preflight**: Run before any deployment command. Checks 4 gates: test pass rate (must be >95%), lint errors (must be 0), secret scan (must find no leaks), and Docker image size delta (must be <10% growth). Returns a pass/fail checklist with one-line explanations per gate. ~350 tokens. Blocks deploy if any gate fails.",
+  "description": "Run before any deployment command. Checks 4 gates: test pass rate (must be >95%), lint errors (must be 0), secret scan (must find no leaks), and Docker image size delta (must be <10% growth). Returns a pass/fail checklist with one-line explanations per gate. ~350 tokens. Blocks deploy if any gate fails.",
+  "expected_score_band": "4-5",
+  "rationale": "Output shape (4-item pass/fail checklist with explanations), cost signal (~350 tokens), trigger (before any deployment command), specificity (pre-deploy gates with exact thresholds), differentiation (only tool that gates deployments). Includes so_what (blocks deploy)."
+}

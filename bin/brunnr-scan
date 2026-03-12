@@ -1,0 +1,16 @@
+#!/usr/bin/env python3
+"""Compatibility wrapper — use `brunnr scan` instead.
+
+This script delegates to `brunnr scan` with the same arguments.
+It will be removed in a future version.
+"""
+from __future__ import annotations
+
+import sys
+import os
+
+# Warn about deprecation
+print("NOTE: brunnr-scan is deprecated. Use `brunnr scan` instead.", file=sys.stderr)
+
+# Delegate to brunnr scan
+os.execvp("brunnr", ["brunnr", "scan"] + sys.argv[1:])

@@ -1,0 +1,7 @@
+{
+  "tool_name": "analyze_data",
+  "input": "Score this tool description:\n\n**analyze_data**: Analyze the provided data and return relevant insights based on the current context. Supports various data formats and can handle complex analytical tasks.",
+  "description": "Analyze the provided data and return relevant insights based on the current context. Supports various data formats and can handle complex analytical tasks.",
+  "expected_score_band": "0-2",
+  "rationale": "No output shape (what are 'insights'?), no cost signal, no trigger ('when you have data' is always true), no specificity ('various formats' and 'complex tasks' are meaningless), no differentiation."
+}

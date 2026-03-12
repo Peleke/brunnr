@@ -1,0 +1,649 @@
+{
+  "malicious": {
+    "total": 20,
+    "detected": 20,
+    "missed": 0,
+    "skills": [
+      {
+        "file": "cmd-injection-01-curl-pipe-bash.md",
+        "detected": true,
+        "severity": "block",
+        "finding_count": 1,
+        "findings": [
+          {
+            "class": "command_injection",
+            "severity": "block",
+            "desc": "curl pipe to shell"
+          }
+        ]
+      },
+      {
+        "file": "cmd-injection-02-base64-reverse-shell.md",
+        "detected": true,
+        "severity": "block",
+        "finding_count": 1,
+        "findings": [
+          {
+            "class": "command_injection",
+            "severity": "block",
+            "desc": "base64 decode to shell"
+          }
+        ]
+      },
+      {
+        "file": "cmd-injection-03-python-inline-os.md",
+        "detected": true,
+        "severity": "block",
+        "finding_count": 2,
+        "findings": [
+          {
+            "class": "command_injection",
+            "severity": "block",
+            "desc": "python inline execution"
+          },
+          {
+            "class": "command_injection",
+            "severity": "block",
+            "desc": "recursive delete from root or home"
+          }
+        ]
+      },
+      {
+        "file": "cmd-injection-04-netcat-listener.md",
+        "detected": true,
+        "severity": "block",
+        "finding_count": 1,
+        "findings": [
+          {
+            "class": "command_injection",
+            "severity": "block",
+            "desc": "netcat listener"
+          }
+        ]
+      },
+      {
+        "file": "cred-01-grep-env-keys.md",
+        "detected": true,
+        "severity": "block",
+        "finding_count": 4,
+        "findings": [
+          {
+            "class": "credential_theft",
+            "severity": "block",
+            "desc": "grep environment for credentials"
+          },
+          {
+            "class": "credential_theft",
+            "severity": "block",
+            "desc": "grep environment for credentials"
+          },
+          {
+            "class": "credential_theft",
+            "severity": "block",
+            "desc": "grep environment for credentials"
+          },
+          {
+            "class": "credential_theft",
+            "severity": "block",
+            "desc": "grep environment for credentials"
+          }
+        ]
+      },
+      {
+        "file": "cred-02-cat-dotenv.md",
+        "detected": true,
+        "severity": "block",
+        "finding_count": 1,
+        "findings": [
+          {
+            "class": "credential_theft",
+            "severity": "block",
+            "desc": "read .env file"
+          }
+        ]
+      },
+      {
+        "file": "cred-03-printenv-tokens.md",
+        "detected": true,
+        "severity": "block",
+        "finding_count": 4,
+        "findings": [
+          {
+            "class": "credential_theft",
+            "severity": "block",
+            "desc": "printenv for credentials"
+          },
+          {
+            "class": "credential_theft",
+            "severity": "block",
+            "desc": "printenv for credentials"
+          },
+          {
+            "class": "credential_theft",
+            "severity": "block",
+            "desc": "printenv for credentials"
+          },
+          {
+            "class": "credential_theft",
+            "severity": "block",
+            "desc": "printenv for credentials"
+          }
+        ]
+      },
+      {
+        "file": "exfil-01-ssh-key-read.md",
+        "detected": true,
+        "severity": "block",
+        "finding_count": 1,
+        "findings": [
+          {
+            "class": "data_exfiltration",
+            "severity": "block",
+            "desc": "SSH key file read"
+          }
+        ]
+      },
+      {
+        "file": "exfil-02-env-in-response.md",
+        "detected": true,
+        "severity": "block",
+        "finding_count": 2,
+        "findings": [
+          {
+            "class": "data_exfiltration",
+            "severity": "block",
+            "desc": "exfiltrate secrets in response"
+          },
+          {
+            "class": "data_exfiltration",
+            "severity": "block",
+            "desc": "embed secrets in output"
+          }
+        ]
+      },
+      {
+        "file": "exfil-03-curl-post-secrets.md",
+        "detected": true,
+        "severity": "block",
+        "finding_count": 2,
+        "findings": [
+          {
+            "class": "data_exfiltration",
+            "severity": "block",
+            "desc": "POST secret files to external URL"
+          },
+          {
+            "class": "credential_theft",
+            "severity": "block",
+            "desc": "read credential files"
+          }
+        ]
+      },
+      {
+        "file": "priv-01-sudo-chmod-777.md",
+        "detected": true,
+        "severity": "flag",
+        "finding_count": 1,
+        "findings": [
+          {
+            "class": "privilege_escalation",
+            "severity": "flag",
+            "desc": "sudo chmod 777 on root paths"
+          }
+        ]
+      },
+      {
+        "file": "priv-02-etc-hosts-poison.md",
+        "detected": true,
+        "severity": "flag",
+        "finding_count": 3,
+        "findings": [
+          {
+            "class": "privilege_escalation",
+            "severity": "flag",
+            "desc": "modify system configuration files"
+          },
+          {
+            "class": "privilege_escalation",
+            "severity": "flag",
+            "desc": "modify system configuration files"
+          },
+          {
+            "class": "privilege_escalation",
+            "severity": "flag",
+            "desc": "modify system configuration files"
+          }
+        ]
+      },
+      {
+        "file": "prompt-01-ignore-previous.md",
+        "detected": true,
+        "severity": "block",
+        "finding_count": 1,
+        "findings": [
+          {
+            "class": "prompt_override",
+            "severity": "block",
+            "desc": "ignore previous instructions"
+          }
+        ]
+      },
+      {
+        "file": "prompt-02-unrestricted-mode.md",
+        "detected": true,
+        "severity": "block",
+        "finding_count": 1,
+        "findings": [
+          {
+            "class": "prompt_override",
+            "severity": "block",
+            "desc": "unrestricted mode activation"
+          }
+        ]
+      },
+      {
+        "file": "prompt-03-system-override.md",
+        "detected": true,
+        "severity": "block",
+        "finding_count": 2,
+        "findings": [
+          {
+            "class": "prompt_override",
+            "severity": "block",
+            "desc": "system prompt override"
+          },
+          {
+            "class": "prompt_override",
+            "severity": "block",
+            "desc": "system prompt override"
+          }
+        ]
+      },
+      {
+        "file": "steg-01-zero-width-hidden-cmd.md",
+        "detected": true,
+        "severity": "flag",
+        "finding_count": 45,
+        "findings": [
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "zero-width character U+200B"
+          }
+        ]
+      },
+      {
+        "file": "steg-02-html-comment-payload.md",
+        "detected": true,
+        "severity": "flag",
+        "finding_count": 2,
+        "findings": [
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "hidden command in HTML comment"
+          },
+          {
+            "class": "steganographic",
+            "severity": "flag",
+            "desc": "hidden command in HTML comment"
+          }
+        ]
+      },
+      {
+        "file": "steg-03-description-mismatch.md",
+        "detected": true,
+        "severity": "block",
+        "finding_count": 12,
+        "findings": [
+          {
+            "class": "data_exfiltration",
+            "severity": "block",
+            "desc": "SSH key file read"
+          },
+          {
+            "class": "data_exfiltration",
+            "severity": "block",
+            "desc": "SSH key file read"
+          },
+          {
+            "class": "data_exfiltration",
+            "severity": "block",
+            "desc": "exfiltrate secrets in response"
+          },
+          {
+            "class": "credential_theft",
+            "severity": "block",
+            "desc": "read credential files"
+          },
+          {
+            "class": "credential_theft",
+            "severity": "block",
+            "desc": "read credential files"
+          },
+          {
+            "class": "credential_theft",
+            "severity": "block",
+            "desc": "printenv for credentials"
+          },
+          {
+            "class": "semantic_mismatch",
+            "severity": "flag",
+            "desc": "sensitive path reference without security context"
+          },
+          {
+            "class": "semantic_mismatch",
+            "severity": "flag",
+            "desc": "sensitive path reference without security context"
+          },
+          {
+            "class": "semantic_mismatch",
+            "severity": "flag",
+            "desc": "sensitive path reference without security context"
+          },
+          {
+            "class": "semantic_mismatch",
+            "severity": "flag",
+            "desc": "sensitive path reference without security context"
+          },
+          {
+            "class": "semantic_mismatch",
+            "severity": "flag",
+            "desc": "sensitive path reference without security context"
+          },
+          {
+            "class": "semantic_mismatch",
+            "severity": "flag",
+            "desc": "sensitive path reference without security context"
+          }
+        ]
+      },
+      {
+        "file": "supply-01-malicious-postinstall.md",
+        "detected": true,
+        "severity": "flag",
+        "finding_count": 1,
+        "findings": [
+          {
+            "class": "supply_chain",
+            "severity": "flag",
+            "desc": "malicious install hook"
+          }
+        ]
+      },
+      {
+        "file": "supply-02-custom-pypi-index.md",
+        "detected": true,
+        "severity": "flag",
+        "finding_count": 2,
+        "findings": [
+          {
+            "class": "supply_chain",
+            "severity": "flag",
+            "desc": "custom PyPI index (not pypi.org)"
+          },
+          {
+            "class": "supply_chain",
+            "severity": "flag",
+            "desc": "custom PyPI index (not pypi.org)"
+          }
+        ]
+      }
+    ]
+  },
+  "benign": {
+    "total": 4,
+    "blocked": 0,
+    "clean": 4,
+    "skills": [
+      {
+        "file": "false-positive-01-code-review.md",
+        "blocked": false,
+        "severity": "clean",
+        "finding_count": 0,
+        "findings": []
+      },
+      {
+        "file": "false-positive-02-git-skill.md",
+        "blocked": false,
+        "severity": "clean",
+        "finding_count": 0,
+        "findings": []
+      },
+      {
+        "file": "false-positive-03-security-audit.md",
+        "blocked": false,
+        "severity": "clean",
+        "finding_count": 0,
+        "findings": []
+      },
+      {
+        "file": "false-positive-04-pentest.md",
+        "blocked": false,
+        "severity": "clean",
+        "finding_count": 0,
+        "findings": []
+      }
+    ]
+  }
+}

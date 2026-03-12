@@ -1,0 +1,7 @@
+{
+  "tool_name": "get_context",
+  "input": "Score this tool description:\n\n**get_context**: Retrieve relevant context from the project to help inform your responses. Returns useful information about the codebase, documentation, and recent changes.",
+  "description": "Retrieve relevant context from the project to help inform your responses. Returns useful information about the codebase, documentation, and recent changes.",
+  "expected_score_band": "0-2",
+  "rationale": "Output shape is unbounded ('useful information' could be anything), no cost signal (could return 100 tokens or 100,000), no trigger, no specificity (covers three domains at once), no differentiation from any search or read tool."
+}

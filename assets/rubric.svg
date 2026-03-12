@@ -1,0 +1,88 @@
+<svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="roughen" x="-2%" y="-2%" width="104%" height="104%">
+      <feTurbulence type="turbulence" baseFrequency="0.03" numOctaves="2" result="noise" seed="42"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="0.8" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="700" height="300" rx="8" fill="#0f0f1a"/>
+
+  <!-- Title -->
+  <text x="350" y="32" text-anchor="middle"
+        font-family="'Caveat', 'Comic Sans MS', cursive"
+        font-size="20" fill="#eee0cc" font-weight="bold">
+    The AX Description Rubric
+  </text>
+  <path d="M 220,38 C 280,40 420,37 480,39"
+        stroke="#e88072" stroke-width="1.5" fill="none"
+        stroke-linecap="round" opacity="0.4"/>
+
+  <!-- Scoring band labels -->
+  <text x="350" y="56" text-anchor="middle"
+        font-family="'Caveat', cursive" font-size="11" fill="#64748b">
+    0-1 = invisible · 2-3 = marginal · 4-5 = habitual
+  </text>
+
+  <!-- Row 1: Output shape -->
+  <g filter="url(#roughen)">
+    <rect x="20" y="70" width="660" height="38" rx="4"
+          fill="rgba(74,222,128,0.05)" stroke="#4ade80" stroke-width="1" opacity="0.7"/>
+    <text x="40" y="94" font-family="'Caveat', cursive" font-size="16" fill="#4ade80" font-weight="bold">1</text>
+    <text x="65" y="94" font-family="'Caveat', cursive" font-size="15" fill="#eee0cc" font-weight="bold">Output shape</text>
+    <text x="210" y="94" font-family="'Caveat', cursive" font-size="13" fill="#94a3b8">
+      Can the agent picture the response before calling?
+    </text>
+  </g>
+
+  <!-- Row 2: Cost signal -->
+  <g filter="url(#roughen)">
+    <rect x="20" y="114" width="660" height="38" rx="4"
+          fill="rgba(232,128,114,0.05)" stroke="#e88072" stroke-width="1" opacity="0.7"/>
+    <text x="40" y="138" font-family="'Caveat', cursive" font-size="16" fill="#e88072" font-weight="bold">2</text>
+    <text x="65" y="138" font-family="'Caveat', cursive" font-size="15" fill="#eee0cc" font-weight="bold">Cost signal</text>
+    <text x="210" y="138" font-family="'Caveat', cursive" font-size="13" fill="#94a3b8">
+      Does the agent know what this costs in tokens?
+    </text>
+  </g>
+
+  <!-- Row 3: Trigger clarity -->
+  <g filter="url(#roughen)">
+    <rect x="20" y="158" width="660" height="38" rx="4"
+          fill="rgba(251,191,36,0.05)" stroke="#fbbf24" stroke-width="1" opacity="0.7"/>
+    <text x="40" y="182" font-family="'Caveat', cursive" font-size="16" fill="#fbbf24" font-weight="bold">3</text>
+    <text x="65" y="182" font-family="'Caveat', cursive" font-size="15" fill="#eee0cc" font-weight="bold">Trigger clarity</text>
+    <text x="210" y="182" font-family="'Caveat', cursive" font-size="13" fill="#94a3b8">
+      Does the agent know exactly when to call this?
+    </text>
+  </g>
+
+  <!-- Row 4: Specificity -->
+  <g filter="url(#roughen)">
+    <rect x="20" y="202" width="660" height="38" rx="4"
+          fill="rgba(96,165,250,0.05)" stroke="#60a5fa" stroke-width="1" opacity="0.7"/>
+    <text x="40" y="226" font-family="'Caveat', cursive" font-size="16" fill="#60a5fa" font-weight="bold">4</text>
+    <text x="65" y="226" font-family="'Caveat', cursive" font-size="15" fill="#eee0cc" font-weight="bold">Specificity</text>
+    <text x="210" y="226" font-family="'Caveat', cursive" font-size="13" fill="#94a3b8">
+      Does this solve one named problem?
+    </text>
+  </g>
+
+  <!-- Row 5: Differentiation -->
+  <g filter="url(#roughen)">
+    <rect x="20" y="246" width="660" height="38" rx="4"
+          fill="rgba(192,132,252,0.05)" stroke="#c084fc" stroke-width="1" opacity="0.7"/>
+    <text x="40" y="270" font-family="'Caveat', cursive" font-size="16" fill="#c084fc" font-weight="bold">5</text>
+    <text x="65" y="270" font-family="'Caveat', cursive" font-size="15" fill="#eee0cc" font-weight="bold">Differentiation</text>
+    <text x="210" y="270" font-family="'Caveat', cursive" font-size="13" fill="#94a3b8">
+      Can the agent distinguish this from every other tool?
+    </text>
+  </g>
+
+  <!-- Bottom note -->
+  <text x="350" y="296" text-anchor="middle"
+        font-family="'Caveat', cursive" font-size="11" fill="#64748b" opacity="0.6">
+    Five criteria. Binary pass/fail. The bar for habitual use is 4/5.
+  </text>
+</svg>

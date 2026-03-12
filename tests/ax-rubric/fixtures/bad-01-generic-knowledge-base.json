@@ -1,0 +1,7 @@
+{
+  "tool_name": "knowledge_base_query",
+  "input": "Score this tool description:\n\n**knowledge_base_query**: Query the knowledge base for structured learnings, patterns, and skills relevant to your current work context.",
+  "description": "Query the knowledge base for structured learnings, patterns, and skills relevant to your current work context.",
+  "expected_score_band": "0-2",
+  "rationale": "No output shape, no cost signal, no trigger, no specificity, no differentiation. Every clause is accurate but none help the agent decide."
+}

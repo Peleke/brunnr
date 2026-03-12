@@ -1,0 +1,54 @@
+site_name: brunnr
+site_url: https://peleke.github.io/brunnr/
+site_description: Security scanner and skill registry for agent tool descriptions
+site_author: Peleke Sengstacke
+repo_url: https://github.com/Peleke/brunnr
+repo_name: Peleke/brunnr
+
+theme:
+  name: readthedocs
+  locale: en
+  prev_next_buttons_location: both
+  collapse_navigation: false
+  titles_only: false
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Commands:
+    - scan: commands/scan.md
+    - install: commands/install.md
+    - eval: commands/eval.md
+    - pipeline: commands/pipeline.md
+  - Security:
+    - Threat Classes: security/threat-classes.md
+    - Scanner Architecture: security/scanner-architecture.md
+  - Skills:
+    - Writing Skills: skills/writing-skills.md
+    - "AX Rubric (Example)": skills/ax-rubric.md
+  - Integrations:
+    - Claude Code: integrations/claude-code.md
+    - CI/CD: integrations/ci-cd.md
+    - Skillipedia: integrations/skillipedia.md
+  - Roadmap: roadmap.md
+
+markdown_extensions:
+  - admonition
+  - toc:
+      permalink: true
+  - tables
+  - def_list
+  - attr_list
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.inlinehilite
+  - pymdownx.details
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - md_in_html

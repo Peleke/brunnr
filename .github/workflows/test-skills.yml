@@ -1,0 +1,254 @@
+name: Skill Tests
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  security-scan:
+    name: Security Scan (7-class)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Scan all SKILL.md files
+        run: python3 tests/scan-all-skills.py --strict
+
+      - name: Upload scan report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scan-report
+          path: tests/artifacts/scan-report.json
+
+      - name: Post scan summary
+        if: always()
+        run: |
+          echo "## Security Scan Results" >> $GITHUB_STEP_SUMMARY
+          python3 -c "
+          import json
+          report = json.load(open('tests/artifacts/scan-report.json'))
+          total = report['total']
+          blocked = report['blocked']
+          flagged = report['flagged']
+          clean = report['clean']
+          print(f'| Metric | Count |', file=open('$GITHUB_STEP_SUMMARY', 'a'))
+          print(f'|--------|-------|', file=open('$GITHUB_STEP_SUMMARY', 'a'))
+          print(f'| Scanned | {total} |', file=open('$GITHUB_STEP_SUMMARY', 'a'))
+          print(f'| Clean | {clean} |', file=open('$GITHUB_STEP_SUMMARY', 'a'))
+          print(f'| Flagged | {flagged} |', file=open('$GITHUB_STEP_SUMMARY', 'a'))
+          print(f'| Blocked | {blocked} |', file=open('$GITHUB_STEP_SUMMARY', 'a'))
+          if blocked > 0:
+              print(f'', file=open('$GITHUB_STEP_SUMMARY', 'a'))
+              print(f'**{blocked} skill(s) BLOCKED by security scanner.**', file=open('$GITHUB_STEP_SUMMARY', 'a'))
+              for s in report['skills']:
+                  if s['blocked']:
+                      findings = ', '.join(f['desc'] for f in s['findings'] if f['severity'] == 'block')
+                      print(f'- **{s[\"file\"]}**: {findings}', file=open('$GITHUB_STEP_SUMMARY', 'a'))
+          "
+
+  frontmatter-lint:
+    name: Lint SKILL.md Frontmatter
+    needs: [security-scan]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate all SKILL.md files
+        run: |
+          echo "=== SKILL.md Frontmatter Validation ==="
+          ERRORS=0
+          TOTAL=0
+
+          for skill_md in skills/*/SKILL.md; do
+            [ -f "$skill_md" ] || continue
+            TOTAL=$((TOTAL + 1))
+            SKILL_DIR=$(dirname "$skill_md")
+            SKILL_SLUG=$(basename "$SKILL_DIR")
+
+            # Extract frontmatter (between --- lines)
+            FRONTMATTER=$(sed -n '/^---$/,/^---$/p' "$skill_md" | sed '1d;$d')
+
+            NAME=$(echo "$FRONTMATTER" | grep "^name:" | sed 's/^name: *//')
+            DESC=$(echo "$FRONTMATTER" | grep "^description:" | head -1)
+
+            if [ -z "$NAME" ]; then
+              echo "FAIL: $skill_md — missing 'name' in frontmatter"
+              ERRORS=$((ERRORS + 1))
+            elif [ "$NAME" != "$SKILL_SLUG" ]; then
+              echo "FAIL: $skill_md — name '$NAME' does not match directory '$SKILL_SLUG'"
+              ERRORS=$((ERRORS + 1))
+            else
+              echo "OK: $NAME"
+            fi
+
+            if [ -z "$DESC" ]; then
+              echo "FAIL: $skill_md — missing 'description' in frontmatter"
+              ERRORS=$((ERRORS + 1))
+            fi
+          done
+
+          echo ""
+          echo "=== $TOTAL skills checked, $ERRORS errors ==="
+
+          if [ $ERRORS -gt 0 ]; then
+            exit 1
+          fi
+
+  discover-skills:
+    name: Discover Testable Skills
+    needs: [security-scan]
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.discover.outputs.matrix }}
+      has_tests: ${{ steps.discover.outputs.has_tests }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Find skills with test suites
+        id: discover
+        run: |
+          SKILLS="[]"
+          HAS_TESTS="false"
+
+          for test_dir in tests/*/; do
+            [ -d "$test_dir" ] || continue
+            SKILL_SLUG=$(basename "$test_dir")
+
+            # Only include if the corresponding skill exists
+            if [ -f "skills/$SKILL_SLUG/SKILL.md" ] && [ -f "$test_dir/test-spec.json" ]; then
+              SKILLS=$(echo "$SKILLS" | python3 -c "
+          import json, sys
+          arr = json.load(sys.stdin)
+          arr.append('$SKILL_SLUG')
+          json.dump(arr, sys.stdout)
+          ")
+              HAS_TESTS="true"
+            fi
+          done
+
+          echo "matrix={\"skill\":$SKILLS}" >> "$GITHUB_OUTPUT"
+          echo "has_tests=$HAS_TESTS" >> "$GITHUB_OUTPUT"
+          echo "Discovered skills with tests: $SKILLS"
+
+  eval-skills:
+    name: "Eval: ${{ matrix.skill }}"
+    needs: [frontmatter-lint, discover-skills]
+    if: needs.discover-skills.outputs.has_tests == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.discover-skills.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install anthropic pyyaml
+
+      - name: "Run evals for ${{ matrix.skill }}"
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          python tests/harness.py \
+            --skill "${{ matrix.skill }}" \
+            --output "tests/${{ matrix.skill }}/results.json"
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-results-${{ matrix.skill }}
+          path: tests/${{ matrix.skill }}/results.json
+
+  eval-summary:
+    name: Eval Summary
+    needs: [eval-skills]
+    if: always() && needs.eval-skills.result != 'skipped'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: eval-results-*
+          merge-multiple: true
+          path: eval-results/
+
+      - name: Summarize results
+        run: |
+          echo "## Skill Eval Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Skill | Pass | Fail | Total | Result |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|------|------|-------|--------|" >> $GITHUB_STEP_SUMMARY
+
+          OVERALL_PASS=true
+
+          for result_file in eval-results/*/results.json; do
+            [ -f "$result_file" ] || continue
+            SKILL=$(python3 -c "import json; r=json.load(open('$result_file')); print(r['skill'])")
+            PASS=$(python3 -c "import json; r=json.load(open('$result_file')); print(r['summary']['pass'])")
+            FAIL=$(python3 -c "import json; r=json.load(open('$result_file')); print(r['summary']['fail'])")
+            TOTAL=$(python3 -c "import json; r=json.load(open('$result_file')); print(r['summary']['total'])")
+            OK=$(python3 -c "import json; r=json.load(open('$result_file')); print('Pass' if r['summary']['fail']==0 else 'FAIL')")
+
+            if [ "$OK" = "FAIL" ]; then
+              OVERALL_PASS=false
+            fi
+
+            echo "| $SKILL | $PASS | $FAIL | $TOTAL | $OK |" >> $GITHUB_STEP_SUMMARY
+          done
+
+          if [ "$OVERALL_PASS" = "false" ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**One or more skill evals failed.**" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
+
+  schema-check:
+    name: Validate Output Schemas
+    needs: [security-scan]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install ajv-cli
+        run: npm install -g ajv-cli ajv-formats
+
+      - name: Validate per-skill output schemas
+        run: |
+          echo "=== Output Schema Validation ==="
+          ERRORS=0
+
+          for schema_file in schemas/*/output.schema.json; do
+            [ -f "$schema_file" ] || continue
+            SKILL=$(basename "$(dirname "$schema_file")")
+
+            echo "Validating schema for $SKILL..."
+            if ajv compile -s "$schema_file" --strict=false 2>/dev/null; then
+              echo "OK: $SKILL schema is valid JSON Schema"
+            else
+              echo "FAIL: $SKILL schema is not valid JSON Schema"
+              ERRORS=$((ERRORS + 1))
+            fi
+          done
+
+          if [ $ERRORS -gt 0 ]; then
+            echo "ERROR: $ERRORS invalid schemas"
+            exit 1
+          fi
+
+          echo "All schemas valid."
