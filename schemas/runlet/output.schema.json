@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "runlet-output-v1",
+  "title": "Runlet Output",
+  "description": "Structured representation of a runlet skill output. The skill outputs markdown with an embedded JSON summary block (RUNLET_SUMMARY). This schema defines the extractable structure for programmatic validation and agent pings.",
+  "type": "object",
+  "required": ["date", "focus", "counts", "top_task", "tasks"],
+  "properties": {
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of the runlist (YYYY-MM-DD)."
+    },
+    "focus": {
+      "type": "string",
+      "description": "Current primary focus axis (e.g., 'Money', 'Career', 'Health', 'Launch')."
+    },
+    "known_focuses": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "All focus axes known for this user. Enables focus swap re-sort."
+    },
+    "counts": {
+      "type": "object",
+      "required": ["do_first", "block_time", "batch", "kill"],
+      "properties": {
+        "do_first": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5,
+          "description": "Number of Do First tasks."
+        },
+        "block_time": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3,
+          "description": "Number of Block Time tasks."
+        },
+        "batch": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of Batch tasks."
+        },
+        "kill": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of Kill or Delegate tasks."
+        }
+      },
+      "additionalProperties": false
+    },
+    "top_task": {
+      "type": "string",
+      "description": "The single most important task for the day (first Do First item, or first Block Time if no Do First)."
+    },
+    "carried": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Task descriptions carried from a previous day's runlist."
+    },
+    "carried_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of carried items."
+    },
+    "tasks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/task"
+      },
+      "description": "All tasks in the runlist with classification metadata."
+    }
+  },
+  "$defs": {
+    "task": {
+      "type": "object",
+      "required": ["description", "quadrant", "energy", "moves_focus"],
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Task description (verb-led, atomic)."
+        },
+        "quadrant": {
+          "type": "string",
+          "enum": ["do_first", "block_time", "batch", "kill"],
+          "description": "Which quadrant this task was assigned to."
+        },
+        "energy": {
+          "type": "string",
+          "enum": ["low", "high"],
+          "description": "Activation energy level."
+        },
+        "moves_focus": {
+          "type": "boolean",
+          "description": "Whether this task advances the current PRIMARY focus within 30 days."
+        },
+        "focuses": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "All focuses this task advances (e.g., ['Money', 'Career']). Enables focus swap re-sort without re-classifying."
+        },
+        "carried_from": {
+          "type": ["string", "null"],
+          "format": "date",
+          "description": "Date this task was originally created, if carried forward. Null if new."
+        },
+        "entry_point": {
+          "type": ["string", "null"],
+          "description": "Entry point hint for Block Time tasks. Null for other quadrants."
+        },
+        "kill_reason": {
+          "type": ["string", "null"],
+          "description": "Reason for killing/delegating. Null for non-kill tasks."
+        },
+        "batch_group": {
+          "type": ["string", "null"],
+          "description": "Context group label for Batch tasks. Null for other quadrants."
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

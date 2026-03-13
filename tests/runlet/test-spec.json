@@ -1,0 +1,60 @@
+{
+  "version": "1.0",
+  "skill": "runlet",
+  "description": "Eval suite for the Runlet skill. Tests correct quadrant assignment, entry point generation for Block Time items, carry-forward logic, kill reasoning, and output format conformance.",
+  "model": "claude-sonnet-4-20250514",
+  "cases": [
+    {
+      "id": "braindump-01-mixed-tasks",
+      "description": "Mixed braindump with tasks across all 4 quadrants — verifies correct classification",
+      "fixture": "fixtures/braindump-01-mixed-tasks.json",
+      "assertions": [
+        { "type": "format_valid", "expected": true },
+        { "type": "contains", "expected": "Do First" },
+        { "type": "contains", "expected": "Block Time" },
+        { "type": "contains", "expected": "Batch" },
+        { "type": "contains", "expected": "Kill or Delegate" },
+        { "type": "contains", "expected": "Entry point:" },
+        { "type": "contains", "expected": "RUNLET_SUMMARY" }
+      ]
+    },
+    {
+      "id": "braindump-02-all-high-energy",
+      "description": "Braindump of mostly high-energy tasks — verifies Block Time gets entry points and Kill gets reasons",
+      "fixture": "fixtures/braindump-02-all-high-energy.json",
+      "assertions": [
+        { "type": "format_valid", "expected": true },
+        { "type": "contains", "expected": "Entry point:" },
+        { "type": "contains", "expected": "~~" }
+      ]
+    },
+    {
+      "id": "braindump-03-carry-forward",
+      "description": "Braindump with previous runlist containing unchecked items — verifies carry-forward tagging",
+      "fixture": "fixtures/braindump-03-carry-forward.json",
+      "assertions": [
+        { "type": "format_valid", "expected": true },
+        { "type": "contains", "expected": "carried:" }
+      ]
+    },
+    {
+      "id": "braindump-04-custom-focus",
+      "description": "Braindump with focus set to 'Health' instead of default 'Money' — verifies axis adapts",
+      "fixture": "fixtures/braindump-04-custom-focus.json",
+      "assertions": [
+        { "type": "format_valid", "expected": true },
+        { "type": "contains", "expected": "Health" },
+        { "type": "contains", "expected": "RUNLET_SUMMARY" }
+      ]
+    },
+    {
+      "id": "braindump-05-vague-input",
+      "description": "Extremely vague braindump — verifies task decomposition and specificity",
+      "fixture": "fixtures/braindump-05-vague-input.json",
+      "assertions": [
+        { "type": "format_valid", "expected": true },
+        { "type": "contains", "expected": "- [ ]" }
+      ]
+    }
+  ]
+}

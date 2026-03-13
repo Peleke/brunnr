@@ -1,0 +1,7 @@
+{
+  "tool_name": "runlet",
+  "input": "Braindump:\nrewrite the authentication middleware, design the new billing page, research competitor pricing models, write a blog post about agent tooling, restructure the test suite, build a demo for the investor meeting, migrate the database to the new schema\n\nFocus: Money\nDate: 2026-03-13",
+  "description": "All high-activation-energy tasks. The skill must sort between Block Time (moves money: billing page, investor demo, database migration) and Kill/Delegate (doesn't move money: rewrite auth, restructure tests, blog post). Every Block Time item must have an entry point.",
+  "expected_score_band": "N/A",
+  "rationale": "Stress-tests entry point generation and kill reasoning when everything is high-energy."
+}

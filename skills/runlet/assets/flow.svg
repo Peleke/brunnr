@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 160" fill="none">
+  <style>
+    .box { rx: 8; ry: 8; stroke-width: 2; }
+    .label { font-family: system-ui, -apple-system, sans-serif; font-size: 13px; fill: #e2e8f0; text-anchor: middle; dominant-baseline: central; }
+    .sublabel { font-family: system-ui, -apple-system, sans-serif; font-size: 10px; fill: #94a3b8; text-anchor: middle; dominant-baseline: central; }
+    .arrow { stroke: #64748b; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+  </style>
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#64748b" />
+    </marker>
+  </defs>
+
+  <!-- Braindump -->
+  <rect x="20" y="40" width="140" height="80" class="box" fill="#1e293b" stroke="#f97316" />
+  <text x="90" y="70" class="label">braindump</text>
+  <text x="90" y="90" class="sublabel">unstructured text</text>
+
+  <!-- Arrow 1 -->
+  <line x1="160" y1="80" x2="200" y2="80" class="arrow" />
+
+  <!-- Classify -->
+  <rect x="200" y="40" width="140" height="80" class="box" fill="#1e293b" stroke="#8b5cf6" />
+  <text x="270" y="65" class="label">classify</text>
+  <text x="270" y="83" class="sublabel">energy cost</text>
+  <text x="270" y="97" class="sublabel">x moves [focus]</text>
+
+  <!-- Arrow 2 -->
+  <line x1="340" y1="80" x2="380" y2="80" class="arrow" />
+
+  <!-- Assign -->
+  <rect x="380" y="40" width="140" height="80" class="box" fill="#1e293b" stroke="#4ade80" />
+  <text x="450" y="65" class="label">assign</text>
+  <text x="450" y="83" class="sublabel">4 quadrants</text>
+  <text x="450" y="97" class="sublabel">+ entry points</text>
+
+  <!-- Arrow 3 -->
+  <line x1="520" y1="80" x2="560" y2="80" class="arrow" />
+
+  <!-- Output -->
+  <rect x="560" y="40" width="220" height="80" class="box" fill="#1e293b" stroke="#4ade80" />
+  <text x="670" y="65" class="label">runlist</text>
+  <text x="670" y="83" class="sublabel">obsidian markdown</text>
+  <text x="670" y="97" class="sublabel">+ RUNLET_SUMMARY json</text>
+</svg>
