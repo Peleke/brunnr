@@ -1,0 +1,7 @@
+{
+  "tool_name": "runlet",
+  "input": "Braindump:\nneed to do linkedin outreach, fix the carousel bug on the site, cross-post AX-07 to dev.to and hashnode, find atlanta AI meetups and register, do rhythm passes on AX-05/06/07 articles, onboard buddy to linwheel, reply to all post comments from today, follow up on week-old unanswered outreach DMs, join 3 discord servers and answer some questions\n\nFocus: Money\nDate: 2026-03-13",
+  "description": "Mixed braindump with tasks spanning all four quadrants. Outreach and follow-ups are low-energy money-movers (Do First). Discord and meetup search are high-energy money-movers (Block Time). Cross-posting and onboarding are low-energy non-money (Batch). Rhythm passes and carousel bug are high-energy non-money (Kill).",
+  "expected_score_band": "N/A",
+  "rationale": "Tests the core classification engine across all four quadrants with a realistic braindump."
+}
