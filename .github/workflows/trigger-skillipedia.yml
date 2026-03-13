@@ -13,10 +13,20 @@ jobs:
   trigger:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: skills
+
+      - name: Build skill manifest
+        id: manifest
+        run: |
+          slugs=$(ls -d skills/*/ 2>/dev/null | xargs -I{} basename {} | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          echo "slugs=$slugs" >> "$GITHUB_OUTPUT"
+
       - name: Dispatch to Skillipedia
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.CROSS_REPO_TOKEN }}
           repository: Peleke/skillipedia
           event-type: brunnr-skills-updated
-          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
+          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "skills": ${{ steps.manifest.outputs.slugs }}}'
