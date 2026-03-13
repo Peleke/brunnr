@@ -81,6 +81,7 @@ brunnr eval ax-rubric --dry-run
 | **[ax-rubric](skills/ax-rubric/)** | Score tool descriptions 0-5 on agent discoverability. Five criteria, pass/fail, rewrite. | [I Don't Deliberate About This](https://peleke.me/writing/ax-04-tool-descriptions) |
 | **[ax-interview](skills/ax-interview/)** | Run a structured AX Interview on agent-tool sessions. Gricean maxim analysis, implicature detection, CoT faithfulness check, Pragmatic Coherence Score with ranked fixes. | [The AX Interview](https://peleke.me/writing/ax-07-the-ax-interview) |
 | **[runlet](skills/runlet/)** | Turn a braindump into an ND-adapted daily runlist. Classifies by activation energy and focus axis. | — |
+| **[linwheel-content-engine](skills/linwheel-content-engine/)** | Orchestrate LinkedIn content creation via LinWheel MCP. Analyze, reshape, refine, schedule, comment. | [LinWheel](https://www.linwheel.io) |
 
 ---
 
