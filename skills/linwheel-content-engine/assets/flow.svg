@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 160" fill="none">
+  <style>
+    .box { rx: 8; ry: 8; stroke-width: 2; }
+    .label { font-family: system-ui, -apple-system, sans-serif; font-size: 13px; fill: #e2e8f0; text-anchor: middle; dominant-baseline: central; }
+    .sublabel { font-family: system-ui, -apple-system, sans-serif; font-size: 10px; fill: #94a3b8; text-anchor: middle; dominant-baseline: central; }
+    .arrow { stroke: #64748b; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+  </style>
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#64748b" />
+    </marker>
+  </defs>
+
+  <!-- Analyze -->
+  <rect x="10" y="40" width="120" height="80" class="box" fill="#1e293b" stroke="#38bdf8" />
+  <text x="70" y="70" class="label">analyze</text>
+  <text x="70" y="90" class="sublabel">source content</text>
+
+  <!-- Arrow -->
+  <line x1="130" y1="80" x2="155" y2="80" class="arrow" />
+
+  <!-- Reshape -->
+  <rect x="155" y="40" width="120" height="80" class="box" fill="#1e293b" stroke="#a78bfa" />
+  <text x="215" y="70" class="label">reshape</text>
+  <text x="215" y="90" class="sublabel">pick angles</text>
+
+  <!-- Arrow -->
+  <line x1="275" y1="80" x2="300" y2="80" class="arrow" />
+
+  <!-- Refine -->
+  <rect x="300" y="40" width="120" height="80" class="box" fill="#1e293b" stroke="#fbbf24" />
+  <text x="360" y="70" class="label">refine</text>
+  <text x="360" y="90" class="sublabel">draft + polish</text>
+
+  <!-- Arrow -->
+  <line x1="420" y1="80" x2="445" y2="80" class="arrow" />
+
+  <!-- Visuals -->
+  <rect x="445" y="40" width="120" height="80" class="box" fill="#1e293b" stroke="#f472b6" />
+  <text x="505" y="70" class="label">visuals</text>
+  <text x="505" y="90" class="sublabel">image / carousel</text>
+
+  <!-- Arrow -->
+  <line x1="565" y1="80" x2="590" y2="80" class="arrow" />
+
+  <!-- Schedule -->
+  <rect x="590" y="40" width="120" height="80" class="box" fill="#1e293b" stroke="#4ade80" />
+  <text x="650" y="70" class="label">schedule</text>
+  <text x="650" y="90" class="sublabel">approve + time</text>
+
+  <!-- Arrow -->
+  <line x1="710" y1="80" x2="735" y2="80" class="arrow" />
+
+  <!-- Comments -->
+  <rect x="735" y="40" width="150" height="80" class="box" fill="#1e293b" stroke="#4ade80" />
+  <text x="810" y="70" class="label">comments</text>
+  <text x="810" y="90" class="sublabel">follow-up + engage</text>
+</svg>
