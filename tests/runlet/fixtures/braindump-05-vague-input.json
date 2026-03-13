@@ -1,0 +1,7 @@
+{
+  "tool_name": "runlet",
+  "input": "Braindump:\nfix stuff on the website, do something about marketing, handle the client situation, clean up code, think about hiring\n\nFocus: Money\nDate: 2026-03-13",
+  "description": "Extremely vague braindump. The skill must decompose vague items into atomic tasks. 'fix stuff on the website' should become specific tasks. 'do something about marketing' should become actionable items. 'think about hiring' should either decompose or be killed (thinking isn't a task).",
+  "expected_score_band": "N/A",
+  "rationale": "Tests task extraction and decomposition from vague, non-actionable input."
+}

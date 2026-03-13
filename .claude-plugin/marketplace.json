@@ -39,6 +39,20 @@
       "keywords": ["agent-experience", "ax", "tool-design", "implicature", "grice", "research"],
       "category": "research",
       "tags": ["ax", "interview", "pragmatic-coherence", "agent-experience"]
+    },
+    {
+      "name": "runlet",
+      "source": "runlet",
+      "description": "Turn a braindump into tomorrow's runlist. Input: unstructured text + optional previous runlist. Output: 4-quadrant Obsidian markdown (~800 tokens) with entry points on high-activation items, carry-forward tags, kill reasoning, and RUNLET_SUMMARY JSON for agent pings. ND-adapted: classifies by activation energy, not urgency.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Peleke Sengstacke"
+      },
+      "repository": "https://github.com/Peleke/brunnr",
+      "license": "MIT",
+      "keywords": ["adhd", "neurodivergent", "productivity", "task-management", "obsidian", "executive-function"],
+      "category": "productivity",
+      "tags": ["runlet", "nd", "task-compiler", "executive-function", "daily-planning"]
     }
   ]
 }
