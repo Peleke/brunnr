@@ -5,52 +5,17 @@ from __future__ import annotations
 import json
 import sys
 from pathlib import Path
-from urllib.request import urlopen, Request
-from urllib.error import URLError
 
-_GITHUB_RAW = "https://raw.githubusercontent.com"
-
-
-def _fetch(url: str) -> str | None:
-    """Fetch a URL and return text content, or None on failure."""
-    try:
-        req = Request(url, headers={"User-Agent": "brunnr-cli"})
-        with urlopen(req, timeout=15) as resp:
-            return resp.read().decode("utf-8")
-    except (URLError, OSError):
-        return None
-
-
-def _registry_base(registry: str) -> str:
-    """Convert a GitHub repo URL to raw content base URL."""
-    # https://github.com/Peleke/brunnr -> https://raw.githubusercontent.com/Peleke/brunnr/main
-    if "github.com" in registry:
-        parts = registry.rstrip("/").replace("https://github.com/", "").split("/")
-        if len(parts) >= 2:
-            return f"{_GITHUB_RAW}/{parts[0]}/{parts[1]}/main"
-    return registry.rstrip("/")
-
-
-def _list_skills(base: str) -> list[str]:
-    """List available skills from registry (via GitHub API)."""
-    # Convert raw URL back to API URL
-    # https://raw.githubusercontent.com/Peleke/brunnr/main -> https://api.github.com/repos/Peleke/brunnr/contents/skills
-    parts = base.replace(f"{_GITHUB_RAW}/", "").split("/")
-    if len(parts) >= 3:
-        api_url = f"https://api.github.com/repos/{parts[0]}/{parts[1]}/contents/skills"
-        content = _fetch(api_url)
-        if content:
-            entries = json.loads(content)
-            return [e["name"] for e in entries if e["type"] == "dir"]
-    return []
+from brunnr.registry import fetch, registry_base, list_skills, repo_parts
+from brunnr.lockfile import add_skill
 
 
 def run(args) -> int:
-    base = _registry_base(args.registry)
+    base = registry_base(args.registry)
 
     # List mode
     if getattr(args, "list_skills", False):
-        skills = _list_skills(base)
+        skills = list_skills(base)
         if not skills:
             print("No skills found (or registry unreachable).", file=sys.stderr)
             return 1
@@ -64,8 +29,14 @@ def run(args) -> int:
         print("ERROR: skill name required. Use `brunnr install --list` to see available skills.", file=sys.stderr)
         return 1
 
-    dest = Path("skills") / slug
-    skill_file = dest / "SKILL.md"
+    # When --target is set, install SKILL.md only (runtime use, not repo structure)
+    target = getattr(args, "target", None)
+    if target:
+        dest = Path(target).expanduser() / slug
+        skill_file = dest / "SKILL.md"
+    else:
+        dest = Path("skills") / slug
+        skill_file = dest / "SKILL.md"
 
     if skill_file.exists() and not getattr(args, "force", False):
         print(f"Skill '{slug}' already installed at {skill_file}", file=sys.stderr)
@@ -75,7 +46,7 @@ def run(args) -> int:
     # Fetch SKILL.md
     skill_url = f"{base}/skills/{slug}/SKILL.md"
     print(f"Fetching {slug} from {args.registry}...")
-    content = _fetch(skill_url)
+    content = fetch(skill_url)
     if not content:
         print(f"ERROR: Could not fetch {skill_url}", file=sys.stderr)
         return 1
@@ -89,13 +60,12 @@ def run(args) -> int:
         print(preview)
         if len(lines) > 30:
             print(f"  ... ({len(lines) - 30} more lines)")
-        print(f"---")
-        # Show GitHub link for full review
-        repo_parts = base.replace(f"{_GITHUB_RAW}/", "").split("/")
-        if len(repo_parts) >= 2:
-            print(f"\nFull source: https://github.com/{repo_parts[0]}/{repo_parts[1]}/tree/main/skills/{slug}")
+        print("---")
+        rp = repo_parts(base)
+        if len(rp) >= 2:
+            print(f"\nFull source: https://github.com/{rp[0]}/{rp[1]}/tree/main/skills/{slug}")
         try:
-            answer = input(f"\nInstall {slug} to ./skills/{slug}/? [y/N] ").strip().lower()
+            answer = input(f"\nInstall {slug} to {dest}/? [y/N] ").strip().lower()
         except (EOFError, KeyboardInterrupt):
             print("\nAborted.", file=sys.stderr)
             return 1
@@ -107,9 +77,14 @@ def run(args) -> int:
     skill_file.write_text(content)
     print(f"  -> {skill_file} ({len(content.splitlines())} lines)")
 
+    # When --target is set, skip schema/test/lockfile (runtime-only install)
+    if target:
+        print(f"\nInstalled {slug} to {dest}/")
+        return 0
+
     # Fetch schema (optional)
     schema_url = f"{base}/schemas/{slug}/output.schema.json"
-    schema_content = _fetch(schema_url)
+    schema_content = fetch(schema_url)
     if schema_content:
         schema_dest = Path("schemas") / slug
         schema_dest.mkdir(parents=True, exist_ok=True)
@@ -119,7 +94,7 @@ def run(args) -> int:
     # Fetch test fixtures (optional)
     if getattr(args, "with_tests", False):
         spec_url = f"{base}/tests/{slug}/test-spec.json"
-        spec_content = _fetch(spec_url)
+        spec_content = fetch(spec_url)
         if spec_content:
             test_dest = Path("tests") / slug
             test_dest.mkdir(parents=True, exist_ok=True)
@@ -141,11 +116,17 @@ def run(args) -> int:
                     print(f"  WARNING: fixture escapes test dir: {fixture_rel}", file=sys.stderr)
                     continue
                 fixture_url = f"{base}/tests/{slug}/{fixture_rel}"
-                fixture_content = _fetch(fixture_url)
+                fixture_content = fetch(fixture_url)
                 if fixture_content:
                     fixture_path.parent.mkdir(parents=True, exist_ok=True)
                     fixture_path.write_text(fixture_content)
                     print(f"  -> tests/{slug}/{fixture_rel}")
+
+    # Update lockfile
+    installed_files = [f"skills/{slug}/SKILL.md"]
+    if schema_content:
+        installed_files.append(f"schemas/{slug}/output.schema.json")
+    add_skill(".", slug, content, args.registry, files=installed_files)
 
     print(f"\nInstalled {slug} to ./{dest}/")
     print(f"\nTip: Run `brunnr eval {slug} --dry-run` to validate locally.")

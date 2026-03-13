@@ -37,8 +37,8 @@ class TestCLI:
     def test_install_help(self):
         r = _run(["install", "--help"])
         assert r.returncode == 0
-        assert "--registry" in r.stdout
         assert "--yes" in r.stdout
+        assert "--target" in r.stdout
 
     def test_eval_help(self):
         r = _run(["eval", "--help"])
