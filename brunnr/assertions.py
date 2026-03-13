@@ -5,20 +5,7 @@ from __future__ import annotations
 import re
 from typing import Any
 
-
-def parse_frontmatter(text: str) -> dict[str, str]:
-    """Extract YAML frontmatter from a SKILL.md file."""
-    if not text.startswith("---"):
-        return {}
-    parts = text.split("---", 2)
-    if len(parts) < 3:
-        return {}
-    fm = {}
-    for line in parts[1].strip().splitlines():
-        if ":" in line:
-            key, val = line.split(":", 1)
-            fm[key.strip()] = val.strip().strip('"').strip("'")
-    return fm
+from brunnr.frontmatter import parse_frontmatter  # noqa: F401 — re-export for backwards compat
 
 
 def extract_score(text: str) -> int | None:
