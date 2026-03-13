@@ -80,7 +80,7 @@ brunnr eval ax-rubric --dry-run
 |-------|-------------|----------|
 | **[ax-rubric](skills/ax-rubric/)** | Score tool descriptions 0-5 on agent discoverability. Five criteria, pass/fail, rewrite. | [I Don't Deliberate About This](https://peleke.me/writing/ax-04-tool-descriptions) |
 | **[ax-interview](skills/ax-interview/)** | Run a structured AX Interview on agent-tool sessions. Gricean maxim analysis, implicature detection, CoT faithfulness check, Pragmatic Coherence Score with ranked fixes. | [The AX Interview](https://peleke.me/writing/ax-07-the-ax-interview) |
-| **[runlet](skills/runlet/)** | Turn a braindump into an ND-adapted daily runlist. Classifies by activation energy and configurable focus axis. Entry points for high-activation tasks, carry-forward tracking, kill reasoning. | — |
+| **[runlet](skills/runlet/)** | Turn a braindump into an ND-adapted daily runlist. Classifies by activation energy and focus axis. | — |
 
 ---
 
