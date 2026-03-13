@@ -296,16 +296,8 @@ def scan_skill_md(content: str) -> ScanResult:
     return result
 
 
-def _extract_body(content: str) -> str:
-    """Extract body text after frontmatter."""
-    match = re.match(r"^---\s*\n.*?\n---\s*\n?(.*)", content, re.DOTALL)
-    return match.group(1) if match else content
-
-
-def _extract_description(content: str) -> str:
-    """Extract description from frontmatter."""
-    match = re.search(r"^description:\s*[\"']?(.+?)[\"']?\s*$", content, re.MULTILINE)
-    return match.group(1) if match else ""
+from brunnr.frontmatter import extract_body as _extract_body  # noqa: E302
+from brunnr.frontmatter import extract_description as _extract_description
 
 
 def _has_security_context(content: str) -> bool:
