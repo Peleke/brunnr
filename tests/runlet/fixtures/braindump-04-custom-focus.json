@@ -1,0 +1,7 @@
+{
+  "tool_name": "runlet",
+  "input": "Braindump:\nschedule annual physical, meal prep for the week, research ADHD medication options with psychiatrist notes, go for a 30 min walk, cancel the sugary snack subscription, organize supplements cabinet, book a therapy appointment, read 20 pages of the ADHD book\n\nFocus: Health\nDate: 2026-03-13",
+  "description": "Health-focused braindump. The skill must adapt the impact axis to 'Health' instead of 'Money'. Walk and meal prep are low-energy health-movers (Do First). Psychiatrist research and therapy booking are high-energy health-movers (Block Time). Supplement organization is low-energy non-health (Batch). Reading the book is high-energy non-health-urgent (Kill or maybe Batch depending on classification).",
+  "expected_score_band": "N/A",
+  "rationale": "Tests the configurable focus axis with a non-default focus."
+}

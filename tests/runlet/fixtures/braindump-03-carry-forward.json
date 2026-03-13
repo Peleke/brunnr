@@ -1,0 +1,7 @@
+{
+  "tool_name": "runlet",
+  "input": "Braindump:\nsend the invoice to client A, check CI pipeline status, review the PR from yesterday\n\nPrevious runlist:\n# Runlist — 2026-03-12\n\n**Focus**: Money\n\n## Do First (low energy, moves money)\n- [ ] LinkedIn outreach: 5 new conversations\n- [x] Reply to post comments\n\n## Block Time (high energy, moves money)\n- [ ] Atlanta meetup search → register for 2-3 events (carried: 2026-03-11)\n  - *Entry point: open lu.ma, search \"Atlanta AI\", bookmark first 3 results*\n- [x] Discord: answer 3 questions\n\n## Batch (low energy, doesn't move money)\n- [ ] Dev.to account setup + cross-post AX-07\n\n## Kill or Delegate\n- ~~Rhythm passes~~ → weekend\n\nFocus: Money\nDate: 2026-03-13",
+  "description": "Braindump with a previous runlist that has unchecked items. LinkedIn outreach should carry forward (1st carry). Atlanta meetup should carry forward (3rd carry — was already carried once in the previous list, which itself carried from 03-11, so this is the 3rd day). Dev.to should carry forward. Completed items should NOT carry.",
+  "expected_score_band": "N/A",
+  "rationale": "Tests carry-forward logic including the 3-carry auto-promotion rule."
+}
