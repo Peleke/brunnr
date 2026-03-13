@@ -220,6 +220,8 @@ A markdown file at:
 *Carried items: N from YYYY-MM-DD.*
 ```
 
+> **Implementer note (Obsidian Kanban):** If the user views runlists in Obsidian Kanban, a `## Complete` lane should be appended after Kill or Delegate. The lane needs "Mark items in this list as complete" enabled (right-click lane header → toggle). This ensures dragging a card to Complete writes `- [x]` in the markdown, which the nightly recap agent reads to distinguish done from killed.
+
 ### Machine-readable summary
 
 Append an HTML comment block at the end of the file. This doesn't render in Obsidian but is readable by agents for the morning ping and nightly recap.
