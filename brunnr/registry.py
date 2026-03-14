@@ -62,3 +62,21 @@ def fetch_skill_metadata(base: str, slug: str) -> dict[str, str] | None:
 def repo_parts(base: str) -> list[str]:
     """Extract [owner, repo] from a raw base URL."""
     return base.replace(f"{_GITHUB_RAW}/", "").split("/")[:2]
+
+
+def list_directory(base: str, path: str) -> list[dict] | None:
+    """List files in a directory via GitHub API.
+
+    Returns a list of dicts with 'name', 'type', 'download_url', 'path' keys,
+    or None if the directory doesn't exist or the request fails.
+    """
+    parts = base.replace(f"{_GITHUB_RAW}/", "").split("/")
+    if len(parts) >= 3:
+        api_url = f"https://api.github.com/repos/{parts[0]}/{parts[1]}/contents/{path}"
+        content = fetch(api_url)
+        if content:
+            try:
+                return json.loads(content)
+            except (json.JSONDecodeError, ValueError):
+                return None
+    return None
