@@ -20,7 +20,7 @@ jobs:
       - name: Build skill manifest
         id: manifest
         run: |
-          slugs=$(ls -d skills/*/ 2>/dev/null | xargs -I{} basename {} | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          slugs=$(for d in skills/*/; do [ -f "${d}SKILL.md" ] && basename "$d"; done | jq -R -s -c 'split("\n") | map(select(length > 0))')
           echo "slugs=$slugs" >> "$GITHUB_OUTPUT"
 
       - name: Dispatch to Skillipedia
