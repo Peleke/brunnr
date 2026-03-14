@@ -2,14 +2,19 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from brunnr.scanner.context import ScanContext
 from brunnr.scanner.types import ScanResult
+
+if TYPE_CHECKING:
+    from brunnr.scanner.protocol import Rule
 
 
 class Pipeline:
     """Runs registered rules against content, collects findings."""
 
-    def __init__(self, rules: list | None = None) -> None:
+    def __init__(self, rules: list[Rule] | None = None) -> None:
         if rules is None:
             from brunnr.scanner.rules import DEFAULT_RULES
 
