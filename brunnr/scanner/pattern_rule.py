@@ -20,6 +20,12 @@ class PatternRule:
     severity: Severity
     patterns: list[tuple[str, str]]  # (regex_str, description)
 
+    def __init_subclass__(cls, **kwargs: object) -> None:
+        super().__init_subclass__(**kwargs)
+        for attr in ("name", "threat_class", "severity", "patterns"):
+            if attr not in cls.__dict__:
+                raise TypeError(f"{cls.__name__} must define class attribute '{attr}'")
+
     def scan(self, ctx: ScanContext) -> list[Finding]:
         findings: list[Finding] = []
         for pattern, desc in self.patterns:

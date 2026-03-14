@@ -18,7 +18,9 @@ from brunnr.scanner.types import (  # noqa: F401
     Severity,
     ThreatClass,
 )
-from brunnr.scanner.pipeline import Pipeline
+from brunnr.scanner.pipeline import Pipeline  # noqa: F401
+
+__all__ = ["scan_skill_md", "Finding", "ScanResult", "Severity", "ThreatClass", "Pipeline"]
 
 _pipeline = Pipeline()
 

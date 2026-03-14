@@ -15,7 +15,7 @@ from brunnr.scanner.rules.supply_chain import SupplyChainRule
 from brunnr.scanner.rules.url_domains import UrlDomainRule
 from brunnr.scanner.rules.zero_width import ZeroWidthRule
 
-DEFAULT_RULES: list[type] = [
+DEFAULT_RULES: list[type[object]] = [
     CommandInjectionRule,
     DataExfiltrationRule,
     CredentialTheftRule,

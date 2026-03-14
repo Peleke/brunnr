@@ -62,6 +62,15 @@ class UrlDomainRule:
                             line=line_num,
                         )
                     )
-            except Exception:
-                pass
+            except ValueError:
+                line_num = ctx.body[: match.start()].count("\n") + 1
+                findings.append(
+                    Finding(
+                        threat_class=ThreatClass.SEMANTIC_MISMATCH,
+                        severity=Severity.INFO,
+                        description="unparseable URL (possible evasion)",
+                        evidence=url[:100],
+                        line=line_num,
+                    )
+                )
         return findings
