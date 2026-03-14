@@ -146,8 +146,8 @@ Before starting, the following must be available:
 
 1. **Offer-scope output** -- A completed offer-scope result containing: product name, format, price, value equation, build spec, positioning (headline, subheadline, bullet points, objection handlers, social proof angle, guarantee), distribution plan, revenue model, and kill criteria
 2. **Persona extraction output** -- The persona used by offer-scope, containing: pain stories (with situation/pain/workaround/emotional state/evidence), decision triggers, objections, willingness-to-pay data, and channel behavior
-3. **SWOT analysis output** -- The SWOT for this hypothesis, containing: validated strengths, key weaknesses, opportunities, threats, risk registry, and moat assessment
-4. **Positioning output** (optional, recommended) -- If a positioning skill run exists, its output becomes the PRIMARY source for: landing page headline (from messaging hierarchy lead message), problem section (from competitive alternatives), copy anti-rules (from anti-messaging). When positioning output is available, use it instead of offer-scope Phase 5 positioning. If no positioning output exists, fall back to offer-scope positioning as before.
+3. **SWOT analysis data** -- The SWOT for this hypothesis, containing: validated strengths, key weaknesses, opportunities, threats, risk registry, and moat assessment
+4. **Positioning data** (optional, recommended) -- If a positioning skill run exists, its output becomes the PRIMARY source for: landing page headline (from messaging hierarchy lead message), problem section (from competitive alternatives), copy anti-rules (from anti-messaging). When positioning output is available, use it instead of offer-scope Phase 5 positioning. If no positioning output exists, fall back to offer-scope positioning as before.
 5. **Decision log entry** -- The decision record for the chosen opportunity
 6. **Signal scan data** -- The original signal scan with PAIN, SPEND, COMPETITIVE, and AUDIENCE signals
 

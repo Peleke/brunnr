@@ -703,7 +703,7 @@ When a module has multiple war stories, link them:
 - The bridge explains how B exposes gaps in our understanding from A
 
 Example threading for Module 0.2:
-- Story A: "We have the SalienceScorer from 0.1. We ran an A/B test on new rules."
+- Story A: "We have the SalienceScorer from 0.1. We ran an A/B test on updated scoring rules."
 - Story B: "The test 'worked' — 3 out of 5 passed. We shipped. A month later, metrics tanked."
 - Bridge: "How surprised should we have been by 3/5? We need probability foundations."
 
