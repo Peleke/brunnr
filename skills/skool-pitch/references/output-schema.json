@@ -1,0 +1,624 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Skool Pitch Output",
+  "description": "Structured output from the skool-pitch skill. Contains a complete Skool community plan with concept, competitive landscape, gamification design, pricing, content architecture, launch playbook (including Skool Games and affiliate strategy), economics, value ladder, and risk assessment. General-purpose -- works for any topic.",
+  "type": "object",
+  "required": [
+    "skool_id",
+    "date",
+    "topic",
+    "topic_validation",
+    "community_concept",
+    "competitive_landscape",
+    "skool_setup",
+    "pricing_strategy",
+    "content_plan",
+    "launch_playbook",
+    "economics",
+    "value_ladder",
+    "risk_assessment"
+  ],
+  "properties": {
+    "skool_id": {
+      "type": "string",
+      "description": "Unique identifier for this Skool pitch, e.g. 'skool-devops-mastery-2026-02-08'"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO 8601 date string"
+    },
+    "topic": {
+      "type": "string",
+      "description": "The topic this Skool community covers, e.g. 'DevOps', 'Watercolor Painting', 'AI for Lawyers'"
+    },
+    "topic_validation": {
+      "type": "object",
+      "required": [
+        "overall_score",
+        "recurring_interest",
+        "peer_value",
+        "willingness_to_pay",
+        "assessment"
+      ],
+      "properties": {
+        "overall_score": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 10,
+          "description": "Average of all three dimension scores"
+        },
+        "recurring_interest": {
+          "type": "object",
+          "required": ["score", "evidence"],
+          "properties": {
+            "score": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 10
+            },
+            "evidence": {
+              "type": "string",
+              "description": "Why this topic has (or lacks) recurring engagement"
+            }
+          }
+        },
+        "peer_value": {
+          "type": "object",
+          "required": ["score", "evidence"],
+          "properties": {
+            "score": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 10
+            },
+            "evidence": {
+              "type": "string",
+              "description": "Whether people in this space benefit from connecting with peers"
+            }
+          }
+        },
+        "willingness_to_pay": {
+          "type": "object",
+          "required": ["score", "evidence"],
+          "properties": {
+            "score": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 10
+            },
+            "evidence": {
+              "type": "string",
+              "description": "Whether people already spend money in this domain"
+            }
+          }
+        },
+        "assessment": {
+          "type": "string",
+          "description": "Overall assessment of topic viability for a Skool community"
+        }
+      }
+    },
+    "community_concept": {
+      "type": "object",
+      "required": [
+        "name",
+        "tagline",
+        "transformation",
+        "core_promise",
+        "skool_url_suggestion"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Community name -- instantly clear about who it is for, implies transformation"
+        },
+        "tagline": {
+          "type": "string",
+          "description": "One-liner value prop. Formula: '[Outcome] for [specific audience] through [mechanism]'"
+        },
+        "transformation": {
+          "type": "object",
+          "required": ["before", "after"],
+          "properties": {
+            "before": {
+              "type": "string",
+              "description": "Current painful or limited state, in audience language"
+            },
+            "after": {
+              "type": "string",
+              "description": "Desired identity, capability, or result they gain"
+            }
+          }
+        },
+        "core_promise": {
+          "type": "string",
+          "description": "The ONE thing this community delivers better than any free alternative"
+        },
+        "skool_url_suggestion": {
+          "type": "string",
+          "description": "Suggested Skool URL slug, e.g. 'skool.com/devops-mastery'"
+        }
+      }
+    },
+    "competitive_landscape": {
+      "type": "object",
+      "required": [
+        "existing_skool_communities",
+        "free_alternatives",
+        "differentiation"
+      ],
+      "properties": {
+        "existing_skool_communities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "url",
+              "price",
+              "members_estimate",
+              "strengths",
+              "weaknesses"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Community name on Skool"
+              },
+              "url": {
+                "type": "string",
+                "description": "Full Skool URL, e.g. 'skool.com/group-slug'"
+              },
+              "price": {
+                "type": "string",
+                "description": "Free or monthly price, e.g. 'Free', '$49/mo'"
+              },
+              "members_estimate": {
+                "type": "string",
+                "description": "Estimated member count, e.g. '2.4k', '500'"
+              },
+              "strengths": {
+                "type": "string",
+                "description": "What this community does well"
+              },
+              "weaknesses": {
+                "type": "string",
+                "description": "Gaps or weaknesses you can exploit"
+              }
+            }
+          }
+        },
+        "free_alternatives": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Free places people go for this topic: subreddits, Discord servers, YouTube channels, Facebook groups, forums"
+        },
+        "differentiation": {
+          "type": "string",
+          "description": "How this community will be specifically different from what exists, tied to operator edge"
+        }
+      }
+    },
+    "skool_setup": {
+      "type": "object",
+      "required": [
+        "plan",
+        "cost",
+        "group_type",
+        "categories",
+        "level_gates",
+        "welcome_video",
+        "pinned_post"
+      ],
+      "properties": {
+        "plan": {
+          "type": "string",
+          "enum": ["hobby", "pro"],
+          "description": "Skool plan: hobby (free group hosting) or pro ($99/mo, native payments)"
+        },
+        "cost": {
+          "type": "string",
+          "description": "Monthly cost to operate, e.g. '$99/mo'"
+        },
+        "group_type": {
+          "type": "string",
+          "enum": ["free", "paid", "freemium"],
+          "description": "Free group, paid group, or freemium (free group feeding paid group)"
+        },
+        "categories": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 5,
+          "items": {
+            "type": "string"
+          },
+          "description": "Content categories for organizing the community feed"
+        },
+        "level_gates": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 9,
+          "items": {
+            "type": "object",
+            "required": ["level", "unlocks", "points_required"],
+            "properties": {
+              "level": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9,
+                "description": "Level number"
+              },
+              "unlocks": {
+                "type": "string",
+                "description": "What content or feature this level unlocks"
+              },
+              "points_required": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Points needed to reach this level"
+              }
+            }
+          }
+        },
+        "welcome_video": {
+          "type": "string",
+          "description": "What to say in the welcome video (30-60 seconds, key topics)"
+        },
+        "pinned_post": {
+          "type": "string",
+          "description": "What the pinned 'Start Here' post should contain"
+        }
+      }
+    },
+    "pricing_strategy": {
+      "type": "object",
+      "required": [
+        "monthly_price",
+        "annual_price",
+        "founding_member_price",
+        "founding_member_limit",
+        "free_trial_days",
+        "rationale"
+      ],
+      "properties": {
+        "monthly_price": {
+          "type": "number",
+          "description": "Monthly membership price in dollars"
+        },
+        "annual_price": {
+          "type": "number",
+          "description": "Annual membership price in dollars (15-20% discount vs monthly)"
+        },
+        "founding_member_price": {
+          "type": "number",
+          "description": "Locked-in monthly price for founding members"
+        },
+        "founding_member_limit": {
+          "type": "integer",
+          "description": "Maximum number of founding member slots"
+        },
+        "free_trial_days": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 30,
+          "description": "Free trial duration in days (0 = no trial, Skool supports 1-30)"
+        },
+        "rationale": {
+          "type": "string",
+          "description": "Why this price was chosen, anchored to competitor data and audience WTP"
+        }
+      }
+    },
+    "content_plan": {
+      "type": "object",
+      "required": [
+        "classroom_courses",
+        "community_content_cadence",
+        "content_repurposing"
+      ],
+      "properties": {
+        "classroom_courses": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "items": {
+            "type": "object",
+            "required": ["course_name", "modules", "drip_strategy"],
+            "properties": {
+              "course_name": {
+                "type": "string",
+                "description": "Clear, outcome-oriented course name"
+              },
+              "modules": {
+                "type": "array",
+                "minItems": 4,
+                "maxItems": 8,
+                "items": {
+                  "type": "string"
+                },
+                "description": "Module names or one-sentence descriptions"
+              },
+              "drip_strategy": {
+                "type": "string",
+                "description": "How to release content over time since Skool lacks native drip (manual schedule, level-gating, cohort announcements)"
+              }
+            }
+          }
+        },
+        "community_content_cadence": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": ["type", "frequency", "description", "time_investment"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "Content type, e.g. 'weekly live call', 'daily tip', 'monthly challenge'"
+              },
+              "frequency": {
+                "type": "string",
+                "description": "How often, e.g. 'weekly', 'daily', 'monthly'"
+              },
+              "description": {
+                "type": "string",
+                "description": "What this content involves"
+              },
+              "time_investment": {
+                "type": "string",
+                "description": "Creator time per occurrence, e.g. '1 hour', '15 minutes'"
+              }
+            }
+          }
+        },
+        "content_repurposing": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 5,
+          "items": {
+            "type": "string"
+          },
+          "description": "Ways to turn community content into external content that drives new members"
+        }
+      }
+    },
+    "launch_playbook": {
+      "type": "object",
+      "required": [
+        "phase_1_pre_launch",
+        "phase_2_founding_members",
+        "phase_3_growth",
+        "skool_games_strategy",
+        "affiliate_strategy"
+      ],
+      "properties": {
+        "phase_1_pre_launch": {
+          "type": "object",
+          "required": ["duration", "steps", "goal"],
+          "properties": {
+            "duration": {
+              "type": "string",
+              "description": "How long this phase lasts, e.g. '2-4 weeks'"
+            },
+            "steps": {
+              "type": "array",
+              "minItems": 3,
+              "items": {
+                "type": "string"
+              },
+              "description": "Specific action steps for pre-launch"
+            },
+            "goal": {
+              "type": "string",
+              "description": "What success looks like at end of this phase"
+            }
+          }
+        },
+        "phase_2_founding_members": {
+          "type": "object",
+          "required": ["duration", "steps", "target_members", "goal"],
+          "properties": {
+            "duration": {
+              "type": "string",
+              "description": "How long this phase lasts, e.g. '2-4 weeks'"
+            },
+            "steps": {
+              "type": "array",
+              "minItems": 3,
+              "items": {
+                "type": "string"
+              },
+              "description": "Specific action steps for founding member recruitment"
+            },
+            "target_members": {
+              "type": "integer",
+              "description": "Target number of founding members"
+            },
+            "goal": {
+              "type": "string",
+              "description": "What success looks like at end of this phase"
+            }
+          }
+        },
+        "phase_3_growth": {
+          "type": "object",
+          "required": ["duration", "steps", "target_members", "goal"],
+          "properties": {
+            "duration": {
+              "type": "string",
+              "description": "How long this phase lasts, e.g. 'months 2-6'"
+            },
+            "steps": {
+              "type": "array",
+              "minItems": 3,
+              "items": {
+                "type": "string"
+              },
+              "description": "Specific action steps for growth phase"
+            },
+            "target_members": {
+              "type": "integer",
+              "description": "Target member count by end of growth phase"
+            },
+            "goal": {
+              "type": "string",
+              "description": "What success looks like at end of this phase"
+            }
+          }
+        },
+        "skool_games_strategy": {
+          "type": "string",
+          "description": "How and when to leverage the Skool Games monthly competition for growth"
+        },
+        "affiliate_strategy": {
+          "type": "string",
+          "description": "How to leverage Skool's 40% recurring affiliate program and community-specific referral incentives"
+        }
+      }
+    },
+    "economics": {
+      "type": "object",
+      "required": [
+        "startup_cost",
+        "monthly_cost",
+        "break_even_members",
+        "month_1_projection",
+        "month_6_projection",
+        "month_12_projection",
+        "churn_assumption",
+        "ltv_per_member"
+      ],
+      "properties": {
+        "startup_cost": {
+          "type": "string",
+          "description": "One-time costs to launch, e.g. '$99 (first month Skool) + $0 (no other tools needed)'"
+        },
+        "monthly_cost": {
+          "type": "string",
+          "description": "Ongoing monthly costs, e.g. '$99/mo (Skool) + $30/mo (Zoom) = $129/mo'"
+        },
+        "break_even_members": {
+          "type": "integer",
+          "description": "Number of paying members needed to cover all costs including creator time"
+        },
+        "month_1_projection": {
+          "type": "object",
+          "required": ["members", "mrr"],
+          "properties": {
+            "members": {
+              "type": "integer",
+              "description": "Projected paying members at end of month 1"
+            },
+            "mrr": {
+              "type": "number",
+              "description": "Projected monthly recurring revenue at end of month 1"
+            }
+          }
+        },
+        "month_6_projection": {
+          "type": "object",
+          "required": ["members", "mrr"],
+          "properties": {
+            "members": {
+              "type": "integer",
+              "description": "Projected paying members at month 6"
+            },
+            "mrr": {
+              "type": "number",
+              "description": "Projected MRR at month 6"
+            }
+          }
+        },
+        "month_12_projection": {
+          "type": "object",
+          "required": ["members", "mrr"],
+          "properties": {
+            "members": {
+              "type": "integer",
+              "description": "Projected paying members at month 12"
+            },
+            "mrr": {
+              "type": "number",
+              "description": "Projected MRR at month 12"
+            }
+          }
+        },
+        "churn_assumption": {
+          "type": "string",
+          "description": "Monthly churn rate with rationale, e.g. '15-20% for first 6 months (new community), dropping to 10-12% after'"
+        },
+        "ltv_per_member": {
+          "type": "string",
+          "description": "Estimated lifetime value per member, calculated from price and churn rate"
+        }
+      }
+    },
+    "value_ladder": {
+      "type": "object",
+      "required": [
+        "free_tier",
+        "entry_offer",
+        "core_offer",
+        "premium_offer"
+      ],
+      "properties": {
+        "free_tier": {
+          "type": "string",
+          "description": "What is free -- lead magnet, free Skool group, free content"
+        },
+        "entry_offer": {
+          "type": "string",
+          "description": "Low-ticket product that demonstrates value and leads to the community"
+        },
+        "core_offer": {
+          "type": "string",
+          "description": "The Skool community itself -- what it includes and its price"
+        },
+        "premium_offer": {
+          "type": "string",
+          "description": "Upsell beyond the community -- coaching, mastermind, done-for-you, etc."
+        }
+      }
+    },
+    "risk_assessment": {
+      "type": "object",
+      "required": ["risks", "kill_criteria"],
+      "properties": {
+        "risks": {
+          "type": "array",
+          "minItems": 4,
+          "items": {
+            "type": "object",
+            "required": ["risk", "mitigation", "severity"],
+            "properties": {
+              "risk": {
+                "type": "string",
+                "description": "What could go wrong"
+              },
+              "mitigation": {
+                "type": "string",
+                "description": "How to reduce probability or impact"
+              },
+              "severity": {
+                "type": "string",
+                "enum": ["low", "medium", "high"],
+                "description": "Impact severity"
+              }
+            }
+          }
+        },
+        "kill_criteria": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "string"
+          },
+          "description": "Measurable, time-bounded conditions under which to shut down or pivot"
+        }
+      }
+    }
+  }
+}

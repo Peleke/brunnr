@@ -1,0 +1,379 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Signal Scan Output",
+  "description": "Structured output from a product signal scan. Contains raw signals across 7 types, scored opportunities, ship candidates, and a meta-signal synthesis.",
+  "type": "object",
+  "required": ["scan_metadata", "signals", "opportunities", "meta_signal", "recommended_first_ship"],
+  "properties": {
+    "scan_metadata": {
+      "type": "object",
+      "required": ["domain", "date", "operator_edge"],
+      "properties": {
+        "domain": {
+          "type": "string",
+          "description": "The domain scanned (e.g. 'DevOps education', 'cybersecurity careers')"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "ISO 8601 date string"
+        },
+        "operator_edge": {
+          "type": "string",
+          "description": "What makes the operator uniquely qualified in this domain"
+        }
+      }
+    },
+    "signals": {
+      "type": "object",
+      "required": ["pain", "demand", "spend", "behavior", "sentiment", "competitive", "audience"],
+      "properties": {
+        "pain": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["signal", "intensity", "source", "evidence", "recurrence"],
+            "properties": {
+              "signal": {
+                "type": "string",
+                "description": "Description of the pain point"
+              },
+              "intensity": {
+                "type": "number",
+                "minimum": 1,
+                "maximum": 10,
+                "description": "Pain intensity score, justified by evidence"
+              },
+              "source": {
+                "type": "string",
+                "description": "Where this was found (subreddit, platform, URL)"
+              },
+              "evidence": {
+                "type": "string",
+                "description": "Actual quote, data point, or specific observation. Not a summary."
+              },
+              "recurrence": {
+                "type": "string",
+                "enum": ["isolated", "occasional", "frequent", "pervasive"],
+                "description": "How often this pain point appears across sources"
+              }
+            }
+          }
+        },
+        "demand": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["signal", "volume", "source", "evidence", "trend"],
+            "properties": {
+              "signal": {
+                "type": "string",
+                "description": "Description of the demand signal"
+              },
+              "volume": {
+                "type": "string",
+                "enum": ["low", "moderate", "high", "extreme"],
+                "description": "Qualitative volume assessment"
+              },
+              "source": {
+                "type": "string",
+                "description": "Where this was found"
+              },
+              "evidence": {
+                "type": "string",
+                "description": "Actual quote, data point, or specific observation"
+              },
+              "trend": {
+                "type": "string",
+                "enum": ["declining", "stable", "growing", "exploding"],
+                "description": "Direction of the demand signal over time"
+              }
+            }
+          }
+        },
+        "spend": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["signal", "price_range", "volume_evidence", "source", "platform"],
+            "properties": {
+              "signal": {
+                "type": "string",
+                "description": "What people are paying for"
+              },
+              "price_range": {
+                "type": "string",
+                "description": "Price range observed, e.g. '$10-25' or '$97-197'"
+              },
+              "volume_evidence": {
+                "type": "string",
+                "description": "Student counts, revenue data, bestseller status, download numbers"
+              },
+              "source": {
+                "type": "string",
+                "description": "Where this was found"
+              },
+              "platform": {
+                "type": "string",
+                "enum": ["Udemy", "Gumroad", "Skillshare", "AppSumo", "direct", "other"],
+                "description": "Platform where spend was observed"
+              }
+            }
+          }
+        },
+        "behavior": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["signal", "source", "evidence", "effort_level"],
+            "properties": {
+              "signal": {
+                "type": "string",
+                "description": "Description of the behavior signal (workarounds, tool-switching, hiring)"
+              },
+              "source": {
+                "type": "string",
+                "description": "Where this was found"
+              },
+              "evidence": {
+                "type": "string",
+                "description": "Actual quote, data point, or specific observation"
+              },
+              "effort_level": {
+                "type": "string",
+                "enum": ["low", "moderate", "high", "extreme"],
+                "description": "How much effort people invest in the workaround"
+              }
+            }
+          }
+        },
+        "sentiment": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["signal", "valence", "source", "evidence"],
+            "properties": {
+              "signal": {
+                "type": "string",
+                "description": "How people feel about existing solutions"
+              },
+              "valence": {
+                "type": "string",
+                "enum": ["positive", "mixed", "negative", "hostile"],
+                "description": "Overall sentiment direction"
+              },
+              "source": {
+                "type": "string",
+                "description": "Where this was found"
+              },
+              "evidence": {
+                "type": "string",
+                "description": "Actual quote, data point, or specific observation"
+              }
+            }
+          }
+        },
+        "competitive": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["signal", "type", "source", "impact"],
+            "properties": {
+              "signal": {
+                "type": "string",
+                "description": "Description of the competitive signal"
+              },
+              "type": {
+                "type": "string",
+                "enum": ["gap", "new_entrant", "exit", "price_change", "feature_launch", "consolidation"],
+                "description": "Type of competitive movement"
+              },
+              "source": {
+                "type": "string",
+                "description": "Where this was found"
+              },
+              "impact": {
+                "type": "string",
+                "enum": ["low", "moderate", "high", "critical"],
+                "description": "Impact level of the competitive signal"
+              }
+            }
+          }
+        },
+        "audience": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["signal", "source", "evidence", "strength"],
+            "properties": {
+              "signal": {
+                "type": "string",
+                "description": "Description of the audience signal (engagement, requests, trust indicators)"
+              },
+              "source": {
+                "type": "string",
+                "description": "Where this was found"
+              },
+              "evidence": {
+                "type": "string",
+                "description": "Actual quote, data point, or specific observation"
+              },
+              "strength": {
+                "type": "string",
+                "enum": ["weak", "moderate", "strong"],
+                "description": "Strength of the audience relationship signal"
+              }
+            }
+          }
+        }
+      }
+    },
+    "opportunities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "score", "scoring_breakdown", "thesis", "ship_candidates"],
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Name of the opportunity"
+          },
+          "score": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 10,
+            "description": "Overall opportunity score: (pain*2 + spend*2 + edge + time + gap + audience) / 8"
+          },
+          "scoring_breakdown": {
+            "type": "object",
+            "required": [
+              "pain_intensity",
+              "spend_evidence",
+              "edge_match",
+              "time_to_ship",
+              "competition_gap",
+              "audience_fit"
+            ],
+            "properties": {
+              "pain_intensity": {
+                "type": "number",
+                "minimum": 1,
+                "maximum": 10,
+                "description": "How much does this hurt? Justified by PAIN signals."
+              },
+              "spend_evidence": {
+                "type": "number",
+                "minimum": 1,
+                "maximum": 10,
+                "description": "Are people already paying? Justified by SPEND signals."
+              },
+              "edge_match": {
+                "type": "number",
+                "minimum": 1,
+                "maximum": 10,
+                "description": "How well does this match the operator's skills and experience?"
+              },
+              "time_to_ship": {
+                "type": "number",
+                "minimum": 1,
+                "maximum": 10,
+                "description": "Can this ship quickly? 10 = 1 day, 1 = months of work."
+              },
+              "competition_gap": {
+                "type": "number",
+                "minimum": 1,
+                "maximum": 10,
+                "description": "How bad are existing solutions? Justified by COMPETITIVE + SENTIMENT signals."
+              },
+              "audience_fit": {
+                "type": "number",
+                "minimum": 1,
+                "maximum": 10,
+                "description": "Can the operator reach these people? Justified by AUDIENCE signals."
+              }
+            }
+          },
+          "thesis": {
+            "type": "string",
+            "description": "Why this opportunity exists -- the structural reason, not a restatement of signals"
+          },
+          "ship_candidates": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": [
+                "product",
+                "format",
+                "price_point",
+                "ship_time",
+                "distribution",
+                "why_it_works"
+              ],
+              "properties": {
+                "product": {
+                  "type": "string",
+                  "description": "Product name and brief description"
+                },
+                "format": {
+                  "type": "string",
+                  "enum": [
+                    "PDF",
+                    "Notion template",
+                    "video",
+                    "video series",
+                    "course",
+                    "tool",
+                    "SaaS",
+                    "consultation",
+                    "community",
+                    "other"
+                  ],
+                  "description": "Product format"
+                },
+                "price_point": {
+                  "type": "string",
+                  "description": "Recommended price, grounded in SPEND data. e.g. '$29-49'"
+                },
+                "ship_time": {
+                  "type": "string",
+                  "description": "Realistic time to ship. e.g. '1 day', '3 days', '1 week'"
+                },
+                "distribution": {
+                  "type": "string",
+                  "description": "Specific channel and strategy for reaching buyers"
+                },
+                "why_it_works": {
+                  "type": "string",
+                  "description": "Connects back to specific signals from the scan"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "meta_signal": {
+      "type": "string",
+      "description": "The overarching insight that ties all signals together -- the structural failure or market shift that creates the opportunity"
+    },
+    "recommended_first_ship": {
+      "type": "object",
+      "required": ["product", "from_opportunity", "rationale"],
+      "properties": {
+        "product": {
+          "type": "string",
+          "description": "The product to ship first"
+        },
+        "from_opportunity": {
+          "type": "string",
+          "description": "Which opportunity this comes from (must match an opportunity title)"
+        },
+        "rationale": {
+          "type": "string",
+          "description": "Why this should be first -- speed to market, validation potential, revenue, audience-building"
+        }
+      }
+    }
+  }
+}

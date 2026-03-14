@@ -1,0 +1,633 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Pitch Output",
+  "description": "Structured output from the pitch skill. Contains a complete go-to-market launch kit: landing page copy, launch posts, GitHub product README, email sequence, launch checklist, A/B test spec, and kill criteria -- all grounded in offer-scope positioning, persona data, and SWOT findings.",
+  "type": "object",
+  "required": [
+    "pitch_id",
+    "date",
+    "domain",
+    "opportunity",
+    "product_name",
+    "landing_page",
+    "launch_posts",
+    "github_readme",
+    "landing_page_html",
+    "email_sequence",
+    "launch_checklist",
+    "ab_test_spec",
+    "kill_criteria",
+    "offer_ref",
+    "persona_ref",
+    "swot_ref",
+    "decision_ref",
+    "signal_scan_ref",
+    "next_step"
+  ],
+  "properties": {
+    "pitch_id": {
+      "type": "string",
+      "description": "Unique identifier for this pitch, e.g. 'pitch-devops-decision-kit-2026-02-08'"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO 8601 date string"
+    },
+    "domain": {
+      "type": "string",
+      "description": "The domain this pitch targets (e.g. 'DevOps education', 'cybersecurity careers')"
+    },
+    "opportunity": {
+      "type": "string",
+      "description": "The specific opportunity from the signal scan this pitch addresses"
+    },
+    "product_name": {
+      "type": "string",
+      "description": "The name of the product being pitched"
+    },
+    "landing_page": {
+      "type": "object",
+      "description": "Complete landing page copy, ready to paste into any landing page builder",
+      "required": [
+        "headline",
+        "subheadline",
+        "above_the_fold_hook",
+        "problem_section",
+        "solution_section",
+        "whats_inside",
+        "social_proof_strategy",
+        "pricing_section",
+        "faq",
+        "primary_cta",
+        "secondary_cta"
+      ],
+      "properties": {
+        "headline": {
+          "type": "string",
+          "description": "The main headline -- must stop the scroll, uses persona's exact pain language"
+        },
+        "subheadline": {
+          "type": "string",
+          "description": "States the transformation in concrete terms: what they get, what changes, how fast"
+        },
+        "above_the_fold_hook": {
+          "type": "string",
+          "description": "First 2-3 sentences below the headline. Acknowledges pain, promises outcome, creates curiosity."
+        },
+        "problem_section": {
+          "type": "string",
+          "description": "Full copy for the problem section. Uses persona's exact language, references minimum 3 pain stories."
+        },
+        "solution_section": {
+          "type": "string",
+          "description": "Full copy for the solution section. Transformation, how it works, speed, effort required."
+        },
+        "whats_inside": {
+          "type": "array",
+          "description": "Section-by-section breakdown from the offer-scope build spec",
+          "minItems": 4,
+          "items": {
+            "type": "object",
+            "required": ["section_name", "description"],
+            "properties": {
+              "section_name": {
+                "type": "string",
+                "description": "The section name from the build spec"
+              },
+              "description": {
+                "type": "string",
+                "description": "Benefit-oriented description of what this section does for the buyer"
+              }
+            }
+          }
+        },
+        "social_proof_strategy": {
+          "type": "string",
+          "description": "Strategy for zero-testimonial launch: credentials proof, process proof, methodology proof"
+        },
+        "pricing_section": {
+          "type": "string",
+          "description": "Full pricing copy including price anchor, value stack, the price, guarantee, and urgency element if applicable"
+        },
+        "faq": {
+          "type": "array",
+          "description": "FAQ items built from persona objections. Each Q maps to a specific objection.",
+          "minItems": 5,
+          "items": {
+            "type": "object",
+            "required": ["question", "answer"],
+            "properties": {
+              "question": {
+                "type": "string",
+                "description": "The persona objection reframed as a question the buyer would actually ask"
+              },
+              "answer": {
+                "type": "string",
+                "description": "The counter from offer-scope objection handlers, expanded into conversational copy"
+              }
+            }
+          }
+        },
+        "primary_cta": {
+          "type": "string",
+          "description": "Primary call to action -- button text and surrounding copy. Specific, not generic."
+        },
+        "secondary_cta": {
+          "type": "string",
+          "description": "Secondary call to action -- lower-commitment action (email signup, free preview, GitHub repo)"
+        }
+      }
+    },
+    "launch_posts": {
+      "type": "array",
+      "description": "Platform-specific launch posts, ready to publish. Each follows 80/20 value-first rule.",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["platform", "title", "body", "cta", "formatting_notes"],
+        "properties": {
+          "platform": {
+            "type": "string",
+            "description": "Target platform (e.g. 'r/devops', 'LinkedIn', 'Twitter/X', 'dev.to', 'Hacker News')"
+          },
+          "title": {
+            "type": "string",
+            "description": "Post title or hook. Platform-appropriate format."
+          },
+          "body": {
+            "type": "string",
+            "description": "Full post body. Provides genuine standalone value. Ready to publish."
+          },
+          "cta": {
+            "type": "string",
+            "description": "Call to action at the end of the post. Natural transition from value to product."
+          },
+          "formatting_notes": {
+            "type": "string",
+            "description": "Platform-specific formatting guidance (markdown style, paragraph length, hashtags, thread pacing)"
+          }
+        }
+      }
+    },
+    "github_readme": {
+      "type": "object",
+      "description": "GitHub product README combining product structure with conversion-optimized copy",
+      "required": ["readme_content"],
+      "properties": {
+        "product_structure": {
+          "type": "object",
+          "description": "Product architecture for the GitHub repo. ACTIVATES for technical domains (DevOps, security, coding, architecture, STEM).",
+          "properties": {
+            "directory_layout": {
+              "type": "string",
+              "description": "The actual directory tree for the repo, formatted as a text tree"
+            },
+            "file_manifest": {
+              "type": "array",
+              "description": "Key files with one-line descriptions",
+              "items": {
+                "type": "object",
+                "required": ["path", "description"],
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "description": "File path within the repo"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "One-line description of what the file contains and why it matters"
+                  }
+                }
+              }
+            },
+            "learning_path": {
+              "type": "array",
+              "description": "How someone progresses through the repo",
+              "items": {
+                "type": "object",
+                "required": ["step", "description"],
+                "properties": {
+                  "step": {
+                    "type": "string",
+                    "description": "Step name or number"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "What the user does in this step and what they learn"
+                  }
+                }
+              }
+            },
+            "prerequisites": {
+              "type": "array",
+              "description": "What the user needs to know before using this repo",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "readme_content": {
+          "type": "string",
+          "description": "The full README.md content. Includes hero section, product structure preview, decision framework preview (the free 80%), CTA sections, social proof, contributing, and license."
+        }
+      }
+    },
+    "landing_page_html": {
+      "type": "object",
+      "description": "Metadata about the generated landing page HTML file. The actual HTML is written to the launchpad branch, not embedded in the JSON output.",
+      "required": ["file_path", "vercel_preview_url", "sections_rendered", "has_hero_image"],
+      "properties": {
+        "file_path": {
+          "type": "string",
+          "description": "Path to index.html on the launchpad branch (always 'index.html' at branch root)"
+        },
+        "vercel_preview_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "The Vercel branch preview URL where the page is live"
+        },
+        "sections_rendered": {
+          "type": "array",
+          "description": "List of Phase 1 sections that were rendered into HTML",
+          "items": {
+            "type": "string",
+            "enum": [
+              "hero",
+              "problem",
+              "solution_before_after",
+              "how_it_works",
+              "modules_table",
+              "credibility",
+              "pricing",
+              "comparison",
+              "faq",
+              "final_cta",
+              "footer"
+            ]
+          }
+        },
+        "has_hero_image": {
+          "type": "boolean",
+          "description": "Whether og:image and twitter:image meta tags reference an actual hero.png"
+        },
+        "file_size_bytes": {
+          "type": "integer",
+          "description": "Size of the generated index.html in bytes. Should be under 30720 (30KB)."
+        }
+      }
+    },
+    "email_sequence": {
+      "type": "array",
+      "description": "Post-purchase email nurture sequence. 3-5 emails building trust from delivery to community.",
+      "minItems": 3,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "required": ["email_number", "subject_line", "send_day", "purpose", "body"],
+        "properties": {
+          "email_number": {
+            "type": "integer",
+            "description": "Email position in the sequence (1-5)"
+          },
+          "subject_line": {
+            "type": "string",
+            "description": "Specific subject line. Must pass the A-pile test -- looks like a message from a person, not a brand."
+          },
+          "send_day": {
+            "type": "integer",
+            "description": "Day to send relative to purchase (0 = immediately, 2 = day 2, etc.)"
+          },
+          "purpose": {
+            "type": "string",
+            "description": "The ONE job of this email (deliver, quick win, story, objection handler, community invite)"
+          },
+          "body": {
+            "type": "string",
+            "description": "Full email body copy. Practitioner-to-practitioner tone. Single CTA."
+          }
+        }
+      }
+    },
+    "launch_checklist": {
+      "type": "object",
+      "description": "Step-by-step execution sequence with specific dates, times, and platforms",
+      "required": ["pre_launch", "launch_day", "week_1", "ongoing_cadence"],
+      "properties": {
+        "pre_launch": {
+          "type": "array",
+          "description": "Pre-launch setup tasks (Days -7 to -1)",
+          "items": {
+            "type": "object",
+            "required": ["task", "tool_needed", "estimated_time"],
+            "properties": {
+              "task": {
+                "type": "string",
+                "description": "What to do"
+              },
+              "tool_needed": {
+                "type": "string",
+                "description": "Specific tool required (Gumroad, ConvertKit, GitHub, Carrd, etc.)"
+              },
+              "estimated_time": {
+                "type": "string",
+                "description": "How long this takes (e.g. '30 minutes', '2 hours')"
+              }
+            }
+          }
+        },
+        "launch_day": {
+          "type": "array",
+          "description": "Hour-by-hour launch day execution plan",
+          "items": {
+            "type": "object",
+            "required": ["time", "action", "platform"],
+            "properties": {
+              "time": {
+                "type": "string",
+                "description": "Specific time (e.g. '9:00 AM EST')"
+              },
+              "action": {
+                "type": "string",
+                "description": "Specific action to take"
+              },
+              "platform": {
+                "type": "string",
+                "description": "Where to do it"
+              }
+            }
+          }
+        },
+        "week_1": {
+          "type": "array",
+          "description": "Daily actions for the first week after launch",
+          "items": {
+            "type": "object",
+            "required": ["day", "actions"],
+            "properties": {
+              "day": {
+                "type": "integer",
+                "description": "Day number (1-7)"
+              },
+              "actions": {
+                "type": "array",
+                "description": "List of specific actions for this day",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "ongoing_cadence": {
+          "type": "array",
+          "description": "Ongoing distribution cadence for weeks 2-4 and beyond",
+          "items": {
+            "type": "object",
+            "required": ["frequency", "action", "platform"],
+            "properties": {
+              "frequency": {
+                "type": "string",
+                "description": "How often (e.g. '2x per week', 'weekly', 'daily')"
+              },
+              "action": {
+                "type": "string",
+                "description": "What to do"
+              },
+              "platform": {
+                "type": "string",
+                "description": "Where to do it"
+              }
+            }
+          }
+        }
+      }
+    },
+    "ab_test_spec": {
+      "type": "object",
+      "description": "What to test once distribution is flowing. Designed for solo operators with 100-500 visitors.",
+      "required": [
+        "headline_variants",
+        "price_variants",
+        "channel_priority",
+        "metrics",
+        "decision_thresholds"
+      ],
+      "properties": {
+        "headline_variants": {
+          "type": "array",
+          "description": "2-3 headline alternatives with rationale for each",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": ["variant", "rationale"],
+            "properties": {
+              "variant": {
+                "type": "string",
+                "description": "The headline text"
+              },
+              "rationale": {
+                "type": "string",
+                "description": "Why this variant might work (pain-focused, outcome-focused, curiosity-focused, etc.)"
+              }
+            }
+          }
+        },
+        "price_variants": {
+          "type": "array",
+          "description": "2-3 price alternatives with rationale",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": ["price", "rationale"],
+            "properties": {
+              "price": {
+                "type": "string",
+                "description": "The price point (e.g. '$19', '$29', '$39')"
+              },
+              "rationale": {
+                "type": "string",
+                "description": "Positioning at this price, what it signals, SPEND data support"
+              }
+            }
+          }
+        },
+        "channel_priority": {
+          "type": "array",
+          "description": "Channels ranked by expected ROI",
+          "items": {
+            "type": "object",
+            "required": ["channel", "rationale", "test_budget"],
+            "properties": {
+              "channel": {
+                "type": "string",
+                "description": "The distribution channel"
+              },
+              "rationale": {
+                "type": "string",
+                "description": "Why this channel is prioritized at this position"
+              },
+              "test_budget": {
+                "type": "string",
+                "description": "Time and/or money to allocate to testing this channel"
+              }
+            }
+          }
+        },
+        "metrics": {
+          "type": "array",
+          "description": "Metrics to track with targets and measurement methods",
+          "items": {
+            "type": "object",
+            "required": ["metric", "target", "measurement_method"],
+            "properties": {
+              "metric": {
+                "type": "string",
+                "description": "What to measure (e.g. 'landing page conversion rate', 'email signup rate')"
+              },
+              "target": {
+                "type": "string",
+                "description": "What 'good' looks like (e.g. '3-5% conversion', '100 signups/month')"
+              },
+              "measurement_method": {
+                "type": "string",
+                "description": "Specific tool or method (e.g. 'Gumroad analytics', 'UTM parameters in Google Analytics')"
+              }
+            }
+          }
+        },
+        "decision_thresholds": {
+          "type": "array",
+          "description": "At what point to declare a winner or take action",
+          "items": {
+            "type": "object",
+            "required": ["metric", "threshold", "action"],
+            "properties": {
+              "metric": {
+                "type": "string",
+                "description": "What you are measuring"
+              },
+              "threshold": {
+                "type": "string",
+                "description": "At what value to act (e.g. '2x difference over 200+ visitors')"
+              },
+              "action": {
+                "type": "string",
+                "description": "What to do when the threshold is hit (e.g. 'switch to winning variant permanently')"
+              }
+            }
+          }
+        }
+      }
+    },
+    "kill_criteria": {
+      "type": "object",
+      "description": "Time-bounded, measurable criteria for iterate/pivot/kill decisions",
+      "required": [
+        "week_1",
+        "month_1",
+        "month_3",
+        "qualitative_signals",
+        "pivot_triggers"
+      ],
+      "properties": {
+        "week_1": {
+          "type": "object",
+          "description": "Week 1 minimum threshold",
+          "required": ["metric", "threshold"],
+          "properties": {
+            "metric": {
+              "type": "string",
+              "description": "What to measure (e.g. 'units sold', 'launch post engagement')"
+            },
+            "threshold": {
+              "type": "string",
+              "description": "Minimum acceptable number (e.g. '5 units sold', '50+ upvotes on launch post')"
+            }
+          }
+        },
+        "month_1": {
+          "type": "object",
+          "description": "Month 1 cumulative threshold",
+          "required": ["metric", "threshold"],
+          "properties": {
+            "metric": {
+              "type": "string",
+              "description": "Cumulative measure (e.g. 'total units', 'email list size')"
+            },
+            "threshold": {
+              "type": "string",
+              "description": "Minimum acceptable number"
+            }
+          }
+        },
+        "month_3": {
+          "type": "object",
+          "description": "Month 3 growth trajectory threshold",
+          "required": ["metric", "threshold"],
+          "properties": {
+            "metric": {
+              "type": "string",
+              "description": "Growth trajectory measure (e.g. 'month-over-month growth rate', 'organic traffic trend')"
+            },
+            "threshold": {
+              "type": "string",
+              "description": "Minimum acceptable trajectory"
+            }
+          }
+        },
+        "qualitative_signals": {
+          "type": "array",
+          "description": "Non-numeric signals that indicate viability or failure",
+          "items": {
+            "type": "string"
+          }
+        },
+        "pivot_triggers": {
+          "type": "array",
+          "description": "Specific conditions that trigger a strategy change vs full kill",
+          "items": {
+            "type": "object",
+            "required": ["trigger", "pivot_direction"],
+            "properties": {
+              "trigger": {
+                "type": "string",
+                "description": "The specific condition (e.g. 'people engage with free content but do not convert')"
+              },
+              "pivot_direction": {
+                "type": "string",
+                "description": "What changes (e.g. 'reduce price by 30%', 'switch to video format', 'target different subreddit')"
+              }
+            }
+          }
+        }
+      }
+    },
+    "offer_ref": {
+      "type": "string",
+      "description": "Reference to the offer-scope output file used as input"
+    },
+    "persona_ref": {
+      "type": "string",
+      "description": "Reference to the persona-extract output file used as input"
+    },
+    "swot_ref": {
+      "type": "string",
+      "description": "Reference to the SWOT analysis output file used as input"
+    },
+    "decision_ref": {
+      "type": "string",
+      "description": "Reference to the decision-log output file used as input"
+    },
+    "signal_scan_ref": {
+      "type": "string",
+      "description": "Reference to the signal-scan output file used as input"
+    },
+    "next_step": {
+      "type": "string",
+      "const": "hunter-log",
+      "description": "The next skill in the pipeline. Always 'hunter-log' for pitch output."
+    }
+  }
+}

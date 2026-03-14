@@ -1,0 +1,389 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Wild Scan Output",
+  "description": "Structured output from a wild-scan quote harvest. Contains scored quotes, pain themes, and content briefs for the 'From the Wild' content series.",
+  "type": "object",
+  "required": ["scan_metadata", "quotes", "themes", "content_briefs"],
+  "properties": {
+    "scan_metadata": {
+      "type": "object",
+      "required": ["topic", "date", "learning_stage", "repo_angle", "platforms_searched", "total_quotes"],
+      "properties": {
+        "topic": {
+          "type": "string",
+          "description": "The topic focus for this scan (e.g., 'learning Kubernetes from scratch')"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "ISO 8601 date string"
+        },
+        "learning_stage": {
+          "type": "string",
+          "description": "Who is struggling (e.g., 'beginners transitioning to DevOps')"
+        },
+        "repo_angle": {
+          "type": "string",
+          "description": "What kind of instructional repo would solve these (e.g., 'production-grade deploy pipeline')"
+        },
+        "platforms_searched": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["reddit", "hackernews", "stackoverflow", "devto", "hashnode", "twitter", "discord", "other"]
+          },
+          "description": "Platforms searched during this scan"
+        },
+        "total_quotes": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Total number of quotes harvested"
+        }
+      }
+    },
+    "quotes": {
+      "type": "array",
+      "minItems": 15,
+      "items": {
+        "type": "object",
+        "required": ["quote", "author", "platform", "community", "url", "engagement", "context", "pain_category", "scores", "overall_score", "theme_id"],
+        "properties": {
+          "quote": {
+            "type": "string",
+            "description": "Exact text of the quote. Not paraphrased."
+          },
+          "author": {
+            "type": "string",
+            "description": "Username or handle (e.g., 'u/devops_mike')"
+          },
+          "platform": {
+            "type": "string",
+            "enum": ["reddit", "hackernews", "stackoverflow", "devto", "hashnode", "twitter", "discord", "other"],
+            "description": "Platform where the quote was found"
+          },
+          "community": {
+            "type": "string",
+            "description": "Specific subreddit, thread, tag, etc."
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Direct link to the quote or containing thread"
+          },
+          "date": {
+            "type": "string",
+            "description": "When the quote was posted (best effort)"
+          },
+          "engagement": {
+            "type": "object",
+            "required": ["metric", "value"],
+            "properties": {
+              "metric": {
+                "type": "string",
+                "description": "Type of engagement metric (e.g., 'upvotes', 'likes', 'views')"
+              },
+              "value": {
+                "type": "integer",
+                "description": "Numeric value of the engagement metric"
+              },
+              "replies": {
+                "type": "integer",
+                "description": "Number of replies or comments"
+              },
+              "same_here_count": {
+                "type": "integer",
+                "description": "Number of 'same here' or agreement responses"
+              }
+            }
+          },
+          "context": {
+            "type": "string",
+            "description": "What thread/question the quote was responding to"
+          },
+          "pain_category": {
+            "type": "string",
+            "enum": [
+              "tutorial-gap",
+              "tool-complexity",
+              "real-world-gap",
+              "career-transition",
+              "information-overload",
+              "environment-setup",
+              "debugging-hell",
+              "missing-fundamentals"
+            ],
+            "description": "Primary pain category"
+          },
+          "scores": {
+            "type": "object",
+            "required": ["specificity", "intensity", "solvability", "engagement"],
+            "properties": {
+              "specificity": {
+                "type": "object",
+                "required": ["value", "justification"],
+                "properties": {
+                  "value": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 10
+                  },
+                  "justification": {
+                    "type": "string",
+                    "description": "One-sentence justification for the score"
+                  }
+                }
+              },
+              "intensity": {
+                "type": "object",
+                "required": ["value", "justification"],
+                "properties": {
+                  "value": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 10
+                  },
+                  "justification": {
+                    "type": "string"
+                  }
+                }
+              },
+              "solvability": {
+                "type": "object",
+                "required": ["value", "justification"],
+                "properties": {
+                  "value": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 10
+                  },
+                  "justification": {
+                    "type": "string"
+                  }
+                }
+              },
+              "engagement": {
+                "type": "object",
+                "required": ["value", "justification"],
+                "properties": {
+                  "value": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 10
+                  },
+                  "justification": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "overall_score": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 10,
+            "description": "Weighted average: (specificity*2 + intensity*2 + solvability*2 + engagement) / 7"
+          },
+          "theme_id": {
+            "type": "string",
+            "description": "ID of the theme this quote belongs to"
+          }
+        }
+      }
+    },
+    "themes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "theme", "thesis", "quote_count", "avg_score", "top_quote_indices", "repo_angle", "is_gold"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique theme ID (kebab-case slug)"
+          },
+          "theme": {
+            "type": "string",
+            "description": "Name of the pain theme"
+          },
+          "thesis": {
+            "type": "string",
+            "description": "One sentence: what structural failure creates this pain?"
+          },
+          "quote_count": {
+            "type": "integer",
+            "minimum": 2,
+            "description": "Number of quotes in this theme (minimum 2)"
+          },
+          "avg_score": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 10,
+            "description": "Average overall score of quotes in this theme"
+          },
+          "top_quote_indices": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "description": "Indices into the quotes array for the 2-3 highest-scoring quotes in this theme"
+          },
+          "repo_angle": {
+            "type": "string",
+            "description": "What kind of instructional repo would demolish this theme?"
+          },
+          "is_gold": {
+            "type": "boolean",
+            "description": "True if 5+ quotes AND avg_score >= 7"
+          },
+          "pain_categories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Pain categories represented in this theme"
+          }
+        }
+      }
+    },
+    "content_briefs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "theme_id", "featured_quote_index", "diagnosis", "repo_spec", "channel", "difficulty"],
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Post title. Punchy, specific. Starts with 'Found Another One:' or similar hook."
+          },
+          "theme_id": {
+            "type": "string",
+            "description": "ID of the theme this brief addresses"
+          },
+          "featured_quote_index": {
+            "type": "integer",
+            "description": "Index into the quotes array for the lead quote"
+          },
+          "supporting_quote_indices": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "description": "Indices for 1-2 supporting quotes"
+          },
+          "diagnosis": {
+            "type": "string",
+            "description": "2-3 sentences: what structural failure creates this pain?"
+          },
+          "repo_spec": {
+            "type": "object",
+            "required": ["name", "tagline", "pain_addressed", "structure", "progressive_steps", "key_decisions", "battle_axe_features", "estimated_build_time"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Repo name (kebab-case)"
+              },
+              "tagline": {
+                "type": "string",
+                "description": "One-line GitHub repo description"
+              },
+              "pain_addressed": {
+                "type": "string",
+                "description": "Which quote(s) this repo directly answers"
+              },
+              "structure": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["path", "purpose"],
+                  "properties": {
+                    "path": {
+                      "type": "string"
+                    },
+                    "purpose": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "description": "Key directories and files with their purpose"
+              },
+              "progressive_steps": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["tag", "title", "description"],
+                  "properties": {
+                    "tag": {
+                      "type": "string",
+                      "description": "Git tag name (e.g., 'step-01-scaffold')"
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "Step title"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "What this step adds and WHY"
+                    }
+                  }
+                },
+                "description": "Progressive git tags from basic to production"
+              },
+              "key_decisions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["decision", "why"],
+                  "properties": {
+                    "decision": {
+                      "type": "string",
+                      "description": "The decision made"
+                    },
+                    "why": {
+                      "type": "string",
+                      "description": "Why X not Y — the tradeoff explanation"
+                    }
+                  }
+                },
+                "description": "3-5 architectural decisions with reasoning"
+              },
+              "battle_axe_features": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Features that make this production-grade, not tutorial-grade"
+              },
+              "prerequisites": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "What the user needs to know before using this repo"
+              },
+              "estimated_build_time": {
+                "type": "string",
+                "description": "How long to build this repo (e.g., '2-3 days', '1 week')"
+              }
+            }
+          },
+          "channel": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["linkedin", "blog", "substack", "reddit", "hackernews"]
+            },
+            "description": "Where to publish this post"
+          },
+          "estimated_words": {
+            "type": "integer",
+            "description": "Target word count"
+          },
+          "difficulty": {
+            "type": "string",
+            "enum": ["easy", "medium", "hard"],
+            "description": "How hard is the repo to build?"
+          }
+        }
+      }
+    }
+  }
+}
