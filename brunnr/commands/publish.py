@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -84,10 +85,15 @@ def run(args) -> int:
             dest.mkdir(parents=True, exist_ok=True)
             (dest / "SKILL.md").write_text(content)
 
-            # Copy other files if they exist
+            # Copy other files and subdirectories
             for extra in skill_dir.iterdir():
-                if extra.name != "SKILL.md" and extra.is_file():
-                    (dest / extra.name).write_text(extra.read_text())
+                if extra.name == "SKILL.md":
+                    continue
+                dest_extra = dest / extra.name
+                if extra.is_dir():
+                    shutil.copytree(extra, dest_extra, dirs_exist_ok=True)
+                elif extra.is_file():
+                    shutil.copy2(extra, dest_extra)
 
             # Commit and push
             subprocess.run(["git", "add", "."], cwd=tmp_path, check=True, capture_output=True)

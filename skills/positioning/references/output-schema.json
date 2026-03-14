@@ -1,0 +1,644 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Positioning Output",
+  "description": "Structured output from the positioning skill. Contains an 8-phase Dunford 'Obviously Awesome' positioning analysis with competitive alternatives, unique attributes, value articulation, ICP, market category, emotional hooks, expansion sequence, and competitive moats.",
+  "type": "object",
+  "required": [
+    "positioning_id",
+    "date",
+    "domain",
+    "opportunity",
+    "product_name",
+    "competitive_alternatives",
+    "unique_attributes",
+    "value_articulation",
+    "icp",
+    "anti_icp",
+    "market_category",
+    "emotional_hooks",
+    "expansion_sequence",
+    "competitive_moats",
+    "messaging_hierarchy",
+    "offer_ref",
+    "persona_ref",
+    "decision_ref",
+    "signal_scan_ref",
+    "next_step",
+    "next_step_input_hint"
+  ],
+  "properties": {
+    "positioning_id": {
+      "type": "string",
+      "pattern": "^positioning-.+-\\d{4}-\\d{2}-\\d{2}$",
+      "description": "Unique identifier, e.g. 'positioning-devops-decision-kit-2026-03-14'"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO 8601 date string"
+    },
+    "domain": {
+      "type": "string",
+      "description": "The domain this positioning targets"
+    },
+    "opportunity": {
+      "type": "string",
+      "description": "The specific opportunity being positioned"
+    },
+    "product_name": {
+      "type": "string",
+      "description": "Name of the product being positioned"
+    },
+    "competitive_alternatives": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 8,
+      "items": {
+        "$ref": "#/$defs/competitive_alternative"
+      },
+      "description": "Phase 1: What customers do today without your product. Min 4, max 8."
+    },
+    "unique_attributes": {
+      "type": "object",
+      "required": ["all_attributes", "advancing_attributes"],
+      "properties": {
+        "all_attributes": {
+          "type": "array",
+          "minItems": 4,
+          "items": {
+            "$ref": "#/$defs/attribute"
+          },
+          "description": "All evaluated attributes (min 4)"
+        },
+        "advancing_attributes": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "$ref": "#/$defs/attribute"
+          },
+          "description": "Only truly_unique and best_in_class attributes (min 2)"
+        }
+      }
+    },
+    "value_articulation": {
+      "type": "object",
+      "required": ["lead_message", "value_map"],
+      "properties": {
+        "lead_message": {
+          "type": "object",
+          "required": ["statement", "attribute", "dimension", "intensity", "evidence"],
+          "properties": {
+            "statement": {
+              "type": "string",
+              "description": "The highest-intensity value statement -- becomes the lead message"
+            },
+            "attribute": {
+              "type": "string",
+              "description": "Which advancing attribute this derives from"
+            },
+            "dimension": {
+              "type": "string",
+              "enum": ["functional", "emotional", "social"]
+            },
+            "intensity": {
+              "type": "string",
+              "const": "high"
+            },
+            "evidence": {
+              "type": "string",
+              "description": "Persona data or signal proving intensity"
+            }
+          }
+        },
+        "value_map": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/value_statement"
+          },
+          "description": "All value statements across all advancing attributes and dimensions"
+        }
+      }
+    },
+    "icp": {
+      "type": "object",
+      "required": [
+        "title",
+        "company_stage",
+        "trigger_moment",
+        "current_state",
+        "desired_state",
+        "budget_authority",
+        "where_to_find",
+        "how_to_identify",
+        "investor_narrative"
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Specific job title/role"
+        },
+        "company_stage": {
+          "type": "string",
+          "description": "Company size/stage where pain is worst"
+        },
+        "trigger_moment": {
+          "type": "string",
+          "description": "The moment they realize they need this"
+        },
+        "current_state": {
+          "type": "string",
+          "description": "What their day/week looks like now"
+        },
+        "desired_state": {
+          "type": "string",
+          "description": "What they want it to look like"
+        },
+        "budget_authority": {
+          "type": "string",
+          "description": "Can they buy solo or need approval?"
+        },
+        "where_to_find": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 2,
+          "description": "Specific communities, platforms, events"
+        },
+        "how_to_identify": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 2,
+          "description": "Observable signals"
+        },
+        "investor_narrative": {
+          "type": "string",
+          "description": "One paragraph: why this customer segment matters"
+        }
+      }
+    },
+    "anti_icp": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["title", "why_not", "warning_signs"],
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Who this is NOT for"
+          },
+          "why_not": {
+            "type": "string",
+            "description": "Why they will not buy or be unhappy"
+          },
+          "warning_signs": {
+            "type": "array",
+            "items": { "type": "string" },
+            "minItems": 1,
+            "description": "How to recognize them early"
+          }
+        }
+      }
+    },
+    "market_category": {
+      "type": "object",
+      "required": ["selected", "candidates", "reasoning"],
+      "properties": {
+        "selected": {
+          "type": "object",
+          "required": ["category", "customer_expectation", "competitive_set", "advantage", "validation"],
+          "properties": {
+            "category": {
+              "type": "string",
+              "description": "The selected market category name"
+            },
+            "customer_expectation": {
+              "type": "string",
+              "description": "What customers expect from this category"
+            },
+            "competitive_set": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Who else is in this category"
+            },
+            "advantage": {
+              "type": "string",
+              "description": "Why the product wins in this category"
+            },
+            "validation": {
+              "type": "object",
+              "required": ["search_volume_evidence", "price_expectation", "growth_signal"],
+              "properties": {
+                "search_volume_evidence": {
+                  "type": "string",
+                  "description": "Evidence of search behavior for this category"
+                },
+                "price_expectation": {
+                  "type": "string",
+                  "description": "What customers expect to pay in this category"
+                },
+                "growth_signal": {
+                  "type": "string",
+                  "description": "Is the category growing, stable, or shrinking?"
+                }
+              }
+            }
+          }
+        },
+        "candidates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["category", "rejected_reason"],
+            "properties": {
+              "category": {
+                "type": "string"
+              },
+              "rejected_reason": {
+                "type": "string"
+              }
+            }
+          },
+          "description": "Rejected category candidates with reasoning"
+        },
+        "reasoning": {
+          "type": "string",
+          "description": "Why the selected category was chosen over alternatives"
+        }
+      }
+    },
+    "emotional_hooks": {
+      "type": "object",
+      "required": ["primary_hook", "framing", "why_this_framing", "anti_framing", "second_hook"],
+      "properties": {
+        "primary_hook": {
+          "type": "string",
+          "description": "The main emotional angle (one sentence)"
+        },
+        "framing": {
+          "type": "string",
+          "enum": ["relief", "aspiration"],
+          "description": "Whether the hook is about escaping pain or reaching a goal"
+        },
+        "why_this_framing": {
+          "type": "string",
+          "description": "Evidence from persona data"
+        },
+        "anti_framing": {
+          "type": "array",
+          "minItems": 5,
+          "items": {
+            "type": "object",
+            "required": ["phrase", "reason"],
+            "properties": {
+              "phrase": {
+                "type": "string",
+                "description": "Word or phrase to never use"
+              },
+              "reason": {
+                "type": "string",
+                "description": "Why it fails with this audience"
+              }
+            }
+          },
+          "description": "Words/phrases to NEVER use. Min 5 entries."
+        },
+        "second_hook": {
+          "type": "string",
+          "description": "Alternative angle for warm conversations"
+        }
+      }
+    },
+    "expansion_sequence": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["stage", "timeframe", "key_messages", "channels", "avoid"],
+        "properties": {
+          "stage": {
+            "type": "string",
+            "enum": ["now", "next", "after"]
+          },
+          "timeframe": {
+            "type": "string",
+            "description": "Specific months/quarters"
+          },
+          "key_messages": {
+            "type": "array",
+            "items": { "type": "string" },
+            "minItems": 2,
+            "maxItems": 3,
+            "description": "2-3 core messages for this stage"
+          },
+          "channels": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Where to deliver these messages"
+          },
+          "avoid": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "What NOT to say yet"
+          }
+        }
+      }
+    },
+    "competitive_moats": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["moat_type", "description", "current_strength", "timeline_to_strength", "messaging_order"],
+        "properties": {
+          "moat_type": {
+            "type": "string",
+            "enum": ["technical", "market", "data", "brand"]
+          },
+          "description": {
+            "type": "string",
+            "description": "What the moat is"
+          },
+          "current_strength": {
+            "type": "string",
+            "enum": ["none", "thin", "emerging", "moderate", "strong"]
+          },
+          "timeline_to_strength": {
+            "type": "string",
+            "description": "When this becomes a real moat"
+          },
+          "messaging_order": {
+            "type": "string",
+            "enum": ["first_conversation", "second_conversation", "investor_only"],
+            "description": "When to talk about this moat"
+          }
+        }
+      }
+    },
+    "messaging_hierarchy": {
+      "type": "object",
+      "required": ["first_conversation", "second_conversation", "third_conversation", "anti_messaging", "by_channel"],
+      "properties": {
+        "first_conversation": {
+          "type": "object",
+          "required": ["lead", "support", "emotional_hook", "category_frame"],
+          "properties": {
+            "lead": {
+              "type": "string",
+              "description": "Lead message (from value articulation)"
+            },
+            "support": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Supporting messages"
+            },
+            "emotional_hook": {
+              "type": "string",
+              "description": "Primary hook from Phase 6"
+            },
+            "category_frame": {
+              "type": "string",
+              "description": "'[Product] is a [category] that [unique attribute]'"
+            }
+          }
+        },
+        "second_conversation": {
+          "type": "object",
+          "required": ["lead", "expand", "social_proof"],
+          "properties": {
+            "lead": {
+              "type": "string"
+            },
+            "expand": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "social_proof": {
+              "type": "string"
+            }
+          }
+        },
+        "third_conversation": {
+          "type": "object",
+          "required": ["lead", "deepen"],
+          "properties": {
+            "lead": {
+              "type": "string"
+            },
+            "deepen": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "anti_messaging": {
+          "type": "array",
+          "minItems": 5,
+          "items": {
+            "type": "object",
+            "required": ["phrase", "reason", "use_instead"],
+            "properties": {
+              "phrase": { "type": "string" },
+              "reason": { "type": "string" },
+              "use_instead": { "type": "string" }
+            }
+          }
+        },
+        "by_channel": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["channel", "first_message", "tone", "avoid"],
+            "properties": {
+              "channel": { "type": "string" },
+              "first_message": { "type": "string" },
+              "tone": { "type": "string" },
+              "avoid": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "url"],
+        "properties": {
+          "title": { "type": "string" },
+          "url": { "type": "string", "format": "uri" }
+        }
+      }
+    },
+    "offer_ref": {
+      "type": "string",
+      "description": "Reference to the offer-scope output (artifact slug)"
+    },
+    "persona_ref": {
+      "type": "string",
+      "description": "Reference to the persona-extract output (artifact slug)"
+    },
+    "swot_ref": {
+      "type": ["string", "null"],
+      "description": "Reference to the swot-analysis output (artifact slug), null if not available"
+    },
+    "decision_ref": {
+      "type": "string",
+      "description": "Reference to the decision-log output (artifact slug)"
+    },
+    "signal_scan_ref": {
+      "type": "string",
+      "description": "Reference to the signal-scan output (artifact slug)"
+    },
+    "next_step": {
+      "type": "string",
+      "const": "pitch",
+      "description": "The next skill in the pipeline"
+    },
+    "next_step_input_hint": {
+      "type": "object",
+      "required": [
+        "positioning_canvas_ref",
+        "lead_message",
+        "category_frame",
+        "primary_hook",
+        "anti_messaging",
+        "icp_title",
+        "first_conversation_moats"
+      ],
+      "properties": {
+        "positioning_canvas_ref": {
+          "type": "string",
+          "description": "Slug of the positioning canvas artifact for pitch to reference"
+        },
+        "lead_message": {
+          "type": "string",
+          "description": "The lead message for the landing page headline"
+        },
+        "category_frame": {
+          "type": "string",
+          "description": "The category frame sentence for positioning copy"
+        },
+        "primary_hook": {
+          "type": "string",
+          "description": "The emotional hook for the landing page above-the-fold"
+        },
+        "anti_messaging": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["phrase", "use_instead"],
+            "properties": {
+              "phrase": { "type": "string" },
+              "use_instead": { "type": "string" }
+            }
+          },
+          "description": "Anti-messaging rules pitch must follow when generating copy"
+        },
+        "icp_title": {
+          "type": "string",
+          "description": "ICP title for targeting landing page copy"
+        },
+        "first_conversation_moats": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Moats credible enough to lead with on the landing page"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "competitive_alternative": {
+      "type": "object",
+      "required": ["name", "type", "description", "strengths", "weaknesses", "price", "evidence"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Alternative name"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["direct_competitor", "indirect_competitor", "diy", "inaction", "internal"],
+          "description": "Type of alternative"
+        },
+        "description": {
+          "type": "string",
+          "description": "What it is and how the persona uses it"
+        },
+        "strengths": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "description": "What this alternative does well"
+        },
+        "weaknesses": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "description": "Where it falls short for the target persona"
+        },
+        "price": {
+          "type": "string",
+          "description": "Cost including time cost for free alternatives"
+        },
+        "evidence": {
+          "type": "string",
+          "description": "How you know this is a real alternative"
+        }
+      }
+    },
+    "attribute": {
+      "type": "object",
+      "required": ["attribute", "classification", "technical_basis", "alternatives_comparison"],
+      "properties": {
+        "attribute": {
+          "type": "string",
+          "description": "What the product does or has"
+        },
+        "classification": {
+          "type": "string",
+          "enum": ["truly_unique", "best_in_class", "table_stakes", "irrelevant"],
+          "description": "Classification against alternatives"
+        },
+        "technical_basis": {
+          "type": "string",
+          "description": "WHY this attribute exists -- the actual mechanism"
+        },
+        "alternatives_comparison": {
+          "type": "string",
+          "description": "How each Phase 1 alternative handles this"
+        },
+        "evidence": {
+          "type": "string",
+          "description": "Proof of uniqueness or best-in-class status"
+        }
+      }
+    },
+    "value_statement": {
+      "type": "object",
+      "required": ["attribute", "dimension", "value_statement", "intensity", "evidence"],
+      "properties": {
+        "attribute": {
+          "type": "string",
+          "description": "The advancing attribute this value derives from"
+        },
+        "dimension": {
+          "type": "string",
+          "enum": ["functional", "emotional", "social"]
+        },
+        "value_statement": {
+          "type": "string",
+          "description": "One sentence stating the value in persona language"
+        },
+        "intensity": {
+          "type": "string",
+          "enum": ["high", "medium", "low"]
+        },
+        "evidence": {
+          "type": "string",
+          "description": "Persona data or signal proving intensity"
+        }
+      }
+    }
+  }
+}

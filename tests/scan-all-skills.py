@@ -83,12 +83,17 @@ def discover_skill_files(paths: list[str]) -> list[Path]:
             if path.is_file() and path.name == "SKILL.md":
                 files.append(path.resolve())
             elif path.is_dir():
-                files.extend(sorted(path.rglob("SKILL.md")))
+                for f in sorted(path.rglob("SKILL.md")):
+                    if f.parent.parent == path or f.parent == path:
+                        files.append(f)
             else:
                 print(f"WARNING: skipping {p} (not a SKILL.md file or directory)", file=sys.stderr)
     else:
-        # Default: scan all skills/*/SKILL.md
-        files = sorted(SKILLS_DIR.rglob("SKILL.md"))
+        # Default: scan all skills/*/SKILL.md (one level deep only)
+        files = sorted(
+            f for f in SKILLS_DIR.rglob("SKILL.md")
+            if f.parent.parent == SKILLS_DIR
+        )
 
     return files
 

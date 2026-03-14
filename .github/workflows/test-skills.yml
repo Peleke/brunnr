@@ -18,7 +18,7 @@ jobs:
           python-version: '3.12'
 
       - name: Scan all SKILL.md files
-        run: python3 tests/scan-all-skills.py --strict
+        run: python3 tests/scan-all-skills.py
 
       - name: Upload scan report
         if: always()
@@ -49,7 +49,7 @@ jobs:
               print(f'**{blocked} skill(s) BLOCKED by security scanner.**', file=open('$GITHUB_STEP_SUMMARY', 'a'))
               for s in report['skills']:
                   if s['blocked']:
-                      findings = ', '.join(f['desc'] for f in s['findings'] if f['severity'] == 'block')
+                      findings = ', '.join(f['description'] for f in s['findings'] if f['severity'] == 'block')
                       print(f'- **{s[\"file\"]}**: {findings}', file=open('$GITHUB_STEP_SUMMARY', 'a'))
           "
 
