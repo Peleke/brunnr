@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/Peleke/brunnr/main/assets/hero.png" alt="brunnr — the well agents drink from" width="100%" />
+<img src="https://raw.githubusercontent.com/Peleke/brunnr/main/assets/hero.png" alt="brunnr: the well agents drink from" width="100%" />
 
 # brunnr
 
@@ -26,16 +26,16 @@
 
 **brunnr** is a security scanner and skills marketplace for [Claude Code](https://docs.anthropic.com/en/docs/claude-code).
 
-- **Scan** — a deterministic, zero-dependency scanner that checks SKILL.md files for prompt injection, credential theft, data exfiltration, supply chain poisoning, and 4 other threat classes. No LLM in the scan loop.
-- **Install** — fetch skills from the registry with review-before-install defaults. You see what you're installing before it touches your project.
-- **Eval** — validate skill quality by running test fixtures against Claude. Structured assertions on scores, format, and criteria.
-- **Pipeline** — scan + eval in one command with CI-ready exit codes.
+- **Scan**: deterministic, zero-dependency scanner that checks SKILL.md files for 8 threat classes (command injection, credential theft, prompt override, and more). No LLM in the scan loop.
+- **Install**: fetch skills from the registry with review-before-install defaults. You see what you're installing before it touches your project.
+- **Eval**: validate skill quality by running test fixtures against Claude. Structured assertions on scores, format, and criteria.
+- **Pipeline**: scan + eval in one command with CI-ready exit codes.
 
 ---
 
 ## Install
 
-### Option 1 — Claude Code (recommended)
+### Option 1: Claude Code (recommended)
 
 ```bash
 # Add the brunnr marketplace
@@ -48,7 +48,7 @@
 /ax-rubric
 ```
 
-### Option 2 — CLI
+### Option 2: CLI
 
 ```bash
 # uv (recommended)
@@ -89,7 +89,7 @@ brunnr eval ax-rubric --dry-run
 
 Old Norse *brunnr*: well, spring.
 
-As in *Mímisbrunnr* — the Well of Mímir beneath Yggdrasil. Odin sacrificed an eye to drink from it and gain wisdom. The well doesn't give you answers. It gives you the capacity to see what was always there.
+As in *Mímisbrunnr*, the Well of Mímir beneath Yggdrasil. Odin sacrificed an eye to drink from it and gain wisdom. The well doesn't give you answers. It gives you the capacity to see what was always there.
 
 Your agent doesn't need to sacrifice anything. It just needs tool descriptions that don't waste its context window.
 
