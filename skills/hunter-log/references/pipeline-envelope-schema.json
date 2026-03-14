@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pipeline-envelope-v1",
+  "title": "PipelineEnvelope",
+  "description": "Wrapper around any hunter pipeline skill output for persistence via hunter-log.",
+  "type": "object",
+  "required": ["skill", "version", "session_id", "timestamp", "input_refs", "output"],
+  "additionalProperties": false,
+  "properties": {
+    "skill": {
+      "type": "string",
+      "enum": ["signal-scan", "decision-log", "persona-extract", "offer-scope"],
+      "description": "The pipeline skill that produced this output."
+    },
+    "version": {
+      "type": "string",
+      "const": "1.0",
+      "description": "Envelope schema version."
+    },
+    "session_id": {
+      "type": "string",
+      "pattern": "^session-\\d{4}-\\d{2}-\\d{2}-\\d{3}$",
+      "description": "Unique session identifier. Format: session-YYYY-MM-DD-NNN.",
+      "examples": ["session-2025-06-15-001"]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of when the output was produced.",
+      "examples": ["2025-06-15T14:30:00Z"]
+    },
+    "input_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "IDs or filename slugs of upstream artifacts this output was derived from. Empty array for first-in-pipeline skills (signal-scan).",
+      "examples": [[], ["devops-education-2025-06-15"]]
+    },
+    "output": {
+      "type": "object",
+      "description": "The skill's structured JSON output. Shape varies by skill type -- see per-skill output schemas.",
+      "minProperties": 1
+    }
+  }
+}

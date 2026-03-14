@@ -1,0 +1,357 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Offer Scope Output",
+  "description": "Structured output from the offer-scope skill. Contains a complete 1-day build spec with value equation, positioning, distribution plan, revenue model, and kill criteria -- all grounded in persona data and SPEND signals.",
+  "type": "object",
+  "required": [
+    "offer_id",
+    "date",
+    "domain",
+    "opportunity",
+    "product_name",
+    "format",
+    "price_point",
+    "ship_time",
+    "value_equation",
+    "one_day_build_spec",
+    "positioning",
+    "distribution_plan",
+    "revenue_model",
+    "kill_criteria",
+    "persona_ref",
+    "decision_ref",
+    "signal_scan_ref"
+  ],
+  "properties": {
+    "offer_id": {
+      "type": "string",
+      "description": "Unique identifier for this offer scope, e.g. 'offer-devops-runbooks-2025-01-15'"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO 8601 date string"
+    },
+    "domain": {
+      "type": "string",
+      "description": "The domain this offer targets (e.g. 'DevOps education', 'cybersecurity careers')"
+    },
+    "opportunity": {
+      "type": "string",
+      "description": "The specific opportunity from the signal scan this offer addresses"
+    },
+    "product_name": {
+      "type": "string",
+      "description": "The name of the product being scoped"
+    },
+    "format": {
+      "type": "string",
+      "enum": [
+        "PDF",
+        "Notion template",
+        "video",
+        "video series",
+        "course",
+        "workshop",
+        "tool",
+        "SaaS",
+        "consultation",
+        "community",
+        "other"
+      ],
+      "description": "Product format, selected based on ship time, persona consumption context, and price ceiling"
+    },
+    "price_point": {
+      "type": "string",
+      "description": "Target price, grounded in SPEND data. e.g. '$29', '$19-29'"
+    },
+    "ship_time": {
+      "type": "string",
+      "description": "Realistic time to build and ship. e.g. '1 day', '6 hours'"
+    },
+    "decision_point": {
+      "type": "object",
+      "required": ["trigger", "justification", "connected_pain_stories"],
+      "properties": {
+        "trigger": {
+          "type": "string",
+          "description": "The selected decision trigger from persona data"
+        },
+        "justification": {
+          "type": "string",
+          "description": "Why this trigger was selected -- pain intensity, urgency, and willingness-to-pay reasoning"
+        },
+        "connected_pain_stories": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "object",
+            "required": ["situation", "pain", "evidence"],
+            "properties": {
+              "situation": {
+                "type": "string",
+                "description": "The persona's situation from the pain story"
+              },
+              "pain": {
+                "type": "string",
+                "description": "The specific pain experienced"
+              },
+              "evidence": {
+                "type": "string",
+                "description": "Real evidence: quote, data point, or observation"
+              }
+            }
+          }
+        }
+      }
+    },
+    "value_equation": {
+      "type": "object",
+      "required": [
+        "dream_outcome",
+        "perceived_likelihood",
+        "time_delay",
+        "effort_sacrifice"
+      ],
+      "properties": {
+        "dream_outcome": {
+          "type": "string",
+          "description": "What the buyer REALLY wants, in their language (not marketer-speak)"
+        },
+        "perceived_likelihood": {
+          "type": "string",
+          "description": "Why they will believe this works -- connected to operator's real credentials"
+        },
+        "time_delay": {
+          "type": "string",
+          "description": "How fast they see results -- what changes immediately upon purchase"
+        },
+        "effort_sacrifice": {
+          "type": "string",
+          "description": "How the product minimizes buyer effort -- what it does FOR them"
+        }
+      }
+    },
+    "one_day_build_spec": {
+      "type": "object",
+      "required": [
+        "deliverable",
+        "transformation",
+        "sections",
+        "total_estimated_hours",
+        "tools_needed"
+      ],
+      "properties": {
+        "deliverable": {
+          "type": "string",
+          "description": "What ships -- e.g. 'A 25-page PDF with decision trees and checklists for...'"
+        },
+        "transformation": {
+          "type": "string",
+          "description": "The single before/after transformation this product delivers"
+        },
+        "sections": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 7,
+          "items": {
+            "type": "object",
+            "required": ["title", "estimated_time", "content_type"],
+            "properties": {
+              "title": {
+                "type": "string",
+                "description": "Clear, benefit-oriented section name"
+              },
+              "estimated_time": {
+                "type": "string",
+                "description": "How long to create this section, e.g. '2 hours', '1.5 hours'"
+              },
+              "content_type": {
+                "type": "string",
+                "enum": [
+                  "decision tree",
+                  "checklist",
+                  "case study",
+                  "template",
+                  "framework",
+                  "guide",
+                  "reference",
+                  "worksheet"
+                ],
+                "description": "The type of content in this section"
+              }
+            }
+          }
+        },
+        "total_estimated_hours": {
+          "type": "number",
+          "maximum": 8,
+          "description": "Total build time in hours. Must not exceed 8."
+        },
+        "tools_needed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Tools required to build -- e.g. 'Claude', 'Canva', 'Gumroad'"
+        }
+      }
+    },
+    "positioning": {
+      "type": "object",
+      "required": [
+        "headline",
+        "subheadline",
+        "bullet_points",
+        "objection_handlers",
+        "social_proof_angle",
+        "guarantee"
+      ],
+      "properties": {
+        "headline": {
+          "type": "string",
+          "description": "Uses PAIN language from persona -- makes them think 'this person is reading my mind'"
+        },
+        "subheadline": {
+          "type": "string",
+          "description": "States the transformation: what they get, what changes, how fast"
+        },
+        "bullet_points": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 5,
+          "items": {
+            "type": "string"
+          },
+          "description": "Benefit statements following Feature -> Benefit -> Feeling formula"
+        },
+        "objection_handlers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["objection", "counter"],
+            "properties": {
+              "objection": {
+                "type": "string",
+                "description": "The objection from persona data"
+              },
+              "counter": {
+                "type": "string",
+                "description": "The counter -- acknowledges then addresses with evidence"
+              }
+            }
+          },
+          "description": "Mapped directly from persona objections list"
+        },
+        "social_proof_angle": {
+          "type": "string",
+          "description": "What credibility to lead with, matched to persona's authority bias"
+        },
+        "guarantee": {
+          "type": "string",
+          "description": "Risk reversal appropriate to the price point"
+        }
+      }
+    },
+    "distribution_plan": {
+      "type": "object",
+      "required": [
+        "launch_channel",
+        "launch_strategy",
+        "ongoing_channels",
+        "email_capture"
+      ],
+      "properties": {
+        "launch_channel": {
+          "type": "string",
+          "description": "Specific community/platform for initial launch -- e.g. 'r/devops value-first thread'"
+        },
+        "launch_strategy": {
+          "type": "string",
+          "description": "Step-by-step launch plan following the value-first approach"
+        },
+        "ongoing_channels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "2-3 specific channels for ongoing distribution with expected cadence"
+        },
+        "email_capture": {
+          "type": "boolean",
+          "description": "Whether to collect emails -- true if repeat purchase potential or upsell path exists"
+        }
+      }
+    },
+    "revenue_model": {
+      "type": "object",
+      "required": [
+        "unit_price",
+        "first_week_target",
+        "first_month_target",
+        "assumptions"
+      ],
+      "properties": {
+        "unit_price": {
+          "type": "number",
+          "description": "Unit price in dollars, derived from value equation + SPEND data + format ceiling (use the lowest)"
+        },
+        "first_week_target": {
+          "type": "object",
+          "required": ["units", "revenue"],
+          "properties": {
+            "units": {
+              "type": "number",
+              "description": "Target units sold in the first week"
+            },
+            "revenue": {
+              "type": "number",
+              "description": "Target revenue in the first week (units * price)"
+            }
+          }
+        },
+        "first_month_target": {
+          "type": "object",
+          "required": ["units", "revenue"],
+          "properties": {
+            "units": {
+              "type": "number",
+              "description": "Target units sold in the first month"
+            },
+            "revenue": {
+              "type": "number",
+              "description": "Target revenue in the first month (units * price)"
+            }
+          }
+        },
+        "assumptions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Every assumption stated explicitly: conversion rate, traffic estimate, community size, etc."
+        }
+      }
+    },
+    "kill_criteria": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "string"
+      },
+      "description": "Conditions under which to abandon the product -- defined before building to prevent sunk cost fallacy"
+    },
+    "persona_ref": {
+      "type": "string",
+      "description": "Reference to the persona-extract output file used as input"
+    },
+    "decision_ref": {
+      "type": "string",
+      "description": "Reference to the decision-log output file used as input"
+    },
+    "signal_scan_ref": {
+      "type": "string",
+      "description": "Reference to the signal-scan output file used as input"
+    }
+  }
+}

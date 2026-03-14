@@ -1,0 +1,488 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Community Pitch Output",
+  "description": "Structured output from the community-pitch skill. Contains a complete paid community plan with concept, platform recommendation, membership tiers, content cadence, launch plan, economics, community structure, bundling strategy, and kill criteria -- all grounded in persona data and signal scan evidence.",
+  "type": "object",
+  "required": [
+    "community_id",
+    "date",
+    "domain",
+    "opportunity",
+    "community_market_fit",
+    "community_concept",
+    "platform_recommendation",
+    "membership_tiers",
+    "content_cadence",
+    "launch_plan",
+    "economics",
+    "community_structure",
+    "bundling_strategy",
+    "kill_criteria",
+    "persona_ref",
+    "decision_ref",
+    "signal_scan_ref"
+  ],
+  "properties": {
+    "community_id": {
+      "type": "string",
+      "description": "Unique identifier for this community pitch, e.g. 'community-devops-mastery-2025-01-15'"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO 8601 date string"
+    },
+    "domain": {
+      "type": "string",
+      "description": "The domain this community targets (e.g. 'DevOps education', 'cybersecurity careers')"
+    },
+    "opportunity": {
+      "type": "string",
+      "description": "The specific opportunity from the signal scan this community addresses"
+    },
+    "community_market_fit": {
+      "type": "object",
+      "required": [
+        "overall_score",
+        "recurring_pain",
+        "peer_connection_desire",
+        "identity_component",
+        "knowledge_evolution",
+        "accountability_need",
+        "assessment"
+      ],
+      "properties": {
+        "overall_score": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 10,
+          "description": "Average of all five dimension scores"
+        },
+        "recurring_pain": {
+          "type": "object",
+          "required": ["score", "evidence"],
+          "properties": {
+            "score": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 10,
+              "description": "Is the pain ongoing or one-time?"
+            },
+            "evidence": {
+              "type": "string",
+              "description": "Specific persona data justifying this score"
+            }
+          }
+        },
+        "peer_connection_desire": {
+          "type": "object",
+          "required": ["score", "evidence"],
+          "properties": {
+            "score": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 10,
+              "description": "Do these personas want to connect with others like them?"
+            },
+            "evidence": {
+              "type": "string",
+              "description": "Specific persona data justifying this score"
+            }
+          }
+        },
+        "identity_component": {
+          "type": "object",
+          "required": ["score", "evidence"],
+          "properties": {
+            "score": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 10,
+              "description": "Is there a professional or personal identity tied to this domain?"
+            },
+            "evidence": {
+              "type": "string",
+              "description": "Specific persona data justifying this score"
+            }
+          }
+        },
+        "knowledge_evolution": {
+          "type": "object",
+          "required": ["score", "evidence"],
+          "properties": {
+            "score": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 10,
+              "description": "Does the knowledge in this domain change frequently?"
+            },
+            "evidence": {
+              "type": "string",
+              "description": "Specific signal scan data justifying this score"
+            }
+          }
+        },
+        "accountability_need": {
+          "type": "object",
+          "required": ["score", "evidence"],
+          "properties": {
+            "score": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 10,
+              "description": "Do these personas need external structure to follow through?"
+            },
+            "evidence": {
+              "type": "string",
+              "description": "Specific persona data justifying this score"
+            }
+          }
+        },
+        "assessment": {
+          "type": "string",
+          "description": "Overall assessment of community-market fit with reasoning"
+        }
+      }
+    },
+    "community_concept": {
+      "type": "object",
+      "required": ["name", "tagline", "transformation", "core_promise", "positioning_against_free"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Community name -- instantly clear about who it is for, implies transformation"
+        },
+        "tagline": {
+          "type": "string",
+          "description": "One-liner value prop. Formula: '[Outcome] for [specific persona] through [mechanism]'"
+        },
+        "transformation": {
+          "type": "object",
+          "required": ["before", "after"],
+          "properties": {
+            "before": {
+              "type": "string",
+              "description": "Current painful state, in persona's language"
+            },
+            "after": {
+              "type": "string",
+              "description": "Desired identity or capability they gain"
+            }
+          }
+        },
+        "core_promise": {
+          "type": "string",
+          "description": "The ONE thing this community delivers better than any free alternative"
+        },
+        "positioning_against_free": {
+          "type": "string",
+          "description": "Why someone would pay when free communities exist in this domain"
+        }
+      }
+    },
+    "platform_recommendation": {
+      "type": "object",
+      "required": [
+        "platform",
+        "rationale",
+        "monthly_cost_to_creator",
+        "features_used"
+      ],
+      "properties": {
+        "platform": {
+          "type": "string",
+          "enum": ["skool", "circle", "discord", "mighty_networks", "custom", "other"],
+          "description": "Recommended community platform"
+        },
+        "rationale": {
+          "type": "string",
+          "description": "Why this platform was selected, tied to persona needs and domain requirements"
+        },
+        "monthly_cost_to_creator": {
+          "type": "string",
+          "description": "Monthly platform cost for the creator, e.g. '$99/mo', 'Free'"
+        },
+        "features_used": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Specific platform features the community will use"
+        }
+      }
+    },
+    "membership_tiers": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "tier_name",
+          "price",
+          "annual_price",
+          "includes",
+          "target_persona"
+        ],
+        "properties": {
+          "tier_name": {
+            "type": "string",
+            "description": "Clear, descriptive tier name (not generic Gold/Silver/Bronze)"
+          },
+          "price": {
+            "type": "string",
+            "description": "Monthly price, e.g. '$49/mo'"
+          },
+          "annual_price": {
+            "type": "string",
+            "description": "Annual price with 15-20% discount, e.g. '$490/yr'"
+          },
+          "includes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Specific list of what is included in this tier"
+          },
+          "target_persona": {
+            "type": "string",
+            "description": "Which persona this tier is designed for"
+          }
+        }
+      }
+    },
+    "content_cadence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "content_type",
+          "frequency",
+          "time_investment",
+          "value_to_member"
+        ],
+        "properties": {
+          "content_type": {
+            "type": "string",
+            "description": "What the content is, e.g. 'weekly live Q&A', 'monthly architecture teardown', 'daily tips'"
+          },
+          "frequency": {
+            "type": "string",
+            "description": "How often, e.g. 'weekly', 'bi-weekly', 'monthly'"
+          },
+          "time_investment": {
+            "type": "string",
+            "description": "Creator time per occurrence, e.g. '1 hour', '30 minutes'"
+          },
+          "value_to_member": {
+            "type": "string",
+            "description": "Why members stay for this specifically -- the retention reason"
+          }
+        }
+      }
+    },
+    "launch_plan": {
+      "type": "object",
+      "required": [
+        "pre_launch",
+        "founding_member_offer",
+        "launch_channels",
+        "first_30_days",
+        "growth_strategy"
+      ],
+      "properties": {
+        "pre_launch": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Specific steps before opening the community (2-4 weeks before launch)"
+        },
+        "founding_member_offer": {
+          "type": "string",
+          "description": "Special deal for first N members -- specific N, specific pricing, specific perks"
+        },
+        "launch_channels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Where to announce -- specific platforms, communities, and formats"
+        },
+        "first_30_days": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "What happens in month 1, week by week"
+        },
+        "growth_strategy": {
+          "type": "string",
+          "description": "How to grow beyond the initial launch -- referrals, content marketing, partnerships, discovery"
+        }
+      }
+    },
+    "economics": {
+      "type": "object",
+      "required": [
+        "target_members_month_1",
+        "target_members_month_6",
+        "target_members_month_12",
+        "monthly_price",
+        "projected_mrr_month_1",
+        "projected_mrr_month_6",
+        "projected_mrr_month_12",
+        "churn_assumption",
+        "break_even_members",
+        "time_investment_weekly"
+      ],
+      "properties": {
+        "target_members_month_1": {
+          "type": "number",
+          "description": "Realistic member count at end of month 1, based on current audience and launch plan"
+        },
+        "target_members_month_6": {
+          "type": "number",
+          "description": "Projected member count at month 6, accounting for churn and growth"
+        },
+        "target_members_month_12": {
+          "type": "number",
+          "description": "Projected member count at month 12, accounting for churn and growth"
+        },
+        "monthly_price": {
+          "type": "number",
+          "description": "Monthly membership price in dollars (primary tier)"
+        },
+        "projected_mrr_month_1": {
+          "type": "number",
+          "description": "Projected monthly recurring revenue at end of month 1"
+        },
+        "projected_mrr_month_6": {
+          "type": "number",
+          "description": "Projected monthly recurring revenue at month 6"
+        },
+        "projected_mrr_month_12": {
+          "type": "number",
+          "description": "Projected monthly recurring revenue at month 12"
+        },
+        "churn_assumption": {
+          "type": "string",
+          "description": "Monthly churn rate assumption with rationale, e.g. '7-10% monthly -- standard for paid communities in this price range'"
+        },
+        "break_even_members": {
+          "type": "number",
+          "description": "Number of members needed to cover platform costs + creator time valued at market rate"
+        },
+        "time_investment_weekly": {
+          "type": "string",
+          "description": "Creator hours per week to maintain the community, e.g. '5-8 hours'"
+        }
+      }
+    },
+    "community_structure": {
+      "type": "object",
+      "required": [
+        "channels_or_spaces",
+        "onboarding_flow",
+        "engagement_mechanics",
+        "retention_hooks"
+      ],
+      "properties": {
+        "channels_or_spaces": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 7,
+          "items": {
+            "type": "object",
+            "required": ["name", "purpose", "who_posts"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Channel or space name"
+              },
+              "purpose": {
+                "type": "string",
+                "description": "What this space is for, in one sentence"
+              },
+              "who_posts": {
+                "type": "string",
+                "enum": ["creator only", "members", "both"],
+                "description": "Who contributes content to this space"
+              }
+            }
+          }
+        },
+        "onboarding_flow": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "string"
+          },
+          "description": "Steps that happen when someone joins -- goal is to get them posting within 24 hours"
+        },
+        "engagement_mechanics": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "string"
+          },
+          "description": "What keeps people active -- challenges, accountability, gamification, prompts, spotlights"
+        },
+        "retention_hooks": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "string"
+          },
+          "description": "What prevents churn -- relationships, progress tracking, exclusive access, reputation, upcoming events"
+        }
+      }
+    },
+    "bundling_strategy": {
+      "type": "object",
+      "required": [
+        "standalone_products",
+        "upsell_path",
+        "downsell_path"
+      ],
+      "properties": {
+        "standalone_products": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "One-time products (from offer-scope) that bundle with or complement the community"
+        },
+        "upsell_path": {
+          "type": "string",
+          "description": "What community members upgrade to -- coaching, mastermind, done-for-you, premium tier"
+        },
+        "downsell_path": {
+          "type": "string",
+          "description": "What to offer when someone cancels -- lower tier, pause, one-time product, alumni channel"
+        }
+      }
+    },
+    "kill_criteria": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "string"
+      },
+      "description": "Conditions under which to shut down the community -- defined before launch to prevent sunk cost fallacy"
+    },
+    "persona_ref": {
+      "type": "string",
+      "description": "Reference to the persona-extract output file used as input"
+    },
+    "decision_ref": {
+      "type": "string",
+      "description": "Reference to the decision-log output file used as input"
+    },
+    "signal_scan_ref": {
+      "type": "string",
+      "description": "Reference to the signal-scan output file used as input"
+    }
+  }
+}

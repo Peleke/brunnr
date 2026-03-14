@@ -1,0 +1,404 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SWOT Analysis Output",
+  "description": "Structured output from the swot-analysis skill. Contains an evidence-grounded SWOT analysis with verdict (proceed/proceed-with-modifications/pivot/kill), risk registry, moat assessment, and next-step hint for offer-scope -- all grounded in web research and upstream pipeline data.",
+  "type": "object",
+  "required": [
+    "swot_id",
+    "date",
+    "domain",
+    "opportunity",
+    "hypothesis",
+    "strengths",
+    "weaknesses",
+    "opportunities",
+    "threats",
+    "synthesis",
+    "risk_registry",
+    "moat_assessment",
+    "persona_ref",
+    "decision_ref",
+    "signal_scan_ref",
+    "next_step",
+    "next_step_input_hint"
+  ],
+  "properties": {
+    "swot_id": {
+      "type": "string",
+      "pattern": "^swot-.+-\\d{4}-\\d{2}-\\d{2}$",
+      "description": "Unique identifier for this SWOT analysis, e.g. 'swot-devops-education-2026-02-08'"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO 8601 date string"
+    },
+    "domain": {
+      "type": "string",
+      "description": "The domain this analysis targets (e.g. 'DevOps education', 'cybersecurity careers')"
+    },
+    "opportunity": {
+      "type": "string",
+      "description": "The specific opportunity being analyzed (e.g. 'DevOps Decision Kit + Skool Community')"
+    },
+    "hypothesis": {
+      "type": "object",
+      "required": ["product", "format", "price", "audience", "distribution_channel", "brand_thesis"],
+      "properties": {
+        "product": {
+          "type": "string",
+          "description": "What you are building -- name and brief description"
+        },
+        "format": {
+          "type": "string",
+          "description": "Delivery mechanism: PDF, course, community, tool, etc."
+        },
+        "price": {
+          "type": "string",
+          "description": "Specific price point or pricing model (e.g. '$29 one-time', '$49/mo subscription')"
+        },
+        "audience": {
+          "type": "string",
+          "description": "Who this is for, referencing the persona (e.g. 'mid-level DevOps engineers who have finished tutorials but cannot make production decisions')"
+        },
+        "distribution_channel": {
+          "type": "string",
+          "description": "Primary channel for reaching the audience (e.g. 'GitHub repo + r/devops + LinkedIn')"
+        },
+        "brand_thesis": {
+          "type": "string",
+          "description": "Core positioning statement -- the one sentence that makes the audience say 'that is exactly my problem'"
+        }
+      }
+    },
+    "strengths": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "$ref": "#/$defs/swot_point"
+      },
+      "description": "Internal, positive factors -- what the operator controls or possesses that supports the hypothesis. Minimum 4, each with cited evidence."
+    },
+    "weaknesses": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "$ref": "#/$defs/swot_point"
+      },
+      "description": "Internal, negative factors -- what the operator lacks or what is structurally fragile. Minimum 4, each with cited evidence. Must not be softened."
+    },
+    "opportunities": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "$ref": "#/$defs/swot_point"
+      },
+      "description": "External, positive factors -- market forces the operator does not control but can exploit. Minimum 4, each with cited evidence."
+    },
+    "threats": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "$ref": "#/$defs/swot_point"
+      },
+      "description": "External, negative factors -- market forces that could kill the hypothesis. Minimum 4, each with cited evidence."
+    },
+    "synthesis": {
+      "type": "object",
+      "required": ["verdict", "reasoning", "what_is_right", "what_is_wrong"],
+      "properties": {
+        "verdict": {
+          "type": "string",
+          "enum": ["proceed", "proceed-with-modifications", "pivot", "kill"],
+          "description": "The binding verdict on whether to proceed with the hypothesis"
+        },
+        "reasoning": {
+          "type": "string",
+          "description": "2-4 sentence explanation of the verdict, weighing strengths/opportunities against weaknesses/threats"
+        },
+        "what_is_right": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "description": "Specific aspects of the hypothesis that are validated by the analysis"
+        },
+        "what_is_wrong": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "description": "Specific aspects of the hypothesis that are problematic or fatal"
+        },
+        "modifications": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["modification", "reasoning"],
+            "properties": {
+              "modification": {
+                "type": "string",
+                "description": "Specific, actionable change to the hypothesis (e.g. 'Launch on Skool Hobby plan at $9/mo instead of Pro at $99/mo')"
+              },
+              "reasoning": {
+                "type": "string",
+                "description": "Why this modification is necessary, referencing specific SWOT findings"
+              }
+            }
+          },
+          "description": "Required if verdict is 'proceed-with-modifications'. Specific changes to make before proceeding to offer-scope."
+        },
+        "pivot_direction": {
+          "type": "string",
+          "description": "Required if verdict is 'pivot'. What the pivot looks like -- what changes and what stays the same."
+        },
+        "kill_reason": {
+          "type": "string",
+          "description": "Required if verdict is 'kill'. Plain explanation of why the hypothesis has fatal weaknesses."
+        }
+      }
+    },
+    "risk_registry": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "required": ["risk", "metric", "threshold", "timeframe", "monitoring_method"],
+        "properties": {
+          "risk": {
+            "type": "string",
+            "description": "What could go wrong -- one sentence, specific and measurable"
+          },
+          "metric": {
+            "type": "string",
+            "description": "What number or signal to watch (e.g. 'GitHub star count', 'monthly churn rate', 'email list conversion rate')"
+          },
+          "threshold": {
+            "type": "string",
+            "description": "At what value does this become a problem (e.g. 'below 500 stars', 'above 20%', 'below 2%')"
+          },
+          "timeframe": {
+            "type": "string",
+            "description": "When to check (e.g. '0-90 days', 'Month 2+', 'Weekly after launch')"
+          },
+          "monitoring_method": {
+            "type": "string",
+            "description": "How to measure -- specific tool, platform, or method (e.g. 'GitHub Insights weekly', 'Skool dashboard monthly', 'Google Analytics')"
+          }
+        }
+      },
+      "description": "Specific, measurable risks to monitor with metrics, thresholds, timeframes, and monitoring methods. 4-8 entries."
+    },
+    "moat_assessment": {
+      "type": "object",
+      "required": ["current_moat_strength", "not_a_moat", "moat_sources", "timeline"],
+      "properties": {
+        "current_moat_strength": {
+          "type": "string",
+          "enum": ["none", "thin", "emerging", "moderate", "strong"],
+          "description": "Honest assessment of current defensibility. For most new indie products, this is 'none'."
+        },
+        "not_a_moat": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "description": "Things the operator might think are defensible but are not (e.g. 'the content itself', 'being first to market')"
+        },
+        "moat_sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["source", "helmer_power", "timeline_to_emerge", "what_must_happen"],
+            "properties": {
+              "source": {
+                "type": "string",
+                "description": "What could become defensible (e.g. 'community network effects', 'brand positioning in niche')"
+              },
+              "helmer_power": {
+                "type": "string",
+                "enum": ["scale_economies", "network_economies", "counter_positioning", "switching_costs", "branding", "cornered_resource", "process_power"],
+                "description": "Which of Helmer's 7 Powers this maps to"
+              },
+              "timeline_to_emerge": {
+                "type": "string",
+                "description": "Realistic estimate of when this power could emerge (e.g. '12-18 months', '6-12 months')"
+              },
+              "what_must_happen": {
+                "type": "string",
+                "description": "Specific conditions required for this power to emerge (e.g. 'community reaches 200+ active members with genuine peer-to-peer value')"
+              }
+            }
+          },
+          "description": "Potential moat sources with realistic timelines and conditions"
+        },
+        "timeline": {
+          "type": "object",
+          "required": ["months_0_6", "months_6_12", "months_12_24", "months_24_plus"],
+          "properties": {
+            "months_0_6": {
+              "type": "string",
+              "description": "Moat assessment for months 0-6 (usually: no moat, competing on positioning and content quality)"
+            },
+            "months_6_12": {
+              "type": "string",
+              "description": "Moat assessment for months 6-12 (usually: emerging brand recognition, early community effects)"
+            },
+            "months_12_24": {
+              "type": "string",
+              "description": "Moat assessment for months 12-24 (usually: moderate moat if community reaches critical mass)"
+            },
+            "months_24_plus": {
+              "type": "string",
+              "description": "Moat assessment for months 24+ (endgame defensibility assessment)"
+            }
+          }
+        },
+        "bottom_line": {
+          "type": "string",
+          "description": "1-2 sentence honest summary of moat viability and timeline"
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "url"],
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Human-readable title of the source"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL of the source"
+          }
+        }
+      },
+      "description": "All sources cited in the analysis"
+    },
+    "persona_ref": {
+      "type": "string",
+      "description": "Reference to the persona-extract output used as input (artifact slug)"
+    },
+    "decision_ref": {
+      "type": "string",
+      "description": "Reference to the decision-log output used as input (artifact slug)"
+    },
+    "signal_scan_ref": {
+      "type": "string",
+      "description": "Reference to the signal-scan output used as input (artifact slug)"
+    },
+    "next_step": {
+      "type": "string",
+      "const": "offer-scope",
+      "description": "The next skill in the pipeline"
+    },
+    "next_step_input_hint": {
+      "type": "object",
+      "required": [
+        "hypothesis",
+        "validated_strengths",
+        "key_risks",
+        "recommended_modifications"
+      ],
+      "properties": {
+        "hypothesis": {
+          "type": "object",
+          "required": ["product", "format", "price", "audience", "distribution_channel", "brand_thesis"],
+          "properties": {
+            "product": {
+              "type": "string",
+              "description": "Product name and description (potentially modified by SWOT findings)"
+            },
+            "format": {
+              "type": "string",
+              "description": "Delivery format (potentially modified)"
+            },
+            "price": {
+              "type": "string",
+              "description": "Price point (potentially modified)"
+            },
+            "audience": {
+              "type": "string",
+              "description": "Target audience from persona"
+            },
+            "distribution_channel": {
+              "type": "string",
+              "description": "Distribution channel (potentially modified)"
+            },
+            "brand_thesis": {
+              "type": "string",
+              "description": "Core positioning statement"
+            }
+          },
+          "description": "The hypothesis as modified by SWOT findings (original if verdict is 'proceed')"
+        },
+        "validated_strengths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "description": "Strengths confirmed by evidence that offer-scope should lean into for positioning"
+        },
+        "key_risks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["risk", "mitigation_hint"],
+            "properties": {
+              "risk": {
+                "type": "string",
+                "description": "The specific risk from the risk registry"
+              },
+              "mitigation_hint": {
+                "type": "string",
+                "description": "Suggestion for how offer-scope can address this in the build spec (e.g. 'include in kill criteria', 'address in guarantee design', 'factor into distribution plan')"
+              }
+            }
+          },
+          "description": "Key risks that offer-scope should address in kill criteria, guarantee design, or distribution planning"
+        },
+        "recommended_modifications": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Modifications from the synthesis that offer-scope must incorporate. Empty array if verdict is 'proceed'."
+        }
+      }
+    }
+  },
+  "$defs": {
+    "swot_point": {
+      "type": "object",
+      "required": ["point", "evidence", "source", "impact"],
+      "properties": {
+        "point": {
+          "type": "string",
+          "description": "The SWOT point -- a clear, specific statement (e.g. 'The post-tutorial pain point is massive and validated')"
+        },
+        "evidence": {
+          "type": "string",
+          "description": "Specific evidence supporting this point -- data, quotes, statistics, research findings. Must be verifiable."
+        },
+        "source": {
+          "type": "string",
+          "description": "Where the evidence came from -- URL, platform, document name, or upstream pipeline reference"
+        },
+        "impact": {
+          "type": "string",
+          "enum": ["high", "medium", "low"],
+          "description": "Impact on the hypothesis succeeding (for strengths/opportunities) or failing (for weaknesses/threats)"
+        }
+      }
+    }
+  }
+}
