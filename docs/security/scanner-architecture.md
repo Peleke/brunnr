@@ -1,6 +1,6 @@
 # Scanner Architecture
 
-brunnr's security scanner is deterministic, regex-based, and uses zero external dependencies. It runs entirely on Python's standard library -- no LLM in the scan loop, no network calls, no third-party packages.
+brunnr's security scanner is deterministic, regex-based, and uses zero external dependencies. It runs entirely on Python's standard library.
 
 ---
 
