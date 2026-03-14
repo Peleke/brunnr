@@ -1,6 +1,6 @@
 # Scanner Architecture
 
-brunnr's security scanner is deterministic, regex-based, and uses zero external dependencies. It runs entirely on Python's standard library -- no LLM in the scan loop, no network calls, no third-party packages.
+brunnr's security scanner is deterministic, regex-based, and uses zero external dependencies. It runs entirely on Python's standard library.
 
 ---
 
@@ -15,7 +15,7 @@ brunnr's security scanner is deterministic, regex-based, and uses zero external 
 
 ## Pipeline flow
 
-The scanner processes each SKILL.md file through a multi-stage pipeline. Every stage runs against the same content, and findings are accumulated into a single `ScanResult`.
+The scanner processes each SKILL.md file through a pipeline of independent rules. The `Pipeline` parses content once into an immutable `ScanContext`, then passes it to each rule in sequence. Findings accumulate into a single `ScanResult`.
 
 <div style="max-width: 650px; margin: 2em auto;">
 <svg viewBox="0 0 620 880" aria-label="brunnr scanner architecture: 8-stage pipeline from input to verdict">
@@ -250,7 +250,94 @@ The scanner processes each SKILL.md file through a multi-stage pipeline. Every s
 
 ---
 
-## Internal components
+## Package structure
+
+The scanner is a Python package (`brunnr/scanner/`) built around a `Rule` protocol and a sequential `Pipeline`. Each threat class is an independent rule module.
+
+```
+brunnr/scanner/
+    __init__.py            # Public API: scan_skill_md, ScanResult, Finding, ...
+    types.py               # Severity, ThreatClass, Finding, ScanResult
+    context.py             # ScanContext (immutable pre-parsed content)
+    protocol.py            # Rule protocol definition
+    pattern_rule.py        # PatternRule base for regex-based rules
+    pipeline.py            # Pipeline class (sequential rule executor)
+    rules/
+        __init__.py        # DEFAULT_RULES registry
+        cmd_injection.py   # CommandInjectionRule        (BLOCK)
+        data_exfil.py      # DataExfiltrationRule        (BLOCK)
+        cred_theft.py      # CredentialTheftRule         (BLOCK)
+        prompt_override.py # PromptOverrideRule          (BLOCK)
+        supply_chain.py    # SupplyChainRule             (FLAG)
+        priv_esc.py        # PrivilegeEscalationRule     (FLAG)
+        steg_patterns.py   # StegPatternRule             (FLAG)
+        zero_width.py      # ZeroWidthRule               (FLAG)
+        url_domains.py     # UrlDomainRule               (INFO)
+        sensitive_paths.py # SensitivePathRule           (FLAG)
+        keyword_divergence.py # KeywordDivergenceRule    (FLAG)
+```
+
+---
+
+## Core abstractions
+
+### Rule protocol
+
+Every scanner rule implements the `Rule` protocol (structural typing, no inheritance required):
+
+```python
+@runtime_checkable
+class Rule(Protocol):
+    name: str
+    def scan(self, ctx: ScanContext) -> list[Finding]: ...
+```
+
+Rules are pure: they receive an immutable `ScanContext` and return a list of findings. They do not mutate shared state. This maps directly to a Rust `trait Rule`.
+
+### ScanContext
+
+The `Pipeline` parses raw content once into a frozen `ScanContext`, then passes it to every rule:
+
+```python
+@dataclass(frozen=True)
+class ScanContext:
+    raw: str          # Full content (frontmatter + body)
+    body: str         # Body text after frontmatter
+    description: str  # Description from frontmatter (may be "")
+```
+
+### PatternRule
+
+Seven of the eleven rules are regex pattern lists. `PatternRule` provides a shared `scan()` implementation. Subclasses only set class attributes:
+
+```python
+class CommandInjectionRule(PatternRule):
+    name = "command_injection"
+    threat_class = ThreatClass.COMMAND_INJECTION
+    severity = Severity.BLOCK
+    patterns = [
+        (r"curl\s+[^\s]+\s*\|\s*(?:ba)?sh", "curl pipe to shell"),
+        # ...
+    ]
+```
+
+The four custom rules (`ZeroWidthRule`, `UrlDomainRule`, `SensitivePathRule`, `KeywordDivergenceRule`) implement `scan()` directly.
+
+### Pipeline
+
+The `Pipeline` runs rules sequentially and collects findings:
+
+```python
+class Pipeline:
+    def __init__(self, rules: list[Rule] | None = None) -> None: ...
+    def scan(self, content: str) -> ScanResult: ...
+```
+
+`Pipeline()` with no arguments loads the default 11 rules. Custom pipelines are created by passing a rule list: `Pipeline(rules=[CommandInjectionRule(), PromptOverrideRule()])`. `Pipeline(rules=[])` is a null scanner.
+
+---
+
+## Internal types
 
 ### ScanResult
 
@@ -307,47 +394,43 @@ class ThreatClass(StrEnum):
 
 ---
 
-## Scan stages in detail
+## How rules execute
 
-### Stage 0: Parse
+### Parse
 
-The scanner separates the YAML frontmatter from the body content. The `description` field from frontmatter is extracted for semantic mismatch analysis. The body (everything after `---`) is used for pattern matching.
+The `Pipeline` constructs a `ScanContext` from raw content, separating YAML frontmatter from the body. The `description` field is extracted for semantic mismatch analysis. The body (everything after `---`) is used for pattern matching.
 
-### Stages 1-4: BLOCK-severity pattern checks
+### BLOCK-severity rules (4 rules)
 
-Command injection, data exfiltration, credential theft, and prompt override patterns are checked against the body text. Each regex match produces a BLOCK-severity finding with the matched text as evidence and the line number of the match.
+Command injection, data exfiltration, credential theft, and prompt override rules check regex patterns against the body text. Each match produces a BLOCK-severity finding with evidence and line number.
 
-### Stages 5-6: FLAG-severity pattern checks
+### FLAG-severity pattern rules (3 rules)
 
-Supply chain and privilege escalation patterns are checked with FLAG severity. These patterns have legitimate uses, so they warrant review rather than automatic rejection.
+Supply chain, privilege escalation, and steganographic pattern rules check with FLAG severity. These patterns have legitimate uses, so they warrant review rather than automatic rejection.
 
-### Stage 7: Steganographic checks
+### Steganographic: zero-width scan
 
-Two sub-checks:
+The `ZeroWidthRule` iterates over every character in the full content (including frontmatter) and flags any of the 12 monitored zero-width Unicode codepoints (U+200B, U+200C, U+200D, U+2060, U+FEFF, U+200E, U+200F, U+202A--U+202E).
 
-1. **Zero-width character scan** -- Iterates over every character in the full content (including frontmatter) and flags any zero-width Unicode characters (U+200B, U+200C, U+200D, U+2060, U+FEFF, and BiDi control characters).
+### Semantic mismatch rules (3 rules)
 
-2. **Hidden command scan** -- Regex check for commands hidden in HTML comments (`<!-- -->`) and CDATA sections.
+1. **UrlDomainRule** -- Extracts all URLs from the body and checks each domain against a curated allowlist. Non-allowlisted domains produce INFO findings. Unparseable URLs are flagged as possible evasion.
 
-### Stage 8: Semantic mismatch checks
+2. **SensitivePathRule** -- Checks for references to sensitive paths (`~/.ssh/`, `~/.aws/`, `.env`, etc.). Findings are suppressed if the skill has security context (detected by keywords like "audit", "security", "encrypt", etc.).
 
-Three sub-checks:
-
-1. **URL domain allowlist** -- Extracts all URLs from the body and checks each domain against a curated allowlist. Non-allowlisted domains produce INFO findings.
-
-2. **Sensitive path detection** -- Checks for references to sensitive paths (`~/.ssh/`, `~/.aws/`, `.env`, etc.). Findings are suppressed if the skill has security context (detected by keywords like "audit", "security", "encrypt", etc.).
-
-3. **Keyword divergence** -- Computes Jaccard similarity between tokenized description and tokenized body. Similarity below 0.02 with a sufficiently large body suggests the description is a decoy.
+3. **KeywordDivergenceRule** -- Computes Jaccard similarity between tokenized description and tokenized body. Similarity below 0.02 with a sufficiently large body suggests the description is a decoy.
 
 ---
 
 ## Security context detection
 
-The scanner includes a special check for skills that legitimately discuss security topics. If the content contains keywords like "audit", "security", "pentest", "protect", "encrypt", "ssh-keygen", or "git config", sensitive path references are suppressed. This prevents false positives on skills about SSH setup, security hardening, or infrastructure automation.
+The `SensitivePathRule` includes a check for skills that legitimately discuss security topics. If the content contains keywords like "audit", "security", "pentest", "protect", "encrypt", "ssh-keygen", or "git config", sensitive path references are suppressed. This prevents false positives on skills about SSH setup, security hardening, or infrastructure automation.
 
 ---
 
 ## Using the scanner as a library
+
+### Quick scan
 
 ```python
 from brunnr.scanner import scan_skill_md, ScanResult
@@ -364,4 +447,38 @@ else:
 
 # Get structured output
 print(result.to_dict())
+```
+
+### Custom pipeline
+
+```python
+from brunnr.scanner.pipeline import Pipeline
+from brunnr.scanner.rules.cmd_injection import CommandInjectionRule
+from brunnr.scanner.rules.prompt_override import PromptOverrideRule
+
+# Scan only for command injection and prompt override
+pipeline = Pipeline(rules=[CommandInjectionRule(), PromptOverrideRule()])
+result = pipeline.scan(content)
+```
+
+### Writing a custom rule
+
+Any class with a `name` attribute and a `scan(ctx) -> list[Finding]` method satisfies the `Rule` protocol:
+
+```python
+from brunnr.scanner.context import ScanContext
+from brunnr.scanner.types import Finding, Severity, ThreatClass
+
+class MyCustomRule:
+    name = "my_custom_check"
+
+    def scan(self, ctx: ScanContext) -> list[Finding]:
+        if "suspicious_pattern" in ctx.body:
+            return [Finding(
+                threat_class=ThreatClass.COMMAND_INJECTION,
+                severity=Severity.FLAG,
+                description="found suspicious pattern",
+                evidence="suspicious_pattern",
+            )]
+        return []
 ```
