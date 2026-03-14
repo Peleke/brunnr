@@ -6,7 +6,7 @@ import json
 import sys
 from pathlib import Path
 
-from brunnr.registry import fetch, registry_base, list_skills, repo_parts
+from brunnr.registry import fetch, registry_base, list_skills, repo_parts, list_directory
 from brunnr.lockfile import add_skill
 
 
@@ -77,10 +77,62 @@ def run(args) -> int:
     skill_file.write_text(content)
     print(f"  -> {skill_file} ({len(content.splitlines())} lines)")
 
+    # Fetch references/ (optional)
+    refs_entries = list_directory(base, f"skills/{slug}/references")
+    ref_files_installed: list[str] = []
+    if refs_entries and isinstance(refs_entries, list):
+        ref_dest = dest / "references"
+        ref_dest.mkdir(parents=True, exist_ok=True)
+        for entry in refs_entries:
+            if not isinstance(entry, dict):
+                continue
+            if entry.get("type") == "file" and entry.get("download_url"):
+                ref_content = fetch(entry["download_url"])
+                if ref_content:
+                    ref_path = ref_dest / entry["name"]
+                    ref_path.write_text(ref_content)
+                    ref_files_installed.append(
+                        f"skills/{slug}/references/{entry['name']}"
+                    )
+                    print(f"  -> references/{entry['name']}")
+            elif entry.get("type") == "dir" and entry.get("path"):
+                # One level of nesting (e.g., references/themes/)
+                sub_entries = list_directory(base, entry["path"])
+                if sub_entries and isinstance(sub_entries, list):
+                    sub_dest = ref_dest / entry["name"]
+                    sub_dest.mkdir(parents=True, exist_ok=True)
+                    for sub in sub_entries:
+                        if (
+                            isinstance(sub, dict)
+                            and sub.get("type") == "file"
+                            and sub.get("download_url")
+                        ):
+                            sub_content = fetch(sub["download_url"])
+                            if sub_content:
+                                sub_path = sub_dest / sub["name"]
+                                sub_path.write_text(sub_content)
+                                ref_files_installed.append(
+                                    f"skills/{slug}/references/{entry['name']}/{sub['name']}"
+                                )
+                                print(
+                                    f"  -> references/{entry['name']}/{sub['name']}"
+                                )
+
     # When --target is set, skip schema/test/lockfile (runtime-only install)
     if target:
         print(f"\nInstalled {slug} to {dest}/")
         return 0
+
+    # Auto-install shared conventions if this skill references them
+    if "_conventions.md" in content:
+        conventions_path = Path("skills") / "_conventions.md"
+        if not conventions_path.exists():
+            conv_url = f"{base}/skills/_conventions.md"
+            conv_content = fetch(conv_url)
+            if conv_content:
+                conventions_path.parent.mkdir(parents=True, exist_ok=True)
+                conventions_path.write_text(conv_content)
+                print("  -> skills/_conventions.md (shared conventions)")
 
     # Fetch schema (optional)
     schema_url = f"{base}/schemas/{slug}/output.schema.json"
@@ -124,6 +176,7 @@ def run(args) -> int:
 
     # Update lockfile
     installed_files = [f"skills/{slug}/SKILL.md"]
+    installed_files.extend(ref_files_installed)
     if schema_content:
         installed_files.append(f"schemas/{slug}/output.schema.json")
     add_skill(".", slug, content, args.registry, files=installed_files)
