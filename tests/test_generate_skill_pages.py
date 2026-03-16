@@ -202,6 +202,16 @@ class TestAdjustHeadings:
         result = adjust_headings("# Title", offset=1)
         assert result == "## Title"
 
+    @pytest.mark.parametrize("level", [1, 2, 3, 4, 5, 6])
+    @pytest.mark.parametrize("offset", [1, 2, 3, 4, 5])
+    def test_heading_level_invariant(self, level, offset):
+        """Property: output level = min(input_level + offset, 6)."""
+        heading = "#" * level + " Heading"
+        result = adjust_headings(heading, offset=offset)
+        expected_level = min(level + offset, 6)
+        expected = "#" * expected_level + " Heading"
+        assert result == expected
+
 
 # =========================================================================
 # compute_file_meta
@@ -234,6 +244,11 @@ class TestComputeFileMeta:
         f.write_bytes(b"x" * (1024 * 1024 + 1))
         meta = compute_file_meta(f)
         assert "MB" in meta["size_display"]
+
+    def test_nonexistent_file_raises(self, tmp_path):
+        f = tmp_path / "does_not_exist.md"
+        with pytest.raises(FileNotFoundError):
+            compute_file_meta(f)
 
 
 # =========================================================================
@@ -409,6 +424,57 @@ class TestLoadSkill:
             assert skill["slug"] == skill_dir.name
             assert skill["name"]  # Must have a name
             assert skill["file_meta"]["sha256"]  # Must have hash
+
+
+class TestLoadSkillSynthetic:
+    """Unit tests for load_skill with synthetic SKILL.md (no real filesystem dependency)."""
+
+    def test_load_synthetic_skill(self, tmp_path, monkeypatch):
+        import scripts.generate_skill_pages as mod
+        monkeypatch.setattr(mod, "SKILLS_DIR", tmp_path)
+
+        skill_dir = tmp_path / "fake-skill"
+        skill_dir.mkdir()
+        (skill_dir / "SKILL.md").write_text(
+            '---\nname: fake-skill\ndescription: "A synthetic test skill."\nlicense: MIT\n'
+            'metadata:\n  openclaw:\n    emoji: "\\U0001F4E1"\n    requires:\n      bins: ["jq"]\n'
+            "---\n# Fake Skill\nBody content here.\n"
+        )
+
+        skill = mod.load_skill("fake-skill")
+        assert skill is not None
+        assert skill["slug"] == "fake-skill"
+        assert skill["name"] == "fake-skill"
+        assert skill["description"] == "A synthetic test skill."
+        assert skill["license"] == "MIT"
+        assert skill["bins"] == ["jq"]
+        assert skill["has_readme"] is False
+        assert skill["scan"]["finding_count"] == 0
+        assert skill["file_meta"]["size_bytes"] > 0
+
+    def test_load_synthetic_skill_with_readme(self, tmp_path, monkeypatch):
+        import scripts.generate_skill_pages as mod
+        monkeypatch.setattr(mod, "SKILLS_DIR", tmp_path)
+
+        skill_dir = tmp_path / "with-readme"
+        skill_dir.mkdir()
+        (skill_dir / "SKILL.md").write_text("---\nname: with-readme\ndescription: Has README.\n---\n# Body\n")
+        (skill_dir / "README.md").write_text("# README\nDocumentation here.\n")
+
+        skill = mod.load_skill("with-readme")
+        assert skill is not None
+        assert skill["has_readme"] is True
+        assert "Documentation here" in skill["readme"]
+
+    def test_load_synthetic_skill_no_skill_md(self, tmp_path, monkeypatch):
+        import scripts.generate_skill_pages as mod
+        monkeypatch.setattr(mod, "SKILLS_DIR", tmp_path)
+
+        skill_dir = tmp_path / "no-skill-md"
+        skill_dir.mkdir()
+
+        skill = mod.load_skill("no-skill-md")
+        assert skill is None
 
 
 # =========================================================================
