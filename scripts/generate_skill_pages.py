@@ -106,6 +106,43 @@ def adjust_headings(md: str, offset: int = 2) -> str:
     return re.sub(r"^(#{1,6})([ \t])", replacer, md, flags=re.MULTILINE)
 
 
+_GITHUB_RAW = "https://github.com/Peleke/brunnr/blob/main/skills"
+
+
+def rewrite_relative_links(md: str, slug: str) -> str:
+    """Rewrite relative links to files that won't exist in docs/.
+
+    Converts references like `references/output-schema.json` and
+    `../signal-scan/` to GitHub blob URLs so mkdocs strict mode
+    doesn't fail on broken links.
+    """
+    def _rewrite(m: re.Match) -> str:
+        text = m.group(1)
+        href = m.group(2)
+        # Skip absolute URLs, anchors, and already-rewritten links
+        if href.startswith(("http://", "https://", "#", "mailto:")):
+            return m.group(0)
+        # Image and binary files: point to GitHub raw
+        if href.endswith((".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp")):
+            return f"[{text}](https://raw.githubusercontent.com/Peleke/brunnr/main/skills/{slug}/{href})"
+        # Resolve parent-dir references (../other-skill/)
+        if href.startswith("../"):
+            target = href.lstrip("../").rstrip("/")
+            return f"[{text}]({_GITHUB_RAW}/{target})"
+        # Resolve references/ and other relative paths
+        if href.startswith("references/") or "/" not in href and href.endswith(
+            (".json", ".md", ".yaml", ".yml", ".txt")
+        ):
+            return f"[{text}]({_GITHUB_RAW}/{slug}/{href})"
+        # Template variable leaks (${SKILLS_DIR}/...)
+        if href.startswith("${"):
+            clean = re.sub(r"\$\{[^}]+\}/", "", href)
+            return f"[{text}]({_GITHUB_RAW}/{clean})"
+        return m.group(0)
+
+    return re.sub(r"\[([^\]]*)\]\(([^)]+)\)", _rewrite, md)
+
+
 def compute_file_meta(path: Path) -> dict:
     """Compute size and SHA-256 for a file."""
     content = path.read_bytes()
@@ -206,8 +243,8 @@ def load_skill(slug: str) -> dict | None:
         "bins": bins if isinstance(bins, list) else [],
         "env_vars": env_vars if isinstance(env_vars, list) else [],
         "tags": tags,
-        "body": adjust_headings(body),
-        "readme": adjust_headings(readme_content) if readme_content else None,
+        "body": rewrite_relative_links(adjust_headings(body), slug),
+        "readme": rewrite_relative_links(adjust_headings(readme_content), slug) if readme_content else None,
         "has_readme": readme_content is not None,
         "scan": {
             "clean": str(scan_data.get("severity", "clean")) == "clean",

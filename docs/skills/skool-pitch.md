@@ -433,7 +433,7 @@ The pitch produces two artifacts:
 
 ##### 1. JSON Spec
 
-Structured data following the schema in [references/output-schema.json](references/output-schema.json). Wrapped in a PipelineEnvelope:
+Structured data following the schema in [references/output-schema.json](https://github.com/Peleke/brunnr/blob/main/skills/skool-pitch/references/output-schema.json). Wrapped in a PipelineEnvelope:
 
 ```json
 {

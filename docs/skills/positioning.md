@@ -764,7 +764,7 @@ Axes selected from the two most differentiating attributes:
 
 ##### 5. JSON Spec: `{vault}/Admin/Product-Discovery/Positioning/{product-slug}-positioning-{YYYY-MM-DD}.json`
 
-Structured data following the schema in [references/output-schema.json](references/output-schema.json). Must validate against that schema.
+Structured data following the schema in [references/output-schema.json](https://github.com/Peleke/brunnr/blob/main/skills/positioning/references/output-schema.json). Must validate against that schema.
 
 ---
 

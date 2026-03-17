@@ -491,7 +491,7 @@ Read ${SKILLS_DIR}/pitch/references/output-template.md
 
 ###### 1. JSON Spec: `{vault}/Admin/Product-Discovery/Pitches/{product-slug}-pitch-{YYYY-MM-DD}.json`
 
-Structured data following the schema in [references/output-schema.json](references/output-schema.json). Must validate against that schema.
+Structured data following the schema in [references/output-schema.json](https://github.com/Peleke/brunnr/blob/main/skills/pitch/references/output-schema.json). Must validate against that schema.
 
 ###### 2. Markdown Summary: `{vault}/Admin/Product-Discovery/Pitches/{product-slug}-pitch-{YYYY-MM-DD}.md`
 

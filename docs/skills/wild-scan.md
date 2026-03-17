@@ -114,7 +114,7 @@ Define the search strategy before harvesting anything.
 **Produce a search plan:**
 - Topic boundaries (what's in scope, what's adjacent but excluded)
 - Target platforms and specific communities (subreddits, HN, SO tags, etc.)
-- Search queries (see [references/search-playbook.md](references/search-playbook.md) for templates)
+- Search queries (see [references/search-playbook.md](https://github.com/Peleke/brunnr/blob/main/skills/wild-scan/references/search-playbook.md) for templates)
 - Pain language to target (frustration indicators, help-seeking patterns)
 - Learning stage filter (what level of quote are we looking for?)
 
@@ -137,7 +137,7 @@ Present this to the user for a quick confirmation. Scope adjustments here preven
 
 **This phase requires extensive web search. Use real quotes. Do NOT fabricate or paraphrase.**
 
-For each platform in the search plan, run targeted searches using the queries from Phase 1. See [references/search-playbook.md](references/search-playbook.md) for search query templates.
+For each platform in the search plan, run targeted searches using the queries from Phase 1. See [references/search-playbook.md](https://github.com/Peleke/brunnr/blob/main/skills/wild-scan/references/search-playbook.md) for search query templates.
 
 ##### Harvesting Rules
 
@@ -183,7 +183,7 @@ For each harvested quote, record:
 
 #### Phase 3: Quote Scoring
 
-Score every harvested quote on four dimensions. See [references/scoring-rubric.md](references/scoring-rubric.md) for detailed calibration.
+Score every harvested quote on four dimensions. See [references/scoring-rubric.md](https://github.com/Peleke/brunnr/blob/main/skills/wild-scan/references/scoring-rubric.md) for detailed calibration.
 
 | Dimension | Weight | What It Measures |
 |-----------|--------|------------------|
@@ -413,7 +413,7 @@ tags:
 
 ##### 2. JSON Index: `{vault}/Writing/From-The-Wild/wild-scan-{topic-slug}-{YYYY-MM-DD}.json`
 
-Structured data following the schema in [references/output-schema.json](references/output-schema.json).
+Structured data following the schema in [references/output-schema.json](https://github.com/Peleke/brunnr/blob/main/skills/wild-scan/references/output-schema.json).
 
 ##### 3. Content Briefs: `{vault}/Writing/Content-Briefs/ftw-{topic-slug}-{theme-slug}-{YYYY-MM-DD}.md`
 
@@ -642,7 +642,7 @@ The content marketing world runs on ideas. "I should write about Terraform state
 
 Quotes are not ideas. Quotes are evidence. When you start with a quote — a real human, in a real community, expressing real frustration, validated by real engagement (upvotes, replies, "same here" responses) — you are not guessing whether the topic resonates. You know it resonates. The engagement metrics are right there. The emotional language is right there. The pain is pre-validated.
 
-This is the same principle that drives product signal detection (see the [signal-scan](../signal-scan/) skill). The difference is scope and cadence:
+This is the same principle that drives product signal detection (see the [signal-scan](https://github.com/Peleke/brunnr/blob/main/skills/signal-scan) skill). The difference is scope and cadence:
 
 | | Signal Scan | Wild Scan |
 |---|---|---|
@@ -655,7 +655,7 @@ Wild Scan is the content engine that signal-scan is the product engine. Same phi
 
 ##### The Evidence Hierarchy
 
-Not all quotes are equal. The scoring system (see [references/scoring-rubric.md](references/scoring-rubric.md)) formalizes this, but the intuition is simple:
+Not all quotes are equal. The scoring system (see [references/scoring-rubric.md](https://github.com/Peleke/brunnr/blob/main/skills/wild-scan/references/scoring-rubric.md)) formalizes this, but the intuition is simple:
 
 **Strongest evidence:**
 - Specific problem + emotional language + high engagement + directly solvable with a repo
@@ -715,7 +715,7 @@ The quote is your content-market fit test. If 200 people upvoted someone's frust
 
 You provide a topic focus (e.g., "DevOps career transition for sysadmins learning to code"), a learning stage (e.g., "early career, some Linux experience, weak on coding"), and a repo angle (e.g., "production-ready infrastructure projects that double as portfolio pieces").
 
-The skill builds a search plan: which platforms, which communities, which search queries, which pain-language indicators. See [references/search-playbook.md](references/search-playbook.md) for the full query template library.
+The skill builds a search plan: which platforms, which communities, which search queries, which pain-language indicators. See [references/search-playbook.md](https://github.com/Peleke/brunnr/blob/main/skills/wild-scan/references/search-playbook.md) for the full query template library.
 
 ##### Phase 2: Quote Harvesting
 

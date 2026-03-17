@@ -1091,7 +1091,7 @@ Run an edit pass and it's ready to publish.
 In Module 0.2, we build the probability foundations that make this scoring
 rigorous instead of hand-wavy.
 
-→ [Module 0.2: Probability & Counting](../module-0.2-probability-counting/0.2-probability-counting-core.ipynb)
+→ [Module 0.2: Probability & Counting](https://github.com/Peleke/brunnr/blob/main/skills/module-0.2-probability-counting/0.2-probability-counting-core.ipynb)
 ```
 
 ##### Hero Images

@@ -419,7 +419,7 @@ The pitch produces two files, saved to the Obsidian vault:
 
 ##### 1. JSON Spec: `{vault}/Admin/Product-Discovery/Offers/community-pitch-{domain-slug}-{YYYY-MM-DD}.json`
 
-Structured data following the schema in [references/output-schema.json](references/output-schema.json). Must validate against that schema. Wrapped in a PipelineEnvelope:
+Structured data following the schema in [references/output-schema.json](https://github.com/Peleke/brunnr/blob/main/skills/community-pitch/references/output-schema.json). Must validate against that schema. Wrapped in a PipelineEnvelope:
 
 ```json
 {

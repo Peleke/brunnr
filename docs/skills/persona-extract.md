@@ -340,7 +340,7 @@ Vault path: `${VAULT}/Admin/Product-Discovery/Personas/`
 
 ##### 1. JSON: `persona-extract-[domain-slug]-[date].json`
 
-Structured data following the schema in [references/output-schema.json](references/output-schema.json). Must validate against that schema.
+Structured data following the schema in [references/output-schema.json](https://github.com/Peleke/brunnr/blob/main/skills/persona-extract/references/output-schema.json). Must validate against that schema.
 
 ##### 2. Markdown Summary
 
