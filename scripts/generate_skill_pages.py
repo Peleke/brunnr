@@ -56,7 +56,7 @@ _CONTENT_SLUGS = [
 _TOOLS_SLUGS = [
     "runlet", "issue", "sketches", "slidev-deck",
     "inline-svg-architecture-diagrams", "llms-txt-generator",
-    "mkdocs-site-generator",
+    "mkdocs-site-generator", "travel-pulse",
 ]
 
 for _slug in _HUNTER_SLUGS:
