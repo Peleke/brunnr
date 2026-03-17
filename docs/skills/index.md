@@ -2,7 +2,7 @@
 
 # Skills
 
-Browse all **37** skills in the brunnr registry.
+Browse all **38** skills in the brunnr registry.
 
 ```bash
 brunnr search          # search from the CLI
@@ -73,4 +73,10 @@ brunnr install <slug>  # install any skill below
 | 🎬 [slidev-deck](slidev-deck.md) | Generate product-oriented slide decks using sli.dev with embedded hand-drawn SVGs. | — | INFO (1) |
 | 🌍 [travel-pulse](travel-pulse.md) | Travel risk intelligence via the Travel Advisory API. | MIT | INFO (3) |
 
+
+## Other Skills
+
+| Skill | Description | License | Scan |
+|-------|-------------|---------|------|
+| [daily-standup-notes](glassworm-bypass.md) | Structured daily standup note generator. | MIT | CLEAN |
 

@@ -388,7 +388,7 @@ The scope produces two files, saved to the Obsidian vault:
 
 ##### 1. JSON Spec: `{vault}/Admin/Product-Discovery/Offers/offer-scope-{domain-slug}-{YYYY-MM-DD}.json`
 
-Structured data following the schema in [references/output-schema.json](references/output-schema.json). Must validate against that schema.
+Structured data following the schema in [references/output-schema.json](https://github.com/Peleke/brunnr/blob/main/skills/offer-scope/references/output-schema.json). Must validate against that schema.
 
 ##### 2. Markdown Summary: `{vault}/Admin/Product-Discovery/Offers/{domain-slug}-{YYYY-MM-DD}.md`
 
