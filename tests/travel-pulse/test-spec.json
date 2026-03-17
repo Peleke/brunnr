@@ -1,0 +1,153 @@
+{
+  "version": "1.0",
+  "skill": "travel-pulse",
+  "description": "Eval suite for the Travel Pulse / SafeGo skill. Tests SafeGo Score computation, output format, multi-country comparison, and edge case handling.",
+  "model": "claude-sonnet-4-20250514",
+  "cases": [
+    {
+      "id": "single-01-safe-country",
+      "description": "Query a generally safe country (Japan). Should produce a high SafeGo Score (A or B grade) with full breakdown.",
+      "input": "Is Japan safe to travel to?",
+      "assertions": [
+        { "type": "contains", "expected": "SafeGo Score" },
+        { "type": "contains", "expected": "Grade" },
+        { "type": "contains", "expected": "Advisory" },
+        { "type": "contains", "expected": "Safety" },
+        { "type": "contains", "expected": "Health" },
+        { "type": "contains", "expected": "Freedom" },
+        { "type": "contains", "expected": "Economic" },
+        { "type": "contains", "expected": "Climate" },
+        { "type": "contains", "expected": "/100" },
+        { "type": "contains", "expected": "Score Breakdown" },
+        { "type": "format_valid", "expected": true }
+      ]
+    },
+    {
+      "id": "single-02-risky-country",
+      "description": "Query a higher-risk country (Colombia). Should show moderate score with regional breakdown and DNT zones.",
+      "input": "What's the travel advisory for Colombia?",
+      "assertions": [
+        { "type": "contains", "expected": "SafeGo Score" },
+        { "type": "contains", "expected": "Grade" },
+        { "type": "contains", "expected": "Key Risks" },
+        { "type": "contains", "expected": "Regional Breakdown" },
+        { "type": "format_valid", "expected": true }
+      ]
+    },
+    {
+      "id": "single-03-high-risk-country",
+      "description": "Query a high-risk country (Ukraine). Should show low score, ceiling applied, emergency modifier if active.",
+      "input": "SafeGo score for Ukraine",
+      "assertions": [
+        { "type": "contains", "expected": "SafeGo Score" },
+        { "type": "contains", "expected": "Ceiling" },
+        { "type": "contains", "expected": "Penalties" },
+        { "type": "format_valid", "expected": true }
+      ]
+    },
+    {
+      "id": "compare-01-two-countries",
+      "description": "Compare two countries side by side. Should produce comparison table.",
+      "input": "Compare Thailand vs Vietnam for travel safety",
+      "assertions": [
+        { "type": "contains", "expected": "Comparison" },
+        { "type": "contains", "expected": "Thailand" },
+        { "type": "contains", "expected": "Vietnam" },
+        { "type": "contains", "expected": "SafeGo Score" },
+        { "type": "contains", "expected": "Recommendation" },
+        { "type": "format_valid", "expected": true }
+      ]
+    },
+    {
+      "id": "compare-02-three-countries",
+      "description": "Compare three countries. Table should have three data columns.",
+      "input": "Compare Japan, South Korea, and Thailand",
+      "assertions": [
+        { "type": "contains", "expected": "Japan" },
+        { "type": "contains", "expected": "South Korea" },
+        { "type": "contains", "expected": "Thailand" },
+        { "type": "contains", "expected": "Comparison" },
+        { "type": "format_valid", "expected": true }
+      ]
+    },
+    {
+      "id": "format-01-breakdown-table",
+      "description": "Verify the score breakdown table is present with all 6 sources.",
+      "input": "Travel risk assessment for Mexico",
+      "assertions": [
+        { "type": "contains", "expected": "Advisory" },
+        { "type": "contains", "expected": "Safety" },
+        { "type": "contains", "expected": "Health" },
+        { "type": "contains", "expected": "Freedom" },
+        { "type": "contains", "expected": "Economic" },
+        { "type": "contains", "expected": "Climate" },
+        { "type": "contains", "expected": "35%" },
+        { "type": "contains", "expected": "20%" },
+        { "type": "contains", "expected": "15%" },
+        { "type": "contains", "expected": "10%" },
+        { "type": "contains", "expected": "5%" }
+      ]
+    },
+    {
+      "id": "format-02-disclaimer",
+      "description": "Every report must end with the safety disclaimer.",
+      "input": "Is Costa Rica safe?",
+      "assertions": [
+        { "type": "contains", "expected": "not a substitute for official government travel advisories" },
+        { "type": "format_valid", "expected": true }
+      ]
+    },
+    {
+      "id": "format-03-rate-limit-footnote",
+      "description": "Report should include rate limit budget footnote.",
+      "input": "Travel pulse for Portugal",
+      "assertions": [
+        { "type": "contains", "expected": "requests remaining" },
+        { "type": "format_valid", "expected": true }
+      ]
+    },
+    {
+      "id": "format-04-math-shown",
+      "description": "Score computation should show raw, ceiling, and modifier steps.",
+      "input": "SafeGo score for Egypt",
+      "assertions": [
+        { "type": "contains", "expected": "Raw" },
+        { "type": "contains", "expected": "Ceiling" },
+        { "type": "contains", "expected": "Final" },
+        { "type": "format_valid", "expected": true }
+      ]
+    },
+    {
+      "id": "logistics-01-visa-currency",
+      "description": "Report should include travel logistics section.",
+      "input": "Should I go to India?",
+      "assertions": [
+        { "type": "contains", "expected": "Visa" },
+        { "type": "contains", "expected": "Currency" },
+        { "type": "contains", "expected": "Language" },
+        { "type": "format_valid", "expected": true }
+      ]
+    },
+    {
+      "id": "edge-01-country-name-resolution",
+      "description": "Should resolve 'South Korea' to KR and produce valid report.",
+      "input": "Is South Korea safe?",
+      "assertions": [
+        { "type": "contains", "expected": "Korea" },
+        { "type": "contains", "expected": "SafeGo Score" },
+        { "type": "format_valid", "expected": true }
+      ]
+    },
+    {
+      "id": "edge-02-informal-query",
+      "description": "Should handle informal phrasing and still produce a full report.",
+      "input": "thinking about going to brazil next month, is it sketchy?",
+      "assertions": [
+        { "type": "contains", "expected": "Brazil" },
+        { "type": "contains", "expected": "SafeGo Score" },
+        { "type": "contains", "expected": "Grade" },
+        { "type": "format_valid", "expected": true }
+      ]
+    }
+  ]
+}
