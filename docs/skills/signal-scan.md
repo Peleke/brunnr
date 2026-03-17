@@ -125,7 +125,7 @@ Present this to the user for confirmation before proceeding. Scope adjustments h
 
 **This phase requires extensive web search. Use real data. Do not hallucinate signals.**
 
-For each of the 7 signal types (see [references/signal-taxonomy.md](references/signal-taxonomy.md) for full definitions), systematically search the following sources:
+For each of the 7 signal types (see [references/signal-taxonomy.md](https://github.com/Peleke/brunnr/blob/main/skills/signal-scan/references/signal-taxonomy.md) for full definitions), systematically search the following sources:
 
 ##### Search Targets
 
@@ -154,7 +154,7 @@ For each of the 7 signal types (see [references/signal-taxonomy.md](references/s
 
 #### Phase 3: Signal Normalization
 
-Convert every raw signal into the structured format defined by its type. Each signal type has a specific schema (see [references/signal-taxonomy.md](references/signal-taxonomy.md) for field definitions).
+Convert every raw signal into the structured format defined by its type. Each signal type has a specific schema (see [references/signal-taxonomy.md](https://github.com/Peleke/brunnr/blob/main/skills/signal-scan/references/signal-taxonomy.md) for field definitions).
 
 **Normalization rules:**
 
@@ -234,7 +234,7 @@ The scan produces two files, saved to the Obsidian vault:
 
 ##### 1. JSON Scan: `{vault}/Admin/Product-Discovery/Signal-Scans/signal-scan-[domain-slug]-[date].json`
 
-Structured data following the schema in [references/output-schema.json](references/output-schema.json). Must validate against that schema.
+Structured data following the schema in [references/output-schema.json](https://github.com/Peleke/brunnr/blob/main/skills/signal-scan/references/output-schema.json). Must validate against that schema.
 
 ##### 2. Markdown Summary: `{vault}/Admin/Product-Discovery/Signal-Scans/{domain-slug}-{YYYY-MM-DD}.md`
 

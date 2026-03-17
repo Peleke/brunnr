@@ -75,7 +75,7 @@ This file defines: canonical vault path, folder-to-type mapping, frontmatter con
 
 Before starting, you need exactly one thing:
 
-1. **PipelineEnvelope** -- A JSON object wrapping the output of a pipeline skill. Must conform to the schema in [references/pipeline-envelope-schema.json](references/pipeline-envelope-schema.json).
+1. **PipelineEnvelope** -- A JSON object wrapping the output of a pipeline skill. Must conform to the schema in [references/pipeline-envelope-schema.json](https://github.com/Peleke/brunnr/blob/main/skills/hunter-log/references/pipeline-envelope-schema.json).
 
 If the caller provides raw skill output without an envelope, ask for the envelope fields (skill, session_id, timestamp, input_refs) or construct one from context.
 
@@ -184,7 +184,7 @@ Map skill type to vault subdirectory:
 
 #### Phase 3: Frontmatter Generation
 
-Use the schema for the document type. See [references/templates.md](references/templates.md) for full templates with frontmatter schemas.
+Use the schema for the document type. See [references/templates.md](https://github.com/Peleke/brunnr/blob/main/skills/hunter-log/references/templates.md) for full templates with frontmatter schemas.
 
 ##### Signal Scan Frontmatter
 ```yaml
@@ -265,7 +265,7 @@ tags: [hunter/session]
 
 #### Phase 4: Body Rendering
 
-Render the document body from the envelope's `output` field using the templates in [references/templates.md](references/templates.md).
+Render the document body from the envelope's `output` field using the templates in [references/templates.md](https://github.com/Peleke/brunnr/blob/main/skills/hunter-log/references/templates.md).
 
 **Rendering rules:**
 
@@ -343,7 +343,7 @@ The kanban board lives at `Pipeline.kanban.md`.
   [[{subdir}/{filename}]]
 ```
 
-**Board structure** (see [references/templates.md](references/templates.md) for the full kanban template):
+**Board structure** (see [references/templates.md](https://github.com/Peleke/brunnr/blob/main/skills/hunter-log/references/templates.md) for the full kanban template):
 ```markdown
 ---
 kanban-plugin: basic
