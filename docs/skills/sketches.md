@@ -175,7 +175,7 @@ Use muted, natural colors. Avoid saturated or neon colors.
 | Highlight | `#e74c3c` (red marker) |
 | Links/actions | `#3498db` (blue marker) |
 
-For other palettes (blueprint, notebook, pastel), see [references/svg-patterns.md](references/svg-patterns.md).
+For other palettes (blueprint, notebook, pastel), see [references/svg-patterns.md](https://github.com/Peleke/brunnr/blob/main/skills/sketches/references/svg-patterns.md).
 
 ##### Rotation for Casual Feel
 
@@ -276,7 +276,7 @@ For shaded or highlighted areas:
 
 #### Pattern Reference
 
-For detailed SVG snippet patterns (all primitive shapes, all arrow types, all icon symbols, complete wireframe examples, and all color palettes), read [references/svg-patterns.md](references/svg-patterns.md).
+For detailed SVG snippet patterns (all primitive shapes, all arrow types, all icon symbols, complete wireframe examples, and all color palettes), read [references/svg-patterns.md](https://github.com/Peleke/brunnr/blob/main/skills/sketches/references/svg-patterns.md).
 
 Load the patterns file when:
 - Building a wireframe with multiple UI components (inputs, buttons, toggles, navbars)

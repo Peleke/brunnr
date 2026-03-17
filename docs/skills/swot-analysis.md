@@ -358,7 +358,7 @@ The SWOT analysis produces two files:
 
 **Vault path**: `Admin/Product-Discovery/SWOT/{domain-slug}-{YYYY-MM-DD}.json`
 
-Structured data following the schema in [references/output-schema.json](references/output-schema.json). Must validate against that schema.
+Structured data following the schema in [references/output-schema.json](https://github.com/Peleke/brunnr/blob/main/skills/swot-analysis/references/output-schema.json). Must validate against that schema.
 
 ##### 2. Markdown Summary
 

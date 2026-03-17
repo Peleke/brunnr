@@ -39,7 +39,7 @@ pip install -e .
 
 ## The flow
 
-Here is the typical brunnr workflow: install the tool, scan your skills directory, review results.
+The typical brunnr workflow: install, scan your skills directory, review results.
 
 <div style="max-width: 520px; margin: 2em auto;">
 <svg viewBox="0 0 500 340" aria-label="brunnr getting started flow: install, scan, review">

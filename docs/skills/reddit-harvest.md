@@ -84,9 +84,9 @@ This file defines: canonical vault path, folder-to-type mapping, frontmatter con
 Before starting, establish with the user:
 
 1. **Topic focus** — What specific area to harvest (e.g., "Kubernetes deployment pain", "Terraform state management")
-2. **Target subreddits** — Specific subreddits to search, or use defaults from [references/subreddit-targets.md](references/subreddit-targets.md)
+2. **Target subreddits** — Specific subreddits to search, or use defaults from [references/subreddit-targets.md](https://github.com/Peleke/brunnr/blob/main/skills/reddit-harvest/references/subreddit-targets.md)
 3. **Min engagement threshold** — Minimum upvotes to consider a post worth drilling into (default: 10)
-4. **Pain queries** — Specific search terms, or use defaults from wild-scan's [search-playbook.md](${SKILLS_DIR}/wild-scan/references/search-playbook.md)
+4. **Pain queries** — Specific search terms, or use defaults from wild-scan's [search-playbook.md](https://github.com/Peleke/brunnr/blob/main/skills/wild-scan/references/search-playbook.md)
 5. **Posts per subreddit** — How many top posts to drill into per subreddit (default: 10)
 
 If the user says "just go" with a topic, use these defaults:

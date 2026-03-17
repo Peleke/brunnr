@@ -217,7 +217,7 @@ Member quotes: [list of quote indices from the wild-scan JSON]
 Anchor quotes: [2-3 highest-scoring quotes that define this cluster]
 ```
 
-See [references/clustering-guide.md](references/clustering-guide.md) for detailed dimension analysis and example patterns.
+See [references/clustering-guide.md](https://github.com/Peleke/brunnr/blob/main/skills/quote-to-persona/references/clustering-guide.md) for detailed dimension analysis and example patterns.
 
 ---
 
