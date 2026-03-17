@@ -24,8 +24,44 @@ nav:
     - Threat Classes: security/threat-classes.md
     - Scanner Architecture: security/scanner-architecture.md
   - Skills:
+    - Browse All: skills/index.md
     - Writing Skills: skills/writing-skills.md
-    - "AX Rubric (Example)": skills/ax-rubric.md
+    - "✍️ article-draft": skills/article-draft.md
+    - "🧪 assessment-generator": skills/assessment-generator.md
+    - "🔬 ax-interview": skills/ax-interview.md
+    - "ax-rubric": skills/ax-rubric.md
+    - "✍️ chapter-generator": skills/chapter-generator.md
+    - "🏘️ community-pitch": skills/community-pitch.md
+    - "📰 content-planner": skills/content-planner.md
+    - "🗺️ curriculum-planner": skills/curriculum-planner.md
+    - "⚖️ decision-log": skills/decision-log.md
+    - "engagement-pass": skills/engagement-pass.md
+    - "📒 hunter-log": skills/hunter-log.md
+    - "🏗️ inline-svg-architecture-diagrams": skills/inline-svg-architecture-diagrams.md
+    - "🎫 issue": skills/issue.md
+    - "lesson-generator": skills/lesson-generator.md
+    - "📣 linwheel-content-engine": skills/linwheel-content-engine.md
+    - "🎯 linwheel-source-optimizer": skills/linwheel-source-optimizer.md
+    - "🤖 llms-txt-generator": skills/llms-txt-generator.md
+    - "📚 mkdocs-site-generator": skills/mkdocs-site-generator.md
+    - "notebook-builder": skills/notebook-builder.md
+    - "🎯 offer-scope": skills/offer-scope.md
+    - "outline-writer": skills/outline-writer.md
+    - "👤 persona-extract": skills/persona-extract.md
+    - "🚀 pitch": skills/pitch.md
+    - "🎯 positioning": skills/positioning.md
+    - "🔬 quote-to-persona": skills/quote-to-persona.md
+    - "📡 reddit-harvest": skills/reddit-harvest.md
+    - "runlet": skills/runlet.md
+    - "🧱 scaffold-pass": skills/scaffold-pass.md
+    - "📡 signal-scan": skills/signal-scan.md
+    - "✏️ sketches": skills/sketches.md
+    - "🎓 skool-pitch": skills/skool-pitch.md
+    - "🎬 slidev-deck": skills/slidev-deck.md
+    - "🔍 swot-analysis": skills/swot-analysis.md
+    - "🧪 technical-tutorial": skills/technical-tutorial.md
+    - "👁️ visual-pass": skills/visual-pass.md
+    - "🎯 wild-scan": skills/wild-scan.md
   - Integrations:
     - Claude Code: integrations/claude-code.md
     - CI/CD: integrations/ci-cd.md

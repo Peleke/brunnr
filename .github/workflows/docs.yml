@@ -5,7 +5,10 @@ on:
     branches: [main]
     paths:
       - "docs/**"
+      - "skills/**"
       - "mkdocs.yml"
+      - "scripts/generate_skill_pages.py"
+      - "scripts/templates/**"
       - ".github/workflows/docs.yml"
   workflow_dispatch:
 
@@ -30,6 +33,12 @@ jobs:
 
       - name: Install mkdocs dependencies
         run: pip install -r docs/requirements.txt
+
+      - name: Install brunnr (for scanner)
+        run: pip install -e .
+
+      - name: Generate skill pages
+        run: python scripts/generate_skill_pages.py
 
       - name: Build docs
         run: mkdocs build --strict
