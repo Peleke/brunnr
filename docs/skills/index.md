@@ -2,7 +2,7 @@
 
 # Skills
 
-Browse all **36** skills in the brunnr registry.
+Browse all **37** skills in the brunnr registry.
 
 ```bash
 brunnr search          # search from the CLI
@@ -71,5 +71,6 @@ brunnr install <slug>  # install any skill below
 | [runlet](runlet.md) | Turn a braindump into tomorrow's runlist. | — | CLEAN |
 | ✏️ [sketches](sketches.md) | Create hand-drawn-style visual sketches, wireframes, and diagrams using inline SVG. | — | INFO (1) |
 | 🎬 [slidev-deck](slidev-deck.md) | Generate product-oriented slide decks using sli.dev with embedded hand-drawn SVGs. | — | INFO (1) |
+| 🌍 [travel-pulse](travel-pulse.md) | Travel risk intelligence via the Travel Advisory API. | MIT | INFO (3) |
 
 

@@ -1,0 +1,197 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "travel-pulse-output-v1",
+  "title": "SafeGo Score Output",
+  "description": "Structured representation of a SafeGo travel risk assessment. The skill outputs markdown, but this schema defines the extractable structure for programmatic validation.",
+  "type": "object",
+  "required": ["country", "safego_score", "grade", "advisory_level", "breakdown"],
+  "properties": {
+    "country": {
+      "type": "object",
+      "required": ["code", "name"],
+      "properties": {
+        "code": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$",
+          "description": "ISO 3166-1 alpha-2 country code."
+        },
+        "name": {
+          "type": "string",
+          "description": "Full country name."
+        },
+        "flag": {
+          "type": "string",
+          "description": "Emoji flag."
+        }
+      },
+      "additionalProperties": false
+    },
+    "safego_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Final SafeGo Score after ceiling and modifiers."
+    },
+    "grade": {
+      "type": "string",
+      "enum": ["A", "B", "C", "D", "F"],
+      "description": "Letter grade derived from SafeGo Score."
+    },
+    "advisory_level": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4,
+      "description": "US State Dept advisory level (1-4)."
+    },
+    "advisory_label": {
+      "type": "string",
+      "description": "Human-readable advisory level label."
+    },
+    "breakdown": {
+      "type": "object",
+      "required": ["advisory", "safety", "health", "freedom", "economic", "climate"],
+      "properties": {
+        "advisory": { "$ref": "#/$defs/source_score" },
+        "safety": { "$ref": "#/$defs/source_score" },
+        "health": { "$ref": "#/$defs/source_score" },
+        "freedom": { "$ref": "#/$defs/source_score" },
+        "economic": { "$ref": "#/$defs/source_score" },
+        "climate": { "$ref": "#/$defs/source_score" }
+      },
+      "additionalProperties": false
+    },
+    "computation": {
+      "type": "object",
+      "properties": {
+        "raw_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Weighted composite before ceiling and modifiers."
+        },
+        "ceiling": {
+          "type": ["number", "null"],
+          "description": "Advisory level ceiling applied, or null if uncapped."
+        },
+        "capped_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "modifiers": {
+          "type": "object",
+          "properties": {
+            "trend": {
+              "type": "integer",
+              "description": "+3 improving, 0 stable, -5 worsening."
+            },
+            "do_not_travel_zones": {
+              "type": "integer",
+              "description": "-2 per zone."
+            },
+            "emergency": {
+              "type": "integer",
+              "description": "-15 if state of emergency, else 0."
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "penalties": {
+      "type": "object",
+      "properties": {
+        "trend_direction": {
+          "type": "string",
+          "enum": ["improving", "stable", "worsening"]
+        },
+        "do_not_travel_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "state_of_emergency": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "key_risks": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Advisory reasons from the API."
+    },
+    "regions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "level"],
+        "properties": {
+          "name": { "type": "string" },
+          "level": { "type": "integer", "minimum": 1, "maximum": 4 },
+          "summary": { "type": "string" }
+        },
+        "additionalProperties": false
+      },
+      "description": "Regional breakdown from the API."
+    },
+    "logistics": {
+      "type": "object",
+      "properties": {
+        "visa_required": { "type": "boolean" },
+        "currency": { "type": "string" },
+        "language": { "type": "string" },
+        "notable_restrictions": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "api_meta": {
+      "type": "object",
+      "properties": {
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the advisory was last updated."
+        },
+        "rate_limit_remaining": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "API requests remaining this period."
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "source_score": {
+      "type": "object",
+      "required": ["score", "weight", "contribution"],
+      "properties": {
+        "score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Normalized source score (0-100)."
+        },
+        "weight": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Weight in the composite (e.g., 0.35)."
+        },
+        "contribution": {
+          "type": "number",
+          "description": "score * weight"
+        },
+        "used_default": {
+          "type": "boolean",
+          "description": "True if source data was missing and default was used."
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
