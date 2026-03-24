@@ -1,0 +1,85 @@
+name: Publish Skills to ClawHub
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'skills/**'
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: 'Version bump level'
+        required: false
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+jobs:
+  security-scan:
+    name: Security Gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install brunnr
+        run: pip install -e .
+      - name: Run security scan
+        run: python3 tests/scan-all-skills.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: clawhub-scan-report
+          path: tests/artifacts/scan-report.json
+
+  publish:
+    name: Publish to ClawHub
+    needs: security-scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install clawhub CLI
+        run: npm install -g clawhub
+
+      - name: Authenticate
+        run: clawhub login --token "$CLAWHUB_TOKEN"
+        env:
+          CLAWHUB_TOKEN: ${{ secrets.CLAWHUB_TOKEN }}
+
+      - name: Verify auth
+        run: clawhub whoami
+
+      - name: Dry-run sync (preview)
+        run: |
+          clawhub sync \
+            --root skills/ \
+            --all \
+            --bump ${{ github.event.inputs.bump || 'patch' }} \
+            --dry-run \
+            --no-input
+
+      - name: Publish changed skills
+        run: |
+          clawhub sync \
+            --root skills/ \
+            --all \
+            --bump ${{ github.event.inputs.bump || 'patch' }} \
+            --tags latest \
+            --changelog "Published from brunnr main (${{ github.sha }})" \
+            --no-input
+
+      - name: Post publish summary
+        if: always()
+        run: |
+          echo "## ClawHub Publish Results" >> $GITHUB_STEP_SUMMARY
+          echo "Commit: \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "Bump: ${{ github.event.inputs.bump || 'patch' }}" >> $GITHUB_STEP_SUMMARY
