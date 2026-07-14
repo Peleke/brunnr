@@ -1,0 +1,59 @@
+<svg viewBox="0 0 940 470" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif">
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#566578"/></marker>
+    <style>
+      .t{fill:#0e1626;font-weight:800;font-size:19px;letter-spacing:-.01em}
+      .h{fill:#14202e;font-weight:700;font-size:14.5px}
+      .s{fill:#566578;font-size:11.5px}
+      .lab{fill:#16486f;font-weight:700;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+      .lab-sig{fill:#8a5a15;font-weight:700;font-size:11px;letter-spacing:.06em}
+      .src{fill:#eef3f8;stroke:#1f6499;stroke-width:1.6}
+      .human{fill:#f5f8fb;stroke:#1f6499;stroke-width:1.5}
+      .agent{fill:#fbf6ee;stroke:#b8791f;stroke-width:1.6}
+      .edge{stroke:#566578;stroke-width:1.7;fill:none}
+      .glyph{fill:none;stroke:#334155;stroke-width:1.8}
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="940" height="470" fill="#f7f9fb"/>
+
+  <text x="40" y="40" class="t">One source, two audiences</text>
+
+  <!-- source -->
+  <rect x="40" y="196" width="150" height="70" rx="10" class="src"/>
+  <text x="115" y="226" text-anchor="middle" class="h">The work</text>
+  <text x="115" y="246" text-anchor="middle" class="s">one dossier</text>
+
+  <!-- split edges -->
+  <path class="edge" d="M190,220 C250,220 250,120 300,120" marker-end="url(#ar)"/>
+  <path class="edge" d="M190,242 C250,242 250,352 300,352" marker-end="url(#ar)"/>
+
+  <!-- HUMAN branch -->
+  <text x="302" y="80" class="lab">Human pack</text>
+  <rect x="302" y="90" width="230" height="66" rx="10" class="human"/>
+  <text x="417" y="118" text-anchor="middle" class="h">Deck + one-pagers</text>
+  <text x="417" y="138" text-anchor="middle" class="s">something to skim and decide from</text>
+  <path class="edge" d="M532,123 L636,123" marker-end="url(#ar)"/>
+  <text x="584" y="112" text-anchor="middle" class="s">skim + decide</text>
+  <!-- person glyph -->
+  <circle cx="700" cy="104" r="13" class="glyph"/>
+  <path class="glyph" d="M676,150 C676,126 724,126 724,150"/>
+  <text x="762" y="128" class="s">a person</text>
+
+  <!-- AGENT branch -->
+  <text x="302" y="308" class="lab-sig">Agent pack</text>
+  <rect x="302" y="318" width="230" height="78" rx="10" class="agent"/>
+  <text x="417" y="346" text-anchor="middle" class="h">README + docs + contract</text>
+  <text x="417" y="366" text-anchor="middle" class="s">a spec the agent runs</text>
+  <text x="417" y="383" text-anchor="middle" class="lab-sig">context · input · output</text>
+  <path class="edge" d="M532,357 L636,357" marker-end="url(#ar)"/>
+  <text x="584" y="346" text-anchor="middle" class="s">parse + execute</text>
+  <!-- agent nodes glyph -->
+  <circle cx="690" cy="340" r="7" class="glyph"/>
+  <circle cx="716" cy="360" r="7" class="glyph"/>
+  <circle cx="690" cy="380" r="7" class="glyph"/>
+  <path class="glyph" d="M690,347 L716,360 M690,373 L716,360"/>
+  <text x="762" y="364" class="s">a fleet</text>
+
+  <text x="40" y="450" class="s">Both are generated from one source. The audiences differ; the truth does not.</text>
+</svg>

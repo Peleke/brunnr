@@ -1,0 +1,5 @@
+{
+  "name": "dossier-generator",
+  "description": "Turn a built system plus a deal context into three linked artifacts: a dual-format dossier (human executive summary + agent implementation spec), a researched customer-acquisition package, and a talk-through deck. ROI-first, confidence-bounded, client codenamed.",
+  "version": "1.0.0"
+}
