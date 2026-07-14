@@ -53,6 +53,36 @@
       "keywords": ["adhd", "neurodivergent", "productivity", "task-management", "obsidian", "executive-function"],
       "category": "productivity",
       "tags": ["runlet", "nd", "task-compiler", "executive-function", "daily-planning"]
+    },
+    {
+      "name": "agent-pack",
+      "source": "agent-pack",
+      "description": "Package finished work into an agent-consumable pack: an entrypoint README carrying an explicit context/input/output contract, the source documents, zipped. Use when a deliverable needs to be executed, not just read.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Peleke Sengstacke"
+      },
+      "homepage": "https://peleke.github.io/brunnr/skills/agent-pack/",
+      "repository": "https://github.com/Peleke/brunnr",
+      "license": "MIT",
+      "keywords": ["agents", "deliverables", "handoff", "packaging", "io-contract", "multi-agent"],
+      "category": "productivity",
+      "tags": ["agent-pack", "handoff", "contract", "packaging"]
+    },
+    {
+      "name": "dossier-generator",
+      "source": "dossier-generator",
+      "description": "Turn a built system plus a deal context into three linked artifacts: a dual-format dossier (human executive summary + agent implementation spec), a researched customer-acquisition package, and a talk-through deck. ROI-first, confidence-bounded, client codenamed.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Peleke Sengstacke"
+      },
+      "homepage": "https://peleke.github.io/brunnr/skills/dossier-generator/",
+      "repository": "https://github.com/Peleke/brunnr",
+      "license": "MIT",
+      "keywords": ["sales", "positioning", "roi", "deal-flow", "packaging", "case-study"],
+      "category": "sales",
+      "tags": ["dossier", "build-to-deal", "pitch", "go-to-market"]
     }
   ]
 }

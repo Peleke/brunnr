@@ -2,7 +2,7 @@
 
 # Skills
 
-Browse all **38** skills in the brunnr registry.
+Browse all **40** skills in the brunnr registry.
 
 ```bash
 brunnr search          # search from the CLI
@@ -78,5 +78,7 @@ brunnr install <slug>  # install any skill below
 
 | Skill | Description | License | Scan |
 |-------|-------------|---------|------|
+| [agent-pack](agent-pack.md) | Package a piece of completed work into an agent-consumable pack: an entrypoint README, the source documents, and an... | — | CLEAN |
+| [dossier-generator](dossier-generator.md) | Turn a built system plus a client/deal context into three linked artifacts: a dual-format dossier (human executive... | — | CLEAN |
 | [daily-standup-notes](glassworm-bypass.md) | Structured daily standup note generator. | MIT | CLEAN |
 

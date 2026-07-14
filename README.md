@@ -10,7 +10,7 @@
 
 [![PyPI](https://img.shields.io/pypi/v/brunnr)](https://pypi.org/project/brunnr/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Skills](https://img.shields.io/badge/skills-3-4ade80)](skills/)
+[![Skills](https://img.shields.io/badge/skills-5-4ade80)](skills/)
 
 </div>
 
@@ -82,6 +82,8 @@ brunnr eval ax-rubric --dry-run
 | **[ax-interview](skills/ax-interview/)** | Run a structured AX Interview on agent-tool sessions. Gricean maxim analysis, implicature detection, CoT faithfulness check, Pragmatic Coherence Score with ranked fixes. | [The AX Interview](https://peleke.me/writing/ax-07-the-ax-interview) |
 | **[runlet](skills/runlet/)** | Turn a braindump into an ND-adapted daily runlist. Classifies by activation energy and focus axis. | — |
 | **[linwheel-content-engine](skills/linwheel-content-engine/)** | Orchestrate LinkedIn content creation via LinWheel MCP. Analyze, reshape, refine, schedule, comment. | [LinWheel](https://www.linwheel.io) |
+| **[agent-pack](skills/agent-pack/)** | Package finished work so an agent can execute it. Entrypoint README, explicit context/input/output contract, zipped. | — |
+| **[dossier-generator](skills/dossier-generator/)** | Turn a build into a deal. Dual-format dossier (human summary + agent spec), researched acquisition package, talk-through deck. | — |
 
 ---
 
