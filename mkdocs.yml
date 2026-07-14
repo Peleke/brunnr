@@ -26,6 +26,7 @@ nav:
   - Skills:
     - Browse All: skills/index.md
     - Writing Skills: skills/writing-skills.md
+    - "agent-pack": skills/agent-pack.md
     - "✍️ article-draft": skills/article-draft.md
     - "🧪 assessment-generator": skills/assessment-generator.md
     - "🔬 ax-interview": skills/ax-interview.md
@@ -35,6 +36,7 @@ nav:
     - "📰 content-planner": skills/content-planner.md
     - "🗺️ curriculum-planner": skills/curriculum-planner.md
     - "⚖️ decision-log": skills/decision-log.md
+    - "dossier-generator": skills/dossier-generator.md
     - "engagement-pass": skills/engagement-pass.md
     - "daily-standup-notes": skills/glassworm-bypass.md
     - "📒 hunter-log": skills/hunter-log.md
