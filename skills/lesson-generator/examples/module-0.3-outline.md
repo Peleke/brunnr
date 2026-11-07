@@ -113,7 +113,7 @@ Then: `binomial_pmf(3, 5, ???)`. "But here's what you've been avoiding. In the r
 ### PART 1: Story A — The Hardcoded Priors
 
 **The context**: buildlog's bandit needs a starting belief for every rule. When you set it up, you hardcoded:
-- New rules: `Beta(3,1)` — "probably good"
+- Newly added rules: `Beta(3,1)` — "probably good"
 - Untested: `Beta(1,1)` — "no opinion"
 
 **The code**: Show the actual BetaParams dataclass. Show how the bandit uses `np.random.beta(α, β)` to sample and decide.

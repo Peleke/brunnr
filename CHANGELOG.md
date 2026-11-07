@@ -4,6 +4,17 @@ All notable changes to brunnr will be documented in this file.
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-11-07
+
+### Changed
+- README notes the limits of pattern scanners and links the Glassworm bypass.
+- Removed the Glassworm bypass from `skills/`. It remains in `exploits/`.
+- Removed the "no false negatives" design principle from the scanner docs.
+
+### Fixed
+- Publish workflow installs the dependencies the test suite needs.
+- Reworded a lesson-generator example that tripped the prompt-override rule.
+
 ## [0.1.2] - 2026-03-12
 
 ### Fixed
