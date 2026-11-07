@@ -9,7 +9,6 @@ brunnr's security scanner is deterministic, regex-based, and uses zero external 
 1. **Deterministic** -- Same input produces the same output every time. No probabilistic models, no temperature settings, no API calls.
 2. **Zero dependencies** -- The scanner uses only `re`, `string`, `dataclasses`, `enum`, and `urllib.parse` from Python's stdlib.
 3. **Fast** -- Scanning a SKILL.md file takes milliseconds. The scanner can process hundreds of files in under a second.
-4. **No false negatives by design** -- The scanner errs on the side of flagging. A legitimate skill that triggers a pattern gets reviewed. A malicious skill that evades all patterns is the failure mode to minimize.
 
 ---
 

@@ -35,7 +35,7 @@
 
 ## Scanners aren't enough
 
-Pattern scanners, including this one, can't show that a skill is safe. A clean scan is a starting point. [`exploits/glassworm-bypass`](exploits/glassworm-bypass/) shows why: it hides an exfiltration command in Unicode variation selectors, and the skill passes all 11 scanner rules with zero findings.
+Pattern scanners, including this one, can't show that a skill is safe. A clean scan is a starting point. [`exploits/glassworm-bypass`](https://github.com/Peleke/brunnr/tree/main/exploits/glassworm-bypass) shows why: it hides an exfiltration command in Unicode variation selectors, and the skill passes all 11 scanner rules with zero findings.
 
 ---
 

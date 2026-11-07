@@ -13,7 +13,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install -e ".[eval]" pytest
+      - run: pip install -e ".[eval]" pytest pyyaml jinja2
       - run: python -m pytest tests/ -q
 
   build:
