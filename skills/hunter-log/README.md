@@ -262,7 +262,7 @@ hunter-log receives an envelope and:
 ### Vault Structure
 
 ```
-ClawTheCurious/
+<your-vault>/
   Product Discovery/
     Pipeline.kanban.md          # Master kanban board (visual pipeline tracking)
     Plan.md                     # Index page with live Dataview queries

@@ -1,0 +1,50 @@
+{
+  "version": "1.0",
+  "skill": "learning-check",
+  "description": "Eval suite for learning-check: verdict table, evidence rule, memory-vs-learning call.",
+  "model": "claude-sonnet-4-20250514",
+  "cases": [
+    {
+      "id": "memory-only-bot",
+      "description": "Support bot with unweighted vector memory and no outcome capture: Q1 no, Q2 partial, Q3 no",
+      "fixture": "fixtures/memory-only-bot.json",
+      "assertions": [
+        {
+          "type": "has_table",
+          "expected": true
+        },
+        {
+          "type": "contains",
+          "expected": "Learning Check"
+        },
+        {
+          "type": "contains",
+          "expected": "First fix"
+        },
+        {
+          "type": "contains",
+          "expected": "Memory vs learning"
+        }
+      ]
+    },
+    {
+      "id": "eval-backed-classifier",
+      "description": "Classifier with labeled eval set, nightly scoring, demo rebuild: mostly yes",
+      "fixture": "fixtures/eval-backed-classifier.json",
+      "assertions": [
+        {
+          "type": "has_table",
+          "expected": true
+        },
+        {
+          "type": "contains",
+          "expected": "yes"
+        },
+        {
+          "type": "contains",
+          "expected": "held-out"
+        }
+      ]
+    }
+  ]
+}

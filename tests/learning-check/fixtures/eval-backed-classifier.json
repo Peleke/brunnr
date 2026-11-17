@@ -1,0 +1,3 @@
+{
+  "input": "Run a learning check on this agent (description only):\n\nAn intent classifier built with DSPy. 400 labeled examples split 300 train / 100 held-out. Every night a job reruns BootstrapFewShot on the train split with an exact-match metric, scores the held-out split, and keeps the new demos only if held-out accuracy improves. Scores are written to evals/history.csv with dates; the last three months show 0.81, 0.84, 0.86."
+}

@@ -46,7 +46,7 @@ that a columnist will turn into articles.
 ## Vault Output Path
 
 ```
-${VAULT}/Buildlog/
+${VAULT}/Buildlog/   (${VAULT} = your Obsidian vault path)
 ```
 
 Filename: `YYYY-MM-DD-{slug}.md` (e.g., `2026-02-27-github-watcher-shipped.md`)

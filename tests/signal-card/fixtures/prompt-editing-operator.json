@@ -1,0 +1,3 @@
+{
+  "input": "Make a signal card for this agent (description only):\n\nA code-review bot posts comments on pull requests. Authors can resolve or dismiss each comment. Today, when the bot is noisy, I read a week of comments and edit its prompt."
+}

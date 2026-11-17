@@ -1,0 +1,31 @@
+{
+  "version": "1.0",
+  "skill": "signal-card",
+  "description": "Eval suite for signal-card: one-line signal, candidate table, slots.",
+  "model": "claude-sonnet-4-20250514",
+  "cases": [
+    {
+      "id": "prompt-editing-operator",
+      "description": "Operator edits prompt by hand: card must say 'you are the loop' and propose a signal",
+      "fixture": "fixtures/prompt-editing-operator.json",
+      "assertions": [
+        {
+          "type": "has_table",
+          "expected": true
+        },
+        {
+          "type": "contains",
+          "expected": "gets better when"
+        },
+        {
+          "type": "contains",
+          "expected": "you are the loop"
+        },
+        {
+          "type": "contains",
+          "expected": "Slots"
+        }
+      ]
+    }
+  ]
+}
