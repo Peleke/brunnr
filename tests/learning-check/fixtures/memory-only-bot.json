@@ -1,0 +1,3 @@
+{
+  "input": "Run a learning check on this agent (description only, no repo):\n\nA support chatbot answers customer tickets with Claude. After each conversation it writes a summary to a vector database and retrieves the top 5 summaries for new tickets. We don't record whether the ticket was resolved. When answers are bad, I edit the system prompt. We have no eval set."
+}

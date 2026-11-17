@@ -1,0 +1,3 @@
+{
+  "input": "Run a field table on this agent. Source:\n\n```ts\n// src/flows/claims.ts\nconst EXTRACT = s(`sourceText:string -> claims:object{ text:string \"one claim\", quoteText:string \"verbatim span of sourceText that states the claim\", claimKind:class \"impact, change, action, caveat\" }[]`);\n\n// src/flows/check.ts\nexport function checkQuotes(src: string, claims: {quoteText: string}[]) {\n  return claims.every(c => src.includes(c.quoteText));\n}\n\n// src/render.ts\nexport const render = (claims: {text: string}[]) => claims.map(c => '- ' + c.text).join('\\n');\n```\n\nevals/gold/ has 5 labeled entries with expected claim texts and quotes. scripts/eval.ts computes verbatim rate for quoteText."
+}

@@ -1,0 +1,31 @@
+{
+  "version": "1.0",
+  "skill": "field-table",
+  "description": "Eval suite for field-table: four columns per output, delete list, gaps.",
+  "model": "claude-sonnet-4-20250514",
+  "cases": [
+    {
+      "id": "claims-signature",
+      "description": "Signature with one unread, undefined enum field: must land on the delete list",
+      "fixture": "fixtures/claims-signature.json",
+      "assertions": [
+        {
+          "type": "has_table",
+          "expected": true
+        },
+        {
+          "type": "contains",
+          "expected": "claimKind"
+        },
+        {
+          "type": "contains",
+          "expected": "Delete"
+        },
+        {
+          "type": "contains",
+          "expected": "quoteText"
+        }
+      ]
+    }
+  ]
+}
