@@ -180,7 +180,7 @@ Group Batch items by context. Label the groups so they can be done in clumps —
 
 A markdown file at:
 ```
-~/Library/Mobile Documents/iCloud~md~obsidian/Documents/ClawTheCurious/Runlist/YYYY-MM-DD.md
+<your-obsidian-vault>/Runlist/YYYY-MM-DD.md
 ```
 
 ### Format

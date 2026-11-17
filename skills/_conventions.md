@@ -12,13 +12,13 @@ All skills in the hunter product discovery pipeline MUST follow these convention
 
 ## Path Variables
 
-These variables are used throughout all pipeline skills. The current values for this installation are listed below. When the pipeline is ejected to a standalone repo, these are set via `.hunter-config.yaml`.
+These variables are used throughout all pipeline skills. Set them for your installation; the values below are placeholders. When the pipeline is ejected to a standalone repo, these are set via `.hunter-config.yaml`.
 
-| Variable | Current Value |
+| Variable | Example value |
 |---|---|
-| `${VAULT}` | `/Users/peleke/Library/Mobile Documents/iCloud~md~obsidian/Documents/ClawTheCurious` |
-| `${SKILLS_DIR}` | `/Users/peleke/Documents/Projects/skills/skills/custom` |
-| `${HUNTER_DIR}` | `/Users/peleke/Documents/Projects/hunter` |
+| `${VAULT}` | `~/path/to/your-obsidian-vault` |
+| `${SKILLS_DIR}` | `~/.claude/skills` |
+| `${HUNTER_DIR}` | `~/path/to/hunter` |
 
 ---
 
@@ -29,7 +29,7 @@ These variables are used throughout all pipeline skills. The current values for 
 ${VAULT}
 ```
 
-**IMPORTANT**: This is the iCloud-synced vault. Do NOT write to `/Users/peleke/Documents/Vaults/ClawTheCurious/` — that path is stale.
+**IMPORTANT**: Write only to the vault `${VAULT}` points at. If you keep more than one copy of the vault, set `${VAULT}` to the synced one.
 
 ### Skills Directory
 ```

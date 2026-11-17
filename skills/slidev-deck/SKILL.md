@@ -15,7 +15,7 @@ Generate complete, ready-to-present slide decks using sli.dev (Markdown-based pr
 Before doing ANYTHING, read the shared conventions file:
 
 ```
-Read /Users/peleke/Documents/Projects/skills/skills/custom/_conventions.md
+Read ${SKILLS_DIR}/_conventions.md
 ```
 
 This file defines: canonical vault path, folder-to-type mapping, frontmatter contract, valid statuses, tag hierarchy, cross-reference syntax, and the PipelineEnvelope schema. All output from this skill MUST conform to those conventions. If there is a conflict between this SKILL.md and `_conventions.md`, the conventions file wins.
@@ -1012,7 +1012,7 @@ For each slide that needs an SVG, generate it inline following the SVG Style Con
 For complex SVGs (architecture diagrams, pipeline flows, competitive maps), use the `sketches` skill's technique reference:
 
 ```
-Read /Users/peleke/Documents/Projects/skills/skills/custom/sketches/references/svg-patterns.md
+Read ${SKILLS_DIR}/sketches/references/svg-patterns.md
 ```
 
 Adapt the whiteboard palette patterns to the dark palette colors.
