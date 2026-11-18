@@ -1,4 +1,4 @@
-"""SKILL.md security scanner — 7-class deterministic threat detection.
+"""SKILL.md security scanner — 8-class deterministic threat detection.
 
 No LLM in the gate. All detection is regex + keyword analysis.
 

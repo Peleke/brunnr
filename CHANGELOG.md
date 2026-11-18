@@ -4,6 +4,18 @@ All notable changes to brunnr will be documented in this file.
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-11-18
+
+### Added
+- `VariationSelectorRule` flags Glassworm-style payloads hidden in Unicode variation selectors. The bypass in `exploits/glassworm-bypass` is now detected.
+- `tests/test_no_leaks.py` fails CI if a tracked file contains a home-directory path, an iCloud vault path, or a session transcript line.
+
+### Changed
+- The sdist contains only the package, README, LICENSE, CHANGELOG and pyproject. Earlier sdists included every tracked file.
+- Regenerated the skill docs pages; local paths are replaced with placeholders.
+- Removed the `content-planner` and `linwheel-content-engine` skills.
+- Corrected counts: 40 skills, 8 threat classes, 12 rules.
+
 ## [0.2.1] - 2026-11-07
 
 ### Changed

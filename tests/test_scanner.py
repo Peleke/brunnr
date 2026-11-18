@@ -1,4 +1,4 @@
-"""Tests for the 7-class SKILL.md security scanner.
+"""Tests for the 8-class SKILL.md security scanner.
 
 7b pattern: all malicious fixtures MUST be detected (block or flag).
 7c pattern: all benign fixtures MUST NOT be blocked.

@@ -10,7 +10,7 @@
 
 [![PyPI](https://img.shields.io/pypi/v/brunnr)](https://pypi.org/project/brunnr/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Skills](https://img.shields.io/badge/skills-5-4ade80)](skills/)
+[![Skills](https://img.shields.io/badge/skills-40-4ade80)](skills/)
 
 </div>
 
@@ -35,7 +35,7 @@
 
 ## Scanners aren't enough
 
-Pattern scanners, including this one, can't show that a skill is safe. A clean scan is a starting point. [`exploits/glassworm-bypass`](https://github.com/Peleke/brunnr/tree/main/exploits/glassworm-bypass) shows why: it hides an exfiltration command in Unicode variation selectors, and the skill passes all 11 scanner rules with zero findings.
+Pattern scanners, including this one, can't show that a skill is safe. A clean scan is a starting point. [`exploits/glassworm-bypass`](https://github.com/Peleke/brunnr/tree/main/exploits/glassworm-bypass) shows why: it hid an exfiltration command in Unicode variation selectors, and the skill passed all 11 rules in 0.2.1 with zero findings. 0.2.2 adds a rule for that technique. The point stands for techniques no rule covers yet.
 
 ---
 
