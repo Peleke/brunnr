@@ -19,76 +19,18 @@ Think of it as a package registry, but for agent system prompts instead of code 
 
 ## How brunnr connects
 
-The connection between brunnr and Skillipedia works through GitHub's cross-repository dispatch:
+Skillipedia pulls from brunnr. Nothing in brunnr pushes to it.
 
-1. **You publish a skill** in a brunnr-compatible repository (skills in `skills/<slug>/SKILL.md`).
-2. **brunnr scans it** for security threats and validates the structure.
-3. **A GitHub Action dispatches** an event to the Skillipedia repository.
-4. **Skillipedia ingests** the skill metadata and generates a catalog entry.
+1. **A skill lands on brunnr `main`** under `skills/<slug>/SKILL.md`, after passing the PR security scan.
+2. **Every 6 hours**, Skillipedia's `Build Skillipedia` workflow checks out brunnr's `skills/` directory. brunnr is public, so no token is involved.
+3. **`scripts/sync-from-brunnr.py`** converts each `SKILL.md` into an entry under `src/content/entries/`.
+4. **The workflow commits changed entries** to Skillipedia `main`, and the site rebuilds.
 
-### Cross-repo dispatch
+To sync immediately, run the workflow by hand:
 
-The dispatch event contains the skill's metadata:
-
-```json
-{
-  "event_type": "skill_published",
-  "client_payload": {
-    "skill_slug": "ax-rubric",
-    "source_repo": "Peleke/brunnr",
-    "scan_result": "clean",
-    "description": "Score agent-facing tool descriptions...",
-    "version": "1.0"
-  }
-}
+```bash
+gh workflow run "Build Skillipedia" --repo Peleke/skillipedia
 ```
-
-### GitHub Actions workflow
-
-To enable automatic publishing to Skillipedia, add a workflow to your repository:
-
-```yaml
-name: Publish Skill
-
-on:
-  push:
-    paths:
-      - 'skills/*/SKILL.md'
-    branches:
-      - main
-
-jobs:
-  publish:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      - name: Install brunnr
-        run: pip install brunnr
-
-      - name: Scan
-        run: brunnr scan --strict
-
-      - name: Dispatch to Skillipedia
-        if: success()
-        uses: peter-evans/repository-dispatch@v3
-        with:
-          token: ${{ secrets.SKILLIPEDIA_TOKEN }}
-          repository: Peleke/skillipedia
-          event-type: skill_published
-          client-payload: |
-            {
-              "skill_slug": "${{ github.event.head_commit.message }}",
-              "source_repo": "${{ github.repository }}"
-            }
-```
-
-!!! note "Token required"
-    Cross-repository dispatch requires a personal access token with `repo` scope stored as a repository secret.
 
 ---
 
