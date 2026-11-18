@@ -1,3 +1,6 @@
 __pycache__/
 site/
 dist/
+.pytest_cache/
+.venv/
+.playwright-mcp/

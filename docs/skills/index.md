@@ -2,7 +2,7 @@
 
 # Skills
 
-Browse all **39** skills in the brunnr registry.
+Browse all **40** skills in the brunnr registry.
 
 ```bash
 brunnr search          # search from the CLI
@@ -39,8 +39,6 @@ brunnr install <slug>  # install any skill below
 | Skill | Description | License | Scan |
 |-------|-------------|---------|------|
 | ✍️ [article-draft](article-draft.md) | Draft technical articles with narrative structure, visual injection, and prose quality enforcement. | MIT | FLAG (1) |
-| 📰 [content-planner](content-planner.md) | Scan GitHub activity and buildlog entries, synthesize engineering work into publishable content opportunities with... | — | CLEAN |
-| 📣 [linwheel-content-engine](linwheel-content-engine.md) | Orchestrate LinkedIn content creation through LinWheel's MCP server. | MIT | INFO (2) |
 | 🎯 [linwheel-source-optimizer](linwheel-source-optimizer.md) | Optimize raw engineering output (buildlog entries, GH synthesis, daily notes, session logs) into high-quality... | — | CLEAN |
 | 📡 [reddit-harvest](reddit-harvest.md) | Playwright-driven Reddit quote harvester for the "From the Wild" content pipeline. | MIT | INFO (2) |
 | 🎯 [wild-scan](wild-scan.md) | Pain-quote harvester for the "From the Wild" content series. | MIT | CLEAN |
@@ -80,4 +78,7 @@ brunnr install <slug>  # install any skill below
 |-------|-------------|---------|------|
 | [agent-pack](agent-pack.md) | Package a piece of completed work into an agent-consumable pack: an entrypoint README, the source documents, and an... | — | CLEAN |
 | [dossier-generator](dossier-generator.md) | Turn a built system plus a client/deal context into three linked artifacts: a dual-format dossier (human executive... | — | CLEAN |
+| [field-table](field-table.md) | Before any optimizer, list every output an agent produces and fill four columns per output: consumer (what reads it),... | MIT | CLEAN |
+| [learning-check](learning-check.md) | Audit an agent (a repo, a service, or a written description) for the three properties of learning: a feedback signal... | MIT | CLEAN |
+| [signal-card](signal-card.md) | Name the signal an agent should learn from, in one line ("My agent gets better when ___ goes up"), then lay out the... | MIT | CLEAN |
 
