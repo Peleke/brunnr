@@ -200,11 +200,11 @@ Example: `buildlog://buildlog-template/workflow-enforcement-tiers-1-2`
 gh://{owner}/{repo}/pull/{number}
 gh://{owner}/{repo}/issues/{number}
 ```
-Example: `gh://Peleke/qortex/pull/62`
+Example: `gh://your-org/core-engine/pull/62`
 
 Or full URLs for PRs/issues:
 ```
-[PR #62](https://github.com/Peleke/qortex/pull/62)
+[PR #62](https://github.com/your-org/core-engine/pull/62)
 ```
 
 ### Pipeline references (between skills)
