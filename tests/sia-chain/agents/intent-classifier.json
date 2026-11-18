@@ -1,0 +1,5 @@
+{
+  "agent": "intent-classifier",
+  "deploymentType": "prompt-program",
+  "input": "Agent: intent-classifier. A DSPy program that labels airline customer messages with one of\ntwelve intents.\n\nclassify.py (excerpt):\n  10  class Intent(dspy.Signature):\n  11      message: str = dspy.InputField()\n  12      intent: str = dspy.OutputField(desc=\"one of the twelve intent labels\")\n  30  def exact_match(example, pred, trace=None):\n  31      return example.intent == pred.intent\n  44  tp = dspy.BootstrapFewShot(metric=exact_match)\n  45  compiled = tp.compile(Classifier(), trainset=devset)\n  52  print(dspy.Evaluate(devset=devset, metric=exact_match)(compiled))\n\ndata/devset.jsonl: 40 labeled examples, written by one engineer in a day.\nThere is no separate test set. The demo set is rebuilt from devset when I rerun compile.\nResults are printed, not saved. I reran it twice last month and remember about 0.82 and 0.85.\n\nLog lines:\n  2026-10-14 compile: 4 demos selected; Evaluate on devset: 0.825\n  2026-10-28 compile: 4 demos selected; Evaluate on devset: 0.850\n"
+}

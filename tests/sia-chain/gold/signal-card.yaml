@@ -1,0 +1,75 @@
+# Gold rows: expected `out` values per fixture agent. Drafted by the DA; not gold until the owner
+# adjudicates (adjudicated_by set). gold_agreement() compares only the keys under `out`;
+# `context` holds extra upstream fields fed to the next link and is never scored.
+skill: signal-card
+rows:
+- agent: review-bot
+  drafted_by: DA
+  adjudicated_by: null
+  note: share of comments authors resolve rather than dismiss.
+  out:
+    slots:
+      signal: preference
+      artifact: skill file
+  context:
+    chosenSignal: share of review comments resolved rather than dismissed
+    slots:
+      signal: preference
+      search: person reviewing proposals
+      artifact: skill file
+- agent: home-assistant
+  drafted_by: DA
+  adjudicated_by: null
+  note: corrections in chat; rate of requests needing no correction.
+  out:
+    slots:
+      signal: feedback
+      artifact: memory
+  context:
+    chosenSignal: share of requests that need no correction
+    slots:
+      signal: feedback
+      search: person reviewing proposals
+      artifact: memory
+- agent: support-triage
+  drafted_by: DA
+  adjudicated_by: null
+  note: share of tickets not moved to another queue.
+  out:
+    slots:
+      signal: score
+      artifact: instructions
+  context:
+    chosenSignal: share of tickets not moved to another queue
+    slots:
+      signal: score
+      search: hill-climbing
+      artifact: instructions
+- agent: intent-classifier
+  drafted_by: DA
+  adjudicated_by: null
+  note: exact-match accuracy on held-out messages.
+  out:
+    slots:
+      signal: score
+      artifact: demos
+  context:
+    chosenSignal: exact-match accuracy on held-out messages
+    slots:
+      signal: score
+      search: bootstrap demos
+      artifact: demos
+- agent: sales-gpt
+  drafted_by: DA
+  adjudicated_by: null
+  note: similarity of draft to the sent version; reply rate is a slow proxy.
+  out:
+    slots:
+      signal: score
+      artifact: instructions
+  context:
+    chosenSignal: token overlap between draft and sent email
+    slots:
+      signal: score
+      search: person reviewing proposals
+      artifact: instructions

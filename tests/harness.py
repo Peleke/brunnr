@@ -10,10 +10,18 @@ Usage:
     python tests/harness.py --skill ax-rubric
     python tests/harness.py --skill ax-rubric --output results.json
     python tests/harness.py --skill ax-rubric --dry-run  # validate fixtures only
+    python tests/harness.py --skill learning-check --runner cli  # subscription, via `claude -p`
+
+Runners:
+    api  Anthropic SDK; needs ANTHROPIC_API_KEY and bills that key (default).
+    cli  `claude --print` on the logged-in subscription. API-key env vars are removed from the
+         subprocess so it cannot fall back to key billing.
 """
 
 import argparse
 import json
+import os
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -29,10 +37,13 @@ from brunnr.assertions import (
     extract_criteria,
     check_has_rewrite,
     run_assertion,
+    KNOWN_TYPES,
+    load_gold_row,
 )
 
 SKILLS_DIR = REPO_ROOT / "skills"
 TESTS_DIR = REPO_ROOT / "tests"
+CHAIN_DIR = TESTS_DIR / "sia-chain"
 
 
 # ---------------------------------------------------------------------------
@@ -74,6 +85,22 @@ def load_fixtures(skill_slug: str) -> list[dict[str, Any]]:
     return fixtures
 
 
+def upstream_envelopes(skills: list[str], agent: str) -> str:
+    """Build upstream envelopes for a chain case from the gold rows (gold stands in for upstream)."""
+    import yaml
+
+    blocks = []
+    for skill in skills:
+        row = load_gold_row(skill, agent)
+        if row is None:
+            raise FileNotFoundError(f"No gold row for upstream {skill}/{agent}")
+        out = {k: v for k, v in row["out"].items() if "[]" not in k}
+        out.update(row.get("context") or {})
+        env = {"sia": {"skill": skill, "version": 1, "in_ref": "gold", "out": out}}
+        blocks.append(f"Upstream envelope from {skill}:\n\n```yaml\n{yaml.safe_dump(env, sort_keys=False)}```")
+    return "\n\n".join(blocks)
+
+
 # ---------------------------------------------------------------------------
 # Claude API interaction
 # ---------------------------------------------------------------------------
@@ -101,6 +128,60 @@ def call_claude(
     return response.content[0].text
 
 
+def call_cli(system_prompt: str, user_message: str, model: str) -> str:
+    """Run one turn through `claude --print` on the subscription (no API key billing)."""
+    env = {k: v for k, v in os.environ.items()
+           if k not in ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN", "CLAUDECODE")}
+    proc = subprocess.run(
+        ["claude", "--print", "--model", model, "--tools", "", "--output-format", "text",
+         "--setting-sources", "", "--system-prompt", system_prompt],
+        input=user_message, capture_output=True, text=True, env=env, timeout=600,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(f"claude exited {proc.returncode}: {proc.stderr.strip()[:300]}")
+    return proc.stdout
+
+
+def call_model(runner: str, system_prompt: str, user_message: str, model: str) -> str:
+    if runner == "cli":
+        return call_cli(system_prompt, user_message, model)
+    return call_claude(system_prompt, user_message, model=model)
+
+
+def run_judge(runner: str, assertion: dict[str, Any], output: str, model: str) -> dict[str, Any]:
+    """Grade a report with a rubric file; record {score, signOff, feedback}."""
+    result: dict[str, Any] = {"assertion": assertion, "passed": False, "detail": ""}
+    rubric = (REPO_ROOT / assertion["expected"]["rubric"]).read_text()
+    raw = call_model(runner, rubric, output, model)
+    try:
+        start, end = raw.index("{"), raw.rindex("}") + 1
+        verdict = json.loads(raw[start:end])
+    except ValueError:
+        result["detail"] = f"judge returned no JSON: {raw[:200]}"
+        return result
+    result["judge"] = verdict
+    result["passed"] = str(verdict.get("signOff", "")).lower() == "yes"
+    result["detail"] = f"score={verdict.get('score')} signOff={verdict.get('signOff')}"
+    return result
+
+
+def validate_case(skill_slug: str, case: dict[str, Any]) -> list[str]:
+    """Dry-run checks: known assertion types, gold rows and rubric files exist."""
+    problems = []
+    agent = case.get("_fixture_data", {}).get("agent")
+    for a in case.get("assertions", []):
+        if a["type"] not in KNOWN_TYPES:
+            problems.append(f"unknown assertion type {a['type']}")
+        if a["type"] == "sia_gold" and load_gold_row(a["expected"]["skill"], a["expected"]["agent"]) is None:
+            problems.append(f"no gold row {a['expected']}")
+        if a["type"] == "judge" and not (REPO_ROOT / a["expected"]["rubric"]).is_file():
+            problems.append(f"rubric missing: {a['expected']['rubric']}")
+    for up in case.get("upstream", []):
+        if agent is None or load_gold_row(up, agent) is None:
+            problems.append(f"no upstream gold row {up}/{agent}")
+    return problems
+
+
 # ---------------------------------------------------------------------------
 # Test runner
 # ---------------------------------------------------------------------------
@@ -111,6 +192,7 @@ def run_test_case(
     case: dict[str, Any],
     model: str,
     dry_run: bool = False,
+    runner: str = "api",
 ) -> dict[str, Any]:
     """Run a single test case and return results."""
     case_id = case["id"]
@@ -128,18 +210,31 @@ def run_test_case(
     print(f"\n  [{case_id}] {description}")
 
     if dry_run:
-        print(f"    DRY RUN — skipping API call")
-        return {
+        problems = validate_case(skill_slug, case)
+        judges = sum(1 for a in case.get("assertions", []) if a["type"] == "judge")
+        for p in problems:
+            print(f"    INVALID: {p}")
+        note = f" ({judges} judge skipped: no model calls in a dry run)" if judges else ""
+        print(f"    DRY RUN — skipping model call{note}")
+        result = {
             "case_id": case_id,
             "description": description,
-            "skipped": True,
+            "skipped": not problems,
+            "invalid": problems,
             "assertions": [],
         }
+        if problems:
+            result["all_passed"] = False
+        return result
+
+    if case.get("upstream"):
+        agent = case["_fixture_data"]["agent"]
+        input_text = f"{input_text}\n\n{upstream_envelopes(case['upstream'], agent)}"
 
     # Call Claude with the skill prompt
     start = time.time()
     try:
-        output = call_claude(skill_prompt, input_text, model=model)
+        output = call_model(runner, skill_prompt, input_text, model)
     except Exception as e:
         return {
             "case_id": case_id,
@@ -153,7 +248,10 @@ def run_test_case(
     # Run assertions
     assertion_results = []
     for assertion in case.get("assertions", []):
-        result = run_assertion(assertion, output)
+        if assertion["type"] == "judge":
+            result = run_judge(runner, assertion, output, model)
+        else:
+            result = run_assertion(assertion, output)
         status = "PASS" if result["passed"] else "FAIL"
         print(f"    {status}: [{assertion['type']}] {result['detail']}")
         assertion_results.append(result)
@@ -173,6 +271,7 @@ def run_skill_tests(
     model: str = "claude-sonnet-4-20250514",
     output_path: str | None = None,
     dry_run: bool = False,
+    runner: str = "api",
 ) -> dict[str, Any]:
     """Run all test cases for a skill."""
     print(f"=== Testing skill: {skill_slug} ===")
@@ -186,7 +285,7 @@ def run_skill_tests(
 
     results = []
     for case in cases:
-        result = run_test_case(skill_slug, skill_prompt, case, model, dry_run)
+        result = run_test_case(skill_slug, skill_prompt, case, model, dry_run, runner)
         results.append(result)
 
     # Summary
@@ -248,7 +347,13 @@ def main():
     parser.add_argument(
         "--dry-run",
         action="store_true",
-        help="Validate fixtures and config without calling the API",
+        help="Validate fixtures and config without calling a model",
+    )
+    parser.add_argument(
+        "--runner",
+        choices=["api", "cli"],
+        default="api",
+        help="api: Anthropic SDK (bills ANTHROPIC_API_KEY). cli: `claude --print` on the subscription.",
     )
     args = parser.parse_args()
 
@@ -257,6 +362,7 @@ def main():
         model=args.model,
         output_path=args.output,
         dry_run=args.dry_run,
+        runner=args.runner,
     )
 
     if report["summary"]["fail"] > 0:

@@ -1,0 +1,36 @@
+# Gold rows: expected `out` values per fixture agent. Drafted by the DA; not gold until the owner
+# adjudicates (adjudicated_by set). gold_agreement() compares only the keys under `out`;
+# `context` holds extra upstream fields fed to the next link and is never scored.
+skill: eval-power
+rows:
+- agent: review-bot
+  drafted_by: DA
+  adjudicated_by: null
+  note: no quantitative claim to grade.
+  out:
+    claimVerdicts: []
+- agent: home-assistant
+  drafted_by: DA
+  adjudicated_by: null
+  note: no quantitative claim to grade.
+  out:
+    claimVerdicts: []
+- agent: support-triage
+  drafted_by: DA
+  adjudicated_by: null
+  note: no quantitative claim to grade.
+  out:
+    claimVerdicts: []
+- agent: intent-classifier
+  drafted_by: DA
+  adjudicated_by: null
+  note: 0.825 -> 0.850 on the set the demos came from, n=40, one run each.
+  out:
+    claimVerdicts[].verdict:
+    - unsupported
+- agent: sales-gpt
+  drafted_by: DA
+  adjudicated_by: null
+  note: no quantitative claim to grade.
+  out:
+    claimVerdicts: []

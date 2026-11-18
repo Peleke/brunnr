@@ -1,0 +1,49 @@
+# Gold rows: expected `out` values per fixture agent. Drafted by the DA; not gold until the owner
+# adjudicates (adjudicated_by set). gold_agreement() compares only the keys under `out`;
+# `context` holds extra upstream fields fed to the next link and is never scored.
+skill: field-table
+rows:
+- agent: review-bot
+  drafted_by: DA
+  adjudicated_by: null
+  note: per-comment fields plus the closing summary.
+  out:
+    fields[].field:
+    - file
+    - line
+    - severity
+    - fix
+    - summary
+- agent: home-assistant
+  drafted_by: DA
+  adjudicated_by: null
+  note: reminders skill output.
+  out:
+    fields[].field:
+    - when
+    - what
+    - recurrence
+- agent: support-triage
+  drafted_by: DA
+  adjudicated_by: null
+  note: TriageOut; urgency and tags have no consumer.
+  out:
+    fields[].field:
+    - queue
+    - urgency
+    - draft_reply
+    - tags
+- agent: intent-classifier
+  drafted_by: DA
+  adjudicated_by: null
+  note: single output field.
+  out:
+    fields[].field:
+    - intent
+- agent: sales-gpt
+  drafted_by: DA
+  adjudicated_by: null
+  note: one free-text output.
+  out:
+    fields[].field:
+    - email
