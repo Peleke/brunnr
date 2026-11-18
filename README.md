@@ -10,7 +10,7 @@
 
 [![PyPI](https://img.shields.io/pypi/v/brunnr)](https://pypi.org/project/brunnr/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Skills](https://img.shields.io/badge/skills-42-4ade80)](skills/)
+[![Skills](https://img.shields.io/badge/skills-45-4ade80)](skills/)
 
 </div>
 

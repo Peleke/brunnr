@@ -38,7 +38,9 @@ nav:
     - "⚖️ decision-log": skills/decision-log.md
     - "dossier-generator": skills/dossier-generator.md
     - "engagement-pass": skills/engagement-pass.md
+    - "eval-power": skills/eval-power.md
     - "field-table": skills/field-table.md
+    - "gold-set": skills/gold-set.md
     - "📒 hunter-log": skills/hunter-log.md
     - "🏗️ inline-svg-architecture-diagrams": skills/inline-svg-architecture-diagrams.md
     - "🎫 issue": skills/issue.md
@@ -47,6 +49,7 @@ nav:
     - "📣 linwheel-content-engine": skills/linwheel-content-engine.md
     - "🎯 linwheel-source-optimizer": skills/linwheel-source-optimizer.md
     - "🤖 llms-txt-generator": skills/llms-txt-generator.md
+    - "metric-signature": skills/metric-signature.md
     - "📚 mkdocs-site-generator": skills/mkdocs-site-generator.md
     - "notebook-builder": skills/notebook-builder.md
     - "🎯 offer-scope": skills/offer-scope.md

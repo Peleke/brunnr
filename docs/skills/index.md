@@ -2,7 +2,7 @@
 
 # Skills
 
-Browse all **42** skills in the brunnr registry.
+Browse all **45** skills in the brunnr registry.
 
 ```bash
 brunnr search          # search from the CLI
@@ -80,7 +80,10 @@ brunnr install <slug>  # install any skill below
 |-------|-------------|---------|------|
 | [agent-pack](agent-pack.md) | Package a piece of completed work into an agent-consumable pack: an entrypoint README, the source documents, and an... | — | CLEAN |
 | [dossier-generator](dossier-generator.md) | Turn a built system plus a client/deal context into three linked artifacts: a dual-format dossier (human executive... | — | CLEAN |
+| [eval-power](eval-power.md) | Decide whether an agent's eval can detect the change you care about, and how to report the result: measure the noise... | MIT | CLEAN |
 | [field-table](field-table.md) | Before any optimizer, list every output an agent produces and fill four columns per output: consumer (what reads it),... | MIT | CLEAN |
+| [gold-set](gold-set.md) | Plan the reference set an agent's metrics run on: the example schema, where real inputs come from, which approved... | MIT | CLEAN |
 | [learning-check](learning-check.md) | Audit an agent (a repo, a service, or a written description) for the three properties of learning: a feedback signal... | MIT | CLEAN |
+| [metric-signature](metric-signature.md) | Turn an agent's chosen learning signal into metric functions: the cheapest check that can tell a good output from a bad... | MIT | CLEAN |
 | [signal-card](signal-card.md) | Name the signal an agent should learn from, in one line ("My agent gets better when ___ goes up"), then lay out the... | MIT | CLEAN |
 
