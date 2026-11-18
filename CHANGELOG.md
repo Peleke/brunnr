@@ -14,7 +14,10 @@ All notable changes to brunnr will be documented in this file.
 - The sdist contains only the package, README, LICENSE, CHANGELOG and pyproject. Earlier sdists included every tracked file.
 - Regenerated the skill docs pages; local paths are replaced with placeholders.
 - `content-planner` and `linwheel-content-engine` no longer reference private tooling; the projects directory for `content-planner` is set with `CONTENT_PLANNER_PROJECTS_DIR`. Examples across skills use generic project names.
-- Corrected counts: 40 skills, 8 threat classes, 12 rules.
+- Corrected counts: 42 skills, 8 threat classes, 12 rules.
+
+### Fixed
+- The eval harness no longer crashes on specs whose cases give `input` inline instead of a `fixture` file (travel-pulse).
 
 ## [0.2.1] - 2026-11-07
 
