@@ -10,7 +10,7 @@
 
 [![PyPI](https://img.shields.io/pypi/v/brunnr)](https://pypi.org/project/brunnr/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Skills](https://img.shields.io/badge/skills-5-4ade80)](skills/)
+[![Skills](https://img.shields.io/badge/skills-42-4ade80)](skills/)
 
 </div>
 
@@ -35,7 +35,7 @@
 
 ## Scanners aren't enough
 
-Pattern scanners, including this one, can't show that a skill is safe. A clean scan is a starting point. [`exploits/glassworm-bypass`](https://github.com/Peleke/brunnr/tree/main/exploits/glassworm-bypass) shows why: it hides an exfiltration command in Unicode variation selectors, and the skill passes all 11 scanner rules with zero findings.
+Pattern scanners, including this one, can't show that a skill is safe. A clean scan is a starting point. [`exploits/glassworm-bypass`](https://github.com/Peleke/brunnr/tree/main/exploits/glassworm-bypass) shows why: it hid an exfiltration command in Unicode variation selectors, and the skill passed all 11 rules in 0.2.1 with zero findings. 0.2.2 adds a rule for that technique. The point stands for techniques no rule covers yet.
 
 ---
 
@@ -87,6 +87,7 @@ brunnr eval ax-rubric --dry-run
 | **[ax-rubric](skills/ax-rubric/)** | Score tool descriptions 0-5 on agent discoverability. Five criteria, pass/fail, rewrite. | [I Don't Deliberate About This](https://peleke.me/writing/ax-04-tool-descriptions) |
 | **[ax-interview](skills/ax-interview/)** | Run a structured AX Interview on agent-tool sessions. Gricean maxim analysis, implicature detection, CoT faithfulness check, Pragmatic Coherence Score with ranked fixes. | [The AX Interview](https://peleke.me/writing/ax-07-the-ax-interview) |
 | **[runlet](skills/runlet/)** | Turn a braindump into an ND-adapted daily runlist. Classifies by activation energy and focus axis. | — |
+| **[linwheel-content-engine](skills/linwheel-content-engine/)** | Orchestrate LinkedIn content creation via LinWheel MCP. Analyze, reshape, refine, schedule, comment. | [LinWheel](https://www.linwheel.io) |
 | **[agent-pack](skills/agent-pack/)** | Package finished work so an agent can execute it. Entrypoint README, explicit context/input/output contract, zipped. | — |
 | **[dossier-generator](skills/dossier-generator/)** | Turn a build into a deal. Dual-format dossier (human summary + agent spec), researched acquisition package, talk-through deck. | — |
 

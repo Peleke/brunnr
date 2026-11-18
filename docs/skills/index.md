@@ -2,7 +2,7 @@
 
 # Skills
 
-Browse all **40** skills in the brunnr registry.
+Browse all **42** skills in the brunnr registry.
 
 ```bash
 brunnr search          # search from the CLI
@@ -39,6 +39,8 @@ brunnr install <slug>  # install any skill below
 | Skill | Description | License | Scan |
 |-------|-------------|---------|------|
 | ✍️ [article-draft](article-draft.md) | Draft technical articles with narrative structure, visual injection, and prose quality enforcement. | MIT | FLAG (1) |
+| 📰 [content-planner](content-planner.md) | Scan GitHub activity and buildlog entries, synthesize engineering work into publishable content opportunities with... | — | CLEAN |
+| 📣 [linwheel-content-engine](linwheel-content-engine.md) | Orchestrate LinkedIn content creation through LinWheel's MCP server. | MIT | INFO (2) |
 | 🎯 [linwheel-source-optimizer](linwheel-source-optimizer.md) | Optimize raw engineering output (buildlog entries, GH synthesis, daily notes, session logs) into high-quality... | — | CLEAN |
 | 📡 [reddit-harvest](reddit-harvest.md) | Playwright-driven Reddit quote harvester for the "From the Wild" content pipeline. | MIT | INFO (2) |
 | 🎯 [wild-scan](wild-scan.md) | Pain-quote harvester for the "From the Wild" content series. | MIT | CLEAN |

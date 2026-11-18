@@ -40,7 +40,7 @@ brunnr install inline-svg-architecture-diagrams
 |----------|-------|
 | **Path** | `skills/inline-svg-architecture-diagrams/SKILL.md` |
 | **Size** | 28.4 KB |
-| **SHA-256** | `d3a5417c867d4bf50d8d9984db3b871abbd20637fff486f052e63b2e975c60e3` |
+| **SHA-256** | `836bd6ad4be5aaf1b61471d192672a2d0c4c416b545192d7c4b230155e524386` |
 
 ---
 
@@ -93,7 +93,7 @@ Phase 7: Wrap in container with hover styles and caption
 ```yaml
 - id: knowledge
   label: "01 · KNOWLEDGE"
-  title: "qortex"
+  title: "core-engine"
   output_label: "→ rules"        # optional right-side annotation
   icon: knowledge-graph           # see Icon Reference below
   link: "https://..."             # optional clickable link
@@ -762,7 +762,7 @@ From `portfolio/public/diagrams/feedback-loop.svg` — a 6-step vertical flow wi
         font-family="'Segoe Print', 'Comic Sans MS', 'Caveat', cursive"
         font-size="22" fill="#e0e0e0" font-weight="bold"
         transform="rotate(-0.6, 336, 38)">
-    Qortex Feedback Loop
+    Feedback Loop
   </text>
   <path d="M 182,46 C 230,48 340,44 490,47"
         stroke="rgb(168,85,247)" stroke-width="1.5" fill="none"

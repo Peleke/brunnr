@@ -56,14 +56,20 @@ def load_test_spec(skill_slug: str) -> dict[str, Any]:
 
 
 def load_fixtures(skill_slug: str) -> list[dict[str, Any]]:
-    """Load all fixture files referenced in the test spec."""
+    """Load all fixture files referenced in the test spec.
+
+    Cases may give their prompt inline as ``input`` instead of a ``fixture``
+    file; those are returned unchanged.
+    """
     spec = load_test_spec(skill_slug)
     fixtures = []
     for case in spec.get("cases", []):
-        fixture_path = TESTS_DIR / skill_slug / case.get("fixture", "")
-        if fixture_path.exists():
-            fixture_data = json.loads(fixture_path.read_text())
-            case["_fixture_data"] = fixture_data
+        fixture_name = case.get("fixture")
+        if fixture_name:
+            fixture_path = TESTS_DIR / skill_slug / fixture_name
+            if not fixture_path.is_file():
+                raise FileNotFoundError(f"Fixture not found: {fixture_path}")
+            case["_fixture_data"] = json.loads(fixture_path.read_text())
         fixtures.append(case)
     return fixtures
 

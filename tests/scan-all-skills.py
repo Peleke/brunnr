@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Step 0: Deterministic security scan of all SKILL.md files.
 
-Runs the 7-class scanner against every skills/*/SKILL.md in the repo.
+Runs the 8-class scanner against every skills/*/SKILL.md in the repo.
 No API calls — pure regex + keyword analysis.
 
 Usage:

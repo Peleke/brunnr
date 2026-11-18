@@ -13,6 +13,7 @@ from brunnr.scanner.rules.sensitive_paths import SensitivePathRule
 from brunnr.scanner.rules.steg_patterns import StegPatternRule
 from brunnr.scanner.rules.supply_chain import SupplyChainRule
 from brunnr.scanner.rules.url_domains import UrlDomainRule
+from brunnr.scanner.rules.variation_selectors import VariationSelectorRule
 from brunnr.scanner.rules.zero_width import ZeroWidthRule
 
 DEFAULT_RULES: list[type[object]] = [
@@ -23,6 +24,7 @@ DEFAULT_RULES: list[type[object]] = [
     SupplyChainRule,
     PrivilegeEscalationRule,
     ZeroWidthRule,
+    VariationSelectorRule,
     StegPatternRule,
     UrlDomainRule,
     SensitivePathRule,

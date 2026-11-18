@@ -271,6 +271,7 @@ brunnr/scanner/
         priv_esc.py        # PrivilegeEscalationRule     (FLAG)
         steg_patterns.py   # StegPatternRule             (FLAG)
         zero_width.py      # ZeroWidthRule               (FLAG)
+        variation_selectors.py # VariationSelectorRule   (FLAG)
         url_domains.py     # UrlDomainRule               (INFO)
         sensitive_paths.py # SensitivePathRule           (FLAG)
         keyword_divergence.py # KeywordDivergenceRule    (FLAG)
@@ -307,7 +308,7 @@ class ScanContext:
 
 ### PatternRule
 
-Seven of the eleven rules are regex pattern lists. `PatternRule` provides a shared `scan()` implementation. Subclasses only set class attributes:
+Seven of the twelve rules are regex pattern lists. `PatternRule` provides a shared `scan()` implementation. Subclasses only set class attributes:
 
 ```python
 class CommandInjectionRule(PatternRule):
@@ -320,7 +321,7 @@ class CommandInjectionRule(PatternRule):
     ]
 ```
 
-The four custom rules (`ZeroWidthRule`, `UrlDomainRule`, `SensitivePathRule`, `KeywordDivergenceRule`) implement `scan()` directly.
+The five custom rules (`ZeroWidthRule`, `VariationSelectorRule`, `UrlDomainRule`, `SensitivePathRule`, `KeywordDivergenceRule`) implement `scan()` directly.
 
 ### Pipeline
 
@@ -332,7 +333,7 @@ class Pipeline:
     def scan(self, content: str) -> ScanResult: ...
 ```
 
-`Pipeline()` with no arguments loads the default 11 rules. Custom pipelines are created by passing a rule list: `Pipeline(rules=[CommandInjectionRule(), PromptOverrideRule()])`. `Pipeline(rules=[])` is a null scanner.
+`Pipeline()` with no arguments loads the default 12 rules. Custom pipelines are created by passing a rule list: `Pipeline(rules=[CommandInjectionRule(), PromptOverrideRule()])`. `Pipeline(rules=[])` is a null scanner.
 
 ---
 
@@ -410,6 +411,10 @@ Supply chain, privilege escalation, and steganographic pattern rules check with 
 ### Steganographic: zero-width scan
 
 The `ZeroWidthRule` iterates over every character in the full content (including frontmatter) and flags any of the 12 monitored zero-width Unicode codepoints (U+200B, U+200C, U+200D, U+2060, U+FEFF, U+200E, U+200F, U+202A--U+202E).
+
+### Steganographic: variation selectors
+
+The `VariationSelectorRule` flags runs of two or more variation selectors (U+FE00--U+FE0F, U+E0100--U+E01EF), and a lone supplementary selector that does not follow a CJK ideograph. Glassworm-style payloads map each byte to one selector, so a hidden payload is always a run. A single U+FE0F after an emoji, or an ideographic variation sequence, is normal text and is not flagged. Added after the [Glassworm bypass](https://github.com/Peleke/brunnr/tree/main/exploits/glassworm-bypass) showed the gap.
 
 ### Semantic mismatch rules (3 rules)
 

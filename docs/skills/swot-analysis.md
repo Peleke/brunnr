@@ -673,7 +673,7 @@ The brainstorming approach produces outputs that are:
 
 The same framework, applied with discipline, becomes one of the most powerful tools in product strategy. The difference is:
 
-1. **Every point is grounded in evidence.** Not "we have a strong team" but "the operator has built production systems at scale (Qortex, MindMirror) and was the 13th most popular author on Scotch.io -- specific credentials the DevOps community values based on Reddit analysis of what they consider credible."
+1. **Every point is grounded in evidence.** Not "we have a strong team" but "the operator has run production systems at scale and was a top-15 author on a major developer tutorial site -- specific credentials the DevOps community values based on Reddit analysis of what they consider credible."
 
 2. **Web research is mandatory.** You do not brainstorm what might be true. You search for what IS true. What are the actual churn rates on Skool? What did KodeKloud announce this quarter? What does the latest L&D budget data show? The internet has this information. Go find it.
 
@@ -943,7 +943,7 @@ This SWOT analysis skill implements a named framework called the **Hypothesis St
 
 1. **Research, not brainstorming.** Every point requires web search to find current evidence. No quadrant relies solely on prior knowledge or internal reasoning.
 
-2. **Evidence standard.** Every point must cite a specific source, data point, or finding. "We have a strong team" fails. "The operator was the 13th most popular author on Scotch.io and built production systems at enterprise scale (Qortex, MindMirror)" passes.
+2. **Evidence standard.** Every point must cite a specific source, data point, or finding. "We have a strong team" fails. "The operator was a top-15 author on a major developer tutorial site and ran production systems at enterprise scale" passes.
 
 3. **Mandatory web search per quadrant.** The skill explicitly requires web research for each of the four quadrants. You cannot complete a valid HST without searching for what is actually happening in the market right now.
 

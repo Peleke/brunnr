@@ -33,6 +33,7 @@ nav:
     - "ax-rubric": skills/ax-rubric.md
     - "✍️ chapter-generator": skills/chapter-generator.md
     - "🏘️ community-pitch": skills/community-pitch.md
+    - "📰 content-planner": skills/content-planner.md
     - "🗺️ curriculum-planner": skills/curriculum-planner.md
     - "⚖️ decision-log": skills/decision-log.md
     - "dossier-generator": skills/dossier-generator.md
@@ -43,6 +44,7 @@ nav:
     - "🎫 issue": skills/issue.md
     - "learning-check": skills/learning-check.md
     - "lesson-generator": skills/lesson-generator.md
+    - "📣 linwheel-content-engine": skills/linwheel-content-engine.md
     - "🎯 linwheel-source-optimizer": skills/linwheel-source-optimizer.md
     - "🤖 llms-txt-generator": skills/llms-txt-generator.md
     - "📚 mkdocs-site-generator": skills/mkdocs-site-generator.md

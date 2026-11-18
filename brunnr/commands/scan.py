@@ -1,4 +1,4 @@
-"""brunnr scan — 7-class SKILL.md security scanner."""
+"""brunnr scan — 8-class SKILL.md security scanner."""
 
 from __future__ import annotations
 

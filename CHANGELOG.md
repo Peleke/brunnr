@@ -4,6 +4,21 @@ All notable changes to brunnr will be documented in this file.
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-11-18
+
+### Added
+- `VariationSelectorRule` flags Glassworm-style payloads hidden in Unicode variation selectors. The bypass in `exploits/glassworm-bypass` is now detected.
+- `tests/test_no_leaks.py` fails CI if a tracked file contains a home-directory path, an iCloud vault path, or a session transcript line.
+
+### Changed
+- The sdist contains only the package, README, LICENSE, CHANGELOG and pyproject. Earlier sdists included every tracked file.
+- Regenerated the skill docs pages; local paths are replaced with placeholders.
+- `content-planner` and `linwheel-content-engine` no longer reference private tooling; the projects directory for `content-planner` is set with `CONTENT_PLANNER_PROJECTS_DIR`. Examples across skills use generic project names.
+- Corrected counts: 42 skills, 8 threat classes, 12 rules.
+
+### Fixed
+- The eval harness no longer crashes on specs whose cases give `input` inline instead of a `fixture` file (travel-pulse).
+
 ## [0.2.1] - 2026-11-07
 
 ### Changed

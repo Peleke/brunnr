@@ -1,4 +1,4 @@
-"""brunnr.scanner — 7-class deterministic SKILL.md security scanner.
+"""brunnr.scanner — 8-class deterministic SKILL.md security scanner.
 
 Usage:
     from brunnr.scanner import scan_skill_md, ScanResult
