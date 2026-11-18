@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "skill": "learning-check",
-  "description": "Eval suite for learning-check: verdict table, evidence rule, memory-vs-learning call.",
+  "description": "Eval suite for learning-check: per-loop verdicts, outcome, envelope.",
   "model": "claude-sonnet-4-20250514",
   "cases": [
     {
@@ -45,6 +45,206 @@
           "expected": "held-out"
         }
       ]
+    },
+    {
+      "id": "chain-review-bot",
+      "description": "Shared fixture agent review-bot",
+      "fixture": "../sia-chain/agents/review-bot.json",
+      "assertions": [
+        {
+          "type": "sia_envelope_valid",
+          "expected": true
+        },
+        {
+          "type": "sia_out_fields",
+          "expected": [
+            "verdicts.signal",
+            "verdicts.update",
+            "verdicts.convergence",
+            "loops",
+            "outcome",
+            "firstFix"
+          ]
+        },
+        {
+          "type": "sia_recommendations",
+          "expected": true
+        },
+        {
+          "type": "sia_gold",
+          "expected": {
+            "skill": "learning-check",
+            "agent": "review-bot"
+          }
+        },
+        {
+          "type": "judge",
+          "expected": {
+            "rubric": "tests/sia-chain/buyer-rubric.md"
+          }
+        }
+      ]
+    },
+    {
+      "id": "chain-home-assistant",
+      "description": "Shared fixture agent home-assistant",
+      "fixture": "../sia-chain/agents/home-assistant.json",
+      "assertions": [
+        {
+          "type": "sia_envelope_valid",
+          "expected": true
+        },
+        {
+          "type": "sia_out_fields",
+          "expected": [
+            "verdicts.signal",
+            "verdicts.update",
+            "verdicts.convergence",
+            "loops",
+            "outcome",
+            "firstFix"
+          ]
+        },
+        {
+          "type": "sia_recommendations",
+          "expected": true
+        },
+        {
+          "type": "sia_gold",
+          "expected": {
+            "skill": "learning-check",
+            "agent": "home-assistant"
+          }
+        },
+        {
+          "type": "judge",
+          "expected": {
+            "rubric": "tests/sia-chain/buyer-rubric.md"
+          }
+        }
+      ]
+    },
+    {
+      "id": "chain-support-triage",
+      "description": "Shared fixture agent support-triage",
+      "fixture": "../sia-chain/agents/support-triage.json",
+      "assertions": [
+        {
+          "type": "sia_envelope_valid",
+          "expected": true
+        },
+        {
+          "type": "sia_out_fields",
+          "expected": [
+            "verdicts.signal",
+            "verdicts.update",
+            "verdicts.convergence",
+            "loops",
+            "outcome",
+            "firstFix"
+          ]
+        },
+        {
+          "type": "sia_recommendations",
+          "expected": true
+        },
+        {
+          "type": "sia_gold",
+          "expected": {
+            "skill": "learning-check",
+            "agent": "support-triage"
+          }
+        },
+        {
+          "type": "judge",
+          "expected": {
+            "rubric": "tests/sia-chain/buyer-rubric.md"
+          }
+        }
+      ]
+    },
+    {
+      "id": "chain-intent-classifier",
+      "description": "Shared fixture agent intent-classifier",
+      "fixture": "../sia-chain/agents/intent-classifier.json",
+      "assertions": [
+        {
+          "type": "sia_envelope_valid",
+          "expected": true
+        },
+        {
+          "type": "sia_out_fields",
+          "expected": [
+            "verdicts.signal",
+            "verdicts.update",
+            "verdicts.convergence",
+            "loops",
+            "outcome",
+            "firstFix"
+          ]
+        },
+        {
+          "type": "sia_recommendations",
+          "expected": true
+        },
+        {
+          "type": "sia_gold",
+          "expected": {
+            "skill": "learning-check",
+            "agent": "intent-classifier"
+          }
+        },
+        {
+          "type": "judge",
+          "expected": {
+            "rubric": "tests/sia-chain/buyer-rubric.md"
+          }
+        }
+      ]
+    },
+    {
+      "id": "chain-sales-gpt",
+      "description": "Shared fixture agent sales-gpt",
+      "fixture": "../sia-chain/agents/sales-gpt.json",
+      "assertions": [
+        {
+          "type": "sia_envelope_valid",
+          "expected": true
+        },
+        {
+          "type": "sia_out_fields",
+          "expected": [
+            "verdicts.signal",
+            "verdicts.update",
+            "verdicts.convergence",
+            "loops",
+            "outcome",
+            "firstFix"
+          ]
+        },
+        {
+          "type": "sia_recommendations",
+          "expected": true
+        },
+        {
+          "type": "sia_gold",
+          "expected": {
+            "skill": "learning-check",
+            "agent": "sales-gpt"
+          }
+        },
+        {
+          "type": "judge",
+          "expected": {
+            "rubric": "tests/sia-chain/buyer-rubric.md"
+          }
+        }
+      ]
     }
-  ]
+  ],
+  "s2": {
+    "capture": "the report's `sia:` envelope (last fenced YAML block), saved per case in the harness results JSON",
+    "metric": "brunnr.sia_chain.hard_check_score (envelope, required out fields, recommendations) and brunnr.sia_chain.gold_agreement against the gold row",
+    "gold": "tests/sia-chain/gold/learning-check.yaml"
+  }
 }
