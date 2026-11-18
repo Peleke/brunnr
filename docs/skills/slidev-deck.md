@@ -38,8 +38,8 @@ brunnr install slidev-deck
 | Property | Value |
 |----------|-------|
 | **Path** | `skills/slidev-deck/SKILL.md` |
-| **Size** | 42.3 KB |
-| **SHA-256** | `887cd6c8b552ab893f5b9139dbc1ec46e961e50d1135d954543fe97240ba54c5` |
+| **Size** | 42.2 KB |
+| **SHA-256** | `95a7eeec161362c4a00a935b9779438522945b641c83e32a5d657da40de376ec` |
 
 ---
 

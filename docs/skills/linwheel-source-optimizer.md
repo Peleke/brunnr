@@ -33,7 +33,7 @@ brunnr install linwheel-source-optimizer
 |----------|-------|
 | **Path** | `skills/linwheel-source-optimizer/SKILL.md` |
 | **Size** | 12.8 KB |
-| **SHA-256** | `8e82d28c7182b0e76bce71e01465368090a7a1c6a07ce5a2d949e23646aac1c0` |
+| **SHA-256** | `f7a82099990f00c8130712bd6fb42e76d782effbee26ab26dd9334b811ba12a1` |
 
 ---
 
@@ -73,7 +73,7 @@ that a columnist will turn into articles.
 #### Vault Output Path
 
 ```
-${VAULT}/Buildlog/
+${VAULT}/Buildlog/   (${VAULT} = your Obsidian vault path)
 ```
 
 Filename: `YYYY-MM-DD-{slug}.md` (e.g., `2026-02-27-github-watcher-shipped.md`)

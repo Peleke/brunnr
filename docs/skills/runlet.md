@@ -33,7 +33,7 @@ brunnr install runlet
 |----------|-------|
 | **Path** | `skills/runlet/SKILL.md` |
 | **Size** | 15.1 KB |
-| **SHA-256** | `e444b9b801c1dab690623c5fca8006d9d665833b369d261a5eefaa484d817472` |
+| **SHA-256** | `8d289f9d36e4fa7de915b223aabb94af98c8d82317769216e5e6d84be2dc0ebc` |
 | **README** | `skills/runlet/README.md` |
 
 ---
@@ -217,7 +217,7 @@ Group Batch items by context. Label the groups so they can be done in clumps —
 
 A markdown file at:
 ```
-${VAULT}/Runlist/YYYY-MM-DD.md
+<your-obsidian-vault>/Runlist/YYYY-MM-DD.md
 ```
 
 ##### Format

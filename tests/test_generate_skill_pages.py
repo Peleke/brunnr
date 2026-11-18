@@ -359,12 +359,11 @@ class TestLoadSkill:
         assert skill["emoji"] == "🔬"
         assert skill["license"] == "MIT"
 
-    def test_load_real_skill_content_planner(self):
-        """content-planner has bins requirement."""
-        skill = load_skill("content-planner")
+    def test_load_real_skill_issue(self):
+        """issue has bins requirement."""
+        skill = load_skill("issue")
         assert skill is not None
         assert "gh" in skill["bins"]
-        assert "python3" in skill["bins"]
 
     def test_load_real_skill_with_readme(self):
         """ax-rubric has a README.md."""

@@ -17,6 +17,9 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Check for local paths and transcripts
+        run: pip install pytest && python3 -m pytest tests/test_no_leaks.py -q
+
       - name: Scan all SKILL.md files
         run: python3 tests/scan-all-skills.py
 

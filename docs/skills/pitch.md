@@ -39,7 +39,7 @@ brunnr install pitch
 |----------|-------|
 | **Path** | `skills/pitch/SKILL.md` |
 | **Size** | 28.1 KB |
-| **SHA-256** | `577b81d94cb04be9248da0e712fe2a61f033ce488a0eb4b39db54e82456d98ae` |
+| **SHA-256** | `be6816b0759d5686ecc298730c4ed68bf587cea9e25b7fa4a8aea933601e09d8` |
 | **README** | `skills/pitch/README.md` |
 
 ---

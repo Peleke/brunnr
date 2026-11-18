@@ -33,16 +33,16 @@ nav:
     - "ax-rubric": skills/ax-rubric.md
     - "✍️ chapter-generator": skills/chapter-generator.md
     - "🏘️ community-pitch": skills/community-pitch.md
-    - "📰 content-planner": skills/content-planner.md
     - "🗺️ curriculum-planner": skills/curriculum-planner.md
     - "⚖️ decision-log": skills/decision-log.md
     - "dossier-generator": skills/dossier-generator.md
     - "engagement-pass": skills/engagement-pass.md
+    - "field-table": skills/field-table.md
     - "📒 hunter-log": skills/hunter-log.md
     - "🏗️ inline-svg-architecture-diagrams": skills/inline-svg-architecture-diagrams.md
     - "🎫 issue": skills/issue.md
+    - "learning-check": skills/learning-check.md
     - "lesson-generator": skills/lesson-generator.md
-    - "📣 linwheel-content-engine": skills/linwheel-content-engine.md
     - "🎯 linwheel-source-optimizer": skills/linwheel-source-optimizer.md
     - "🤖 llms-txt-generator": skills/llms-txt-generator.md
     - "📚 mkdocs-site-generator": skills/mkdocs-site-generator.md
@@ -56,6 +56,7 @@ nav:
     - "📡 reddit-harvest": skills/reddit-harvest.md
     - "runlet": skills/runlet.md
     - "🧱 scaffold-pass": skills/scaffold-pass.md
+    - "signal-card": skills/signal-card.md
     - "📡 signal-scan": skills/signal-scan.md
     - "✏️ sketches": skills/sketches.md
     - "🎓 skool-pitch": skills/skool-pitch.md
