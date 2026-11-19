@@ -273,7 +273,28 @@ def test_gold_mentions_pins_which_claim_was_graded():
     assert sia_chain.gold_agreement(invented, gold)[0] == 0.5
 
 
-@pytest.mark.parametrize("op", ["includes", "mentions"])
+def test_gold_any_of_accepts_an_equivalent_name():
+    gold = {"slots.artifact@anyOf": ["skill file", "instructions"]}
+    assert sia_chain.gold_agreement({"out": {"slots": {"artifact": "Instructions"}}}, gold)[0] == 1.0
+    assert sia_chain.gold_agreement({"out": {"slots": {"artifact": "memory"}}}, gold)[0] == 0.0
+    lst = {"fields[].field@anyOf": ["summary", "verdict"]}
+    assert sia_chain.gold_agreement({"out": {"fields": [{"field": "file"}, {"field": "verdict"}]}}, lst)[0] == 1.0
+    assert sia_chain.gold_agreement({"out": {"fields": [{"field": "file"}]}}, lst)[0] == 0.0
+
+
+def test_gold_yaml_has_no_duplicate_keys():
+    class Strict(yaml.SafeLoader):
+        pass
+    def mapping(loader, node, deep=False):
+        keys = [loader.construct_object(k, deep=deep) for k, _ in node.value]
+        assert len(keys) == len(set(keys)), f"duplicate key at line {node.start_mark.line + 1}"
+        return yaml.SafeLoader.construct_mapping(loader, node, deep)
+    Strict.add_constructor(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, mapping)
+    for f in GOLD_DIR.glob("*.yaml"):
+        yaml.load(f.read_text(), Loader=Strict)
+
+
+@pytest.mark.parametrize("op", ["includes", "mentions", "anyOf"])
 def test_gold_operators_need_a_list(op):
     with pytest.raises(ValueError, match="needs a list"):
         sia_chain.gold_agreement({"out": {"k": "real"}}, {f"k@{op}": "real"})

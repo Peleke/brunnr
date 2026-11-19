@@ -6,14 +6,18 @@ rows:
 - agent: review-bot
   drafted_by: DA
   adjudicated_by: principal
-  note: per-comment fields plus the closing summary.
+  note: "per-comment fields plus the closing summary. The fixture never names the closing field
+    (it says: End with a summary, approve / request changes), so summary or verdict both pass
+    (principal, 2026-11-19)."
   out:
-    fields[].field:
+    fields[].field@includes:
     - file
     - line
     - severity
     - fix
+    fields[].field@anyOf:
     - summary
+    - verdict
 - agent: home-assistant
   drafted_by: DA
   adjudicated_by: principal

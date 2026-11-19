@@ -211,7 +211,9 @@ def gold_agreement(env: dict[str, Any] | None, gold_out: dict[str, Any]) -> tupl
     A key ending in `@includes` passes when the output's set contains every gold item (extras
     allowed), e.g. `sources[].kind@includes: [real]`. A key ending in `@mentions` passes when each
     gold string appears inside at least one output item, e.g. `claimVerdicts[].claim@mentions:
-    ["0.850"]` pins which claim was graded. Both operators take a list.
+    ["0.850"]` pins which claim was graded. A key ending in `@anyOf` passes when the output has
+    at least one of the gold items (equivalent names, e.g. `slots.artifact@anyOf: [instructions,
+    skill file]`). All operators take a list.
     """
     flat = _flatten(gold_out)
     if not flat:
@@ -220,7 +222,7 @@ def gold_agreement(env: dict[str, Any] | None, gold_out: dict[str, Any]) -> tupl
     misses = []
     for key, want in flat.items():
         path, _, op = key.partition("@")
-        if op not in ("", "includes", "mentions"):
+        if op not in ("", "includes", "mentions", "anyOf"):
             raise ValueError(f"unknown gold operator @{op} in {key}")
         if op and not isinstance(want, list):
             raise ValueError(f"gold operator @{op} needs a list in {key}, got {want!r}")
@@ -237,6 +239,10 @@ def gold_agreement(env: dict[str, Any] | None, gold_out: dict[str, Any]) -> tupl
             lacking = sorted(set(_norm(want)) - set(_norm(items)))
             if lacking:
                 misses.append(f"out.{path}: expected to include {lacking}, got {got!r}")
+            continue
+        if op == "anyOf":
+            if not set(_norm(want)) & set(_norm(items)):
+                misses.append(f"out.{path}: expected one of {want!r}, got {got!r}")
             continue
         if op == "mentions":
             texts = [_norm(i) for i in items if not isinstance(i, (list, dict))]

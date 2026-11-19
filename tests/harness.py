@@ -274,6 +274,7 @@ def run_test_case(
     dry_run: bool = False,
     runner: str = "api",
     judge_model: str | None = None,
+    skip_judge: bool = False,
 ) -> dict[str, Any]:
     """Run a single test case and return results."""
     case_id = case["id"]
@@ -328,6 +329,8 @@ def run_test_case(
     # Run assertions
     assertion_results = []
     for assertion in case.get("assertions", []):
+        if assertion["type"] == "judge" and skip_judge:
+            continue
         if assertion["type"] == "judge":
             result = run_judge(runner, assertion, output, judge_model or model, input_text)
         else:
@@ -353,6 +356,7 @@ def run_skill_tests(
     dry_run: bool = False,
     runner: str = "api",
     judge_model: str | None = None,
+    skip_judge: bool = False,
 ) -> dict[str, Any]:
     """Run all test cases for a skill."""
     print(f"=== Testing skill: {skill_slug} ===")
@@ -369,7 +373,7 @@ def run_skill_tests(
 
     results = []
     for case in cases:
-        result = run_test_case(skill_slug, skill_prompt, case, model, dry_run, runner, judge_model)
+        result = run_test_case(skill_slug, skill_prompt, case, model, dry_run, runner, judge_model, skip_judge)
         results.append(result)
 
     # Summary
@@ -448,6 +452,11 @@ def main():
         "--judge-model",
         help="Model for `judge` assertions (default: --model). Use a different one to avoid self-grading.",
     )
+    parser.add_argument(
+        "--skip-judge",
+        action="store_true",
+        help="Run only the deterministic checks (e.g. repeated runs to measure gold noise)",
+    )
     args = parser.parse_args()
 
     report = run_skill_tests(
@@ -457,6 +466,7 @@ def main():
         dry_run=args.dry_run,
         runner=args.runner,
         judge_model=args.judge_model,
+        skip_judge=args.skip_judge,
     )
 
     if report["summary"]["fail"] > 0:

@@ -31,8 +31,8 @@ brunnr install signal-card
 | Property | Value |
 |----------|-------|
 | **Path** | `skills/signal-card/SKILL.md` |
-| **Size** | 6.6 KB |
-| **SHA-256** | `0986d1a5028463842385eb02ea10312c38e52666bc99d3d95525c073f1466b11` |
+| **Size** | 6.9 KB |
+| **SHA-256** | `6cc586337a18d6db6a709ee0e1cfe841aab77ebd8b4418139a552ad0099d1bb4` |
 | **README** | `skills/signal-card/README.md` |
 
 ---
@@ -59,7 +59,10 @@ Agents* (Manning).
   - **feedback:** words a person wrote about an output ("that date is wrong, use the invoice date").
   - **confidence:** the agent's own estimate, checked against something external.
   Type a signal by its raw form as recorded, not by the number you compute from it: notes a
-  reviewer writes are feedback even when you count them.
+  reviewer writes are feedback even when you count them. A person keeping or changing one output
+  before using it is a score per output (kept unchanged = pass), even when the changed version is
+  stored next to it. Preference needs two or more candidate outputs for the same input that a
+  person chose between.
 - **One signal first.** Propose up to three candidates, then recommend one and say why.
 - **Cite what exists.** For each slot, prefer options already present in the code (path:line).
   Mark anything new as "to build".

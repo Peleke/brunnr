@@ -7,11 +7,14 @@ rows:
   drafted_by: DA
   adjudicated_by: principal
   note: share of comments authors resolve rather than dismiss. Resolved/dismissed is recorded per
-    comment, so the type is score (was preference; changed and re-adjudicated 2026-11-18).
+    comment, so the type is score (was preference; changed and re-adjudicated 2026-11-18). For the artifact,
+    the skill file and CLAUDE.md are both instructions, so either name passes (principal, 2026-11-19).
   out:
     slots:
       signal: score
-      artifact: skill file
+      artifact@anyOf:
+      - skill file
+      - instructions
   context:
     chosenSignal: share of review comments resolved rather than dismissed
     slots:
@@ -21,15 +24,15 @@ rows:
 - agent: home-assistant
   drafted_by: DA
   adjudicated_by: principal
-  note: corrections in chat; rate of requests needing no correction. Each request records corrected or not, so the raw form is a score (was feedback; changed and re-adjudicated 2026-11-19).
+  note: corrections in chat; rate of requests needing no correction. The raw form is chat text, so feedback under the raw-form rule (briefly score on 2026-11-19; reverted and re-adjudicated the same day).
   out:
     slots:
-      signal: score
+      signal: feedback
       artifact: memory
   context:
     chosenSignal: share of requests that need no correction
     slots:
-      signal: score
+      signal: feedback
       search: person reviewing proposals
       artifact: memory
 - agent: support-triage

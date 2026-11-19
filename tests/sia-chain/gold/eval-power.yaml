@@ -25,7 +25,7 @@ rows:
   drafted_by: DA
   adjudicated_by: principal
   note: 0.825 -> 0.850 on the set the demos came from, n=40, one run each. The @mentions key pins
-    which claim was graded, so an invented claim graded unsupported does not pass (added 2026-11-19).
+    which claim was graded, so an invented claim graded unsupported does not pass (added 2026-11-19, confirmed by principal).
   out:
     claimVerdicts[].verdict:
     - unsupported
