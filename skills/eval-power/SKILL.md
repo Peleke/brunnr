@@ -70,8 +70,10 @@ run (pre-registration).
 
 ## Step 6: Grade existing claims
 
-For each improvement claim found (in notes, PRs, logs, or the operator's words): `supported`,
-`inconclusive` or `unsupported`, with one line why. A score on training data, a single run per
+For each improvement claim a person on the team made (in notes, PRs, commit messages, or the
+operator's words): `supported`, `inconclusive` or `unsupported`, with one line why. The agent's own
+messages ("Fixed", "Noted for next time") and claims you infer from an edit are not claims; leave
+them out. A score on training data, a single run per
 condition, or no baseline makes a claim `unsupported` as stated.
 
 ## Output

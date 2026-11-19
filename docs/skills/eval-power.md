@@ -31,8 +31,8 @@ brunnr install eval-power
 | Property | Value |
 |----------|-------|
 | **Path** | `skills/eval-power/SKILL.md` |
-| **Size** | 6.1 KB |
-| **SHA-256** | `6644e66d40ec522f794cbe30f41a92b5ebadb4e6c059236b044a38728c56f51e` |
+| **Size** | 6.2 KB |
+| **SHA-256** | `bc41081bcdc6e627ac2bccdf20a1dec05a4d3939d88594b29d623577a1ac380f` |
 | **README** | `skills/eval-power/README.md` |
 
 ---
@@ -99,8 +99,10 @@ run (pre-registration).
 
 #### Step 6: Grade existing claims
 
-For each improvement claim found (in notes, PRs, logs, or the operator's words): `supported`,
-`inconclusive` or `unsupported`, with one line why. A score on training data, a single run per
+For each improvement claim a person on the team made (in notes, PRs, commit messages, or the
+operator's words): `supported`, `inconclusive` or `unsupported`, with one line why. The agent's own
+messages ("Fixed", "Noted for next time") and claims you infer from an edit are not claims; leave
+them out. A score on training data, a single run per
 condition, or no baseline makes a claim `unsupported` as stated.
 
 #### Output
