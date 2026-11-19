@@ -32,7 +32,7 @@ brunnr install learning-check
 |----------|-------|
 | **Path** | `skills/learning-check/SKILL.md` |
 | **Size** | 7.7 KB |
-| **SHA-256** | `a170c967359a66111903da59d3ce08b5783d1442a754f972e9d41de8986e626e` |
+| **SHA-256** | `00c10c1c35330e2dd3332035eb2ccfb05c3e27a780dee2a06b50b237d958f6f7` |
 | **README** | `skills/learning-check/README.md` |
 
 ---
@@ -121,8 +121,8 @@ want, mark it "proposed", and answer no to all three.
 Then the envelope as the last fenced block, then the footer line. The envelope must parse as
 YAML: put double quotes around every free-text value (names, `title`, `why`, `do`, each
 `evidence` item, claims), because a `: ` or a leading quote inside an unquoted value breaks the
-parse. Keep the colon on every key: `effort: S` (or `M`, `L`) and `impact: medium` (or `high`,
-`low`), with `medium` spelled out. `verdicts` are the headline
+parse. Every key keeps its colon, as in the template (`effort: S`, `impact: medium`); write `medium`,
+not `med`. `verdicts` are the headline
 loop's answers; `loops` lists every loop.
 
 ```yaml
@@ -154,7 +154,7 @@ sia:
 
 **Recommendations:** at most seven, each with evidence or `unknown (ask: …)`. No pitching.
 - Order by what each item unblocks: item 1 is the one the others depend on.
-- Size `effort` for everything the `do` includes, prerequisites too.
+- Size each item (S, M, L) for everything its `do` includes, prerequisites too.
 - Each `do` stands alone: no "see above", one named choice rather than an either/or.
 - A claim resting on one incident is a hypothesis; say "one case" and what would confirm it. A
   claim that something is absent (no reader, never measured) names where you searched. Quote `"no"` in YAML so it stays a string.

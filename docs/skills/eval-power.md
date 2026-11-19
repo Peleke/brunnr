@@ -32,7 +32,7 @@ brunnr install eval-power
 |----------|-------|
 | **Path** | `skills/eval-power/SKILL.md` |
 | **Size** | 6.2 KB |
-| **SHA-256** | `4cd642d4a1a79c17c3714a5edee6cfedb432b74b6aa26b7fd68b620471c12cbc` |
+| **SHA-256** | `90775e4a2428195a3c98eef89f1f441d11e93444a8e44baeec8442c3984d6f9a` |
 | **README** | `skills/eval-power/README.md` |
 
 ---
@@ -121,8 +121,8 @@ condition, or no baseline makes a claim `unsupported` as stated.
 Then the envelope as the last fenced block, then the footer line. The envelope must parse as
 YAML: put double quotes around every free-text value (names, `title`, `why`, `do`, each
 `evidence` item, claims), because a `: ` or a leading quote inside an unquoted value breaks the
-parse. Keep the colon on every key: `effort: S` (or `M`, `L`) and `impact: medium` (or `high`,
-`low`), with `medium` spelled out.
+parse. Every key keeps its colon, as in the template (`effort: S`, `impact: medium`); write `medium`,
+not `med`.
 
 ```yaml
 sia:
@@ -155,7 +155,7 @@ sia:
 
 **Recommendations:** at most seven, each with evidence or `unknown (ask: …)`. No pitching.
 - Order by what each item unblocks: item 1 is the one the others depend on.
-- Size `effort` for everything the `do` includes, prerequisites too.
+- Size each item (S, M, L) for everything its `do` includes, prerequisites too.
 - Each `do` stands alone: no "see above", one named choice rather than an either/or.
 - A claim resting on one incident is a hypothesis; say "one case" and what would confirm it. A
   claim that something is absent (no reader, never measured) names where you searched.
