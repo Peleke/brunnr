@@ -194,18 +194,28 @@ def gold_agreement(env: dict[str, Any] | None, gold_out: dict[str, Any]) -> tupl
 
     Lists compare as sets of scalars; `[]` in the gold means "no items" (a missing key counts as
     none). Any other missing leaf is a miss, even when the gold value is the string "none".
+    A key ending in `@includes` passes when the output's set contains every gold item (extras
+    allowed), e.g. `sources[].kind@includes: [real]`.
     """
     flat = _flatten(gold_out)
     if not flat:
         return 1.0, []
     out = (env or {}).get("out") or {}
     misses = []
-    for path, want in flat.items():
+    for key, want in flat.items():
+        path, _, op = key.partition("@")
+        if op not in ("", "includes"):
+            raise ValueError(f"unknown gold operator @{op} in {key}")
         got = get_path(out, path)
         if got is _MISSING:
-            if want == []:
+            if want == [] and not op:
                 continue
             misses.append(f"out.{path}: expected {want!r}, missing")
+            continue
+        if op == "includes":
+            lacking = sorted(set(_norm(want)) - set(_norm(got if isinstance(got, list) else [got])))
+            if lacking:
+                misses.append(f"out.{path}: expected to include {lacking}, got {got!r}")
             continue
         if _norm(got) != _norm(want):
             misses.append(f"out.{path}: expected {want!r}, got {got!r}")

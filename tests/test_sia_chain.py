@@ -241,6 +241,17 @@ def test_gold_empty_list_rejects_invented_items():
     assert sia_chain.gold_agreement(env, {"claimVerdicts": []})[0] == 0.0
 
 
+def test_gold_includes_allows_extras_but_not_omissions():
+    gold = {"sources[].kind@includes": ["real"]}
+    env = lambda *kinds: {"out": {"sources": [{"kind": k} for k in kinds]}}
+    assert sia_chain.gold_agreement(env("real", "hand"), gold)[0] == 1.0
+    assert sia_chain.gold_agreement(env("real"), gold)[0] == 1.0
+    assert sia_chain.gold_agreement(env("hand", "synthetic"), gold)[0] == 0.0
+    assert sia_chain.gold_agreement({"out": {}}, gold)[0] == 0.0
+    with pytest.raises(ValueError):
+        sia_chain.gold_agreement(env("real"), {"sources[].kind@subset": ["real"]})
+
+
 def test_gold_missing_leaf_is_a_miss_even_for_none():
     assert sia_chain.gold_agreement({"out": {}}, {"consumer": "none"})[0] == 0.0
     assert sia_chain.gold_agreement({"out": {"consumer": None}}, {"consumer": "none"})[0] == 1.0
