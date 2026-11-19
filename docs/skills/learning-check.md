@@ -32,7 +32,7 @@ brunnr install learning-check
 |----------|-------|
 | **Path** | `skills/learning-check/SKILL.md` |
 | **Size** | 7.7 KB |
-| **SHA-256** | `00c10c1c35330e2dd3332035eb2ccfb05c3e27a780dee2a06b50b237d958f6f7` |
+| **SHA-256** | `d91fc922233e5670f0acf78bb7ad086c080572199b8864a99aa110bf8c879d26` |
 | **README** | `skills/learning-check/README.md` |
 
 ---
@@ -140,11 +140,11 @@ sia:
     firstFix: "<one concrete step>"
   recommendations:
     - id: lc-1
+      effort: S                   # S | M | L
+      impact: high                # high | medium | low
       title: "<imperative, one line>"
       why: "<one line tied to evidence>"
       do: "<a step an agent or engineer can do without rereading the report>"
-      effort: S                   # S | M | L
-      impact: high                # high | medium | low
       evidence: ["<path:line>"]   # or "unknown (ask: <question>)"
       next_skill: signal-card
       links: []

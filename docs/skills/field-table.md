@@ -32,7 +32,7 @@ brunnr install field-table
 |----------|-------|
 | **Path** | `skills/field-table/SKILL.md` |
 | **Size** | 6.2 KB |
-| **SHA-256** | `47e6c8c8c1ad88b3dbe1a19f116663e5f7ed13810b1373669c1a4d2d3121b3be` |
+| **SHA-256** | `43a24bb1c2d65f2e8852a80b875993a6e1662e668a9dd05c72bb778e19df2aae` |
 | **README** | `skills/field-table/README.md` |
 
 ---
@@ -139,11 +139,11 @@ sia:
       - { field: notes, consumer: none, definition: "model only", examples: 0, metric: none }
   recommendations:
     - id: ft-1
+      effort: S                   # S | M | L
+      impact: medium              # high | medium | low
       title: "<imperative, one line>"
       why: "<one line tied to evidence>"
       do: "<a step an agent or engineer can do without rereading the report>"
-      effort: S                   # S | M | L
-      impact: medium              # high | medium | low
       evidence: ["<path:line>"]   # or "unknown (ask: <question>)"
       next_skill: gold-set
       links: []

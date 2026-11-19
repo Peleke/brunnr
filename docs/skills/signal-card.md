@@ -32,7 +32,7 @@ brunnr install signal-card
 |----------|-------|
 | **Path** | `skills/signal-card/SKILL.md` |
 | **Size** | 6.6 KB |
-| **SHA-256** | `ceacc2cbac8245bba3643e1639458baa2093748fdd96dd94c22b53e271801fe1` |
+| **SHA-256** | `f3a476460dd99438a4ccaff4d629bb72c11391e9bd4075c5e3161b88575977d6` |
 | **README** | `skills/signal-card/README.md` |
 
 ---
@@ -138,11 +138,11 @@ sia:
     slots: { signal: score, search: "person reviewing proposals", artifact: instructions }
   recommendations:
     - id: sc-1
+      effort: S                   # S | M | L
+      impact: high                # high | medium | low
       title: "<imperative, one line>"
       why: "<one line tied to evidence>"
       do: "<a step an agent or engineer can do without rereading the report>"
-      effort: S                   # S | M | L
-      impact: high                # high | medium | low
       evidence: ["<path:line>"]   # or "unknown (ask: <question>)"
       next_skill: metric-signature
       links: []

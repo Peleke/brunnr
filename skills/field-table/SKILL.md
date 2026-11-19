@@ -110,11 +110,11 @@ sia:
       - { field: notes, consumer: none, definition: "model only", examples: 0, metric: none }
   recommendations:
     - id: ft-1
+      effort: S                   # S | M | L
+      impact: medium              # high | medium | low
       title: "<imperative, one line>"
       why: "<one line tied to evidence>"
       do: "<a step an agent or engineer can do without rereading the report>"
-      effort: S                   # S | M | L
-      impact: medium              # high | medium | low
       evidence: ["<path:line>"]   # or "unknown (ask: <question>)"
       next_skill: gold-set
       links: []

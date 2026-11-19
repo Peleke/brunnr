@@ -112,11 +112,11 @@ sia:
       - { claim: "prompt v3 raised exact match from 0.71 to 0.74", verdict: unsupported, why: "one run per condition, no zero-change run" }
   recommendations:
     - id: ep-1
+      effort: S
+      impact: high
       title: "<imperative, one line>"
       why: "<one line tied to evidence>"
       do: "<a step an agent or engineer can do without rereading the report>"
-      effort: S
-      impact: high
       evidence: ["<path:line>"]   # or "unknown (ask: <question>)"
       next_skill: none
       links: []

@@ -107,11 +107,11 @@ sia:
     leakageChecks: ["no vendor on both sides of a split", "demos drawn from train only"]
   recommendations:
     - id: gs-1
+      effort: M
+      impact: high
       title: "<imperative, one line>"
       why: "<one line tied to evidence>"
       do: "<a step an agent or engineer can do without rereading the report>"
-      effort: M
-      impact: high
       evidence: ["<path:line>"]   # or "unknown (ask: <question>)"
       next_skill: eval-power
       links: []

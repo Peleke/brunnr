@@ -32,7 +32,7 @@ brunnr install eval-power
 |----------|-------|
 | **Path** | `skills/eval-power/SKILL.md` |
 | **Size** | 6.2 KB |
-| **SHA-256** | `90775e4a2428195a3c98eef89f1f441d11e93444a8e44baeec8442c3984d6f9a` |
+| **SHA-256** | `060541b96a02461d6510fef3fb25b11499e593b06b46ab00dfd5402c5a9ef53b` |
 | **README** | `skills/eval-power/README.md` |
 
 ---
@@ -141,11 +141,11 @@ sia:
       - { claim: "prompt v3 raised exact match from 0.71 to 0.74", verdict: unsupported, why: "one run per condition, no zero-change run" }
   recommendations:
     - id: ep-1
+      effort: S
+      impact: high
       title: "<imperative, one line>"
       why: "<one line tied to evidence>"
       do: "<a step an agent or engineer can do without rereading the report>"
-      effort: S
-      impact: high
       evidence: ["<path:line>"]   # or "unknown (ask: <question>)"
       next_skill: none
       links: []

@@ -71,11 +71,11 @@ The most important part of every report. YAML, inside the envelope:
 ```yaml
 recommendations:
   - id: ms-1                       # <skill initials>-<n>, ordered by leverage
+    effort: S                      # S | M | L
+    impact: high                   # high | medium | low, spelled out
     title: "Score vendor IDs with exact match before trying a judge"
     why: "the chosen signal is a correct/incorrect vendor; a code metric is enough"
     do: "add metric(example, pred) -> float returning 1.0 on vendor match; run it on 30 invoices"
-    effort: S                      # S | M | L
-    impact: high                   # high | medium | low, spelled out
     evidence: ["src/ap/extract.py:41"]
     next_skill: gold-set
     links: []

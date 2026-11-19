@@ -111,11 +111,11 @@ sia:
     firstFix: "<one concrete step>"
   recommendations:
     - id: lc-1
+      effort: S                   # S | M | L
+      impact: high                # high | medium | low
       title: "<imperative, one line>"
       why: "<one line tied to evidence>"
       do: "<a step an agent or engineer can do without rereading the report>"
-      effort: S                   # S | M | L
-      impact: high                # high | medium | low
       evidence: ["<path:line>"]   # or "unknown (ask: <question>)"
       next_skill: signal-card
       links: []

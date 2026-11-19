@@ -32,7 +32,7 @@ brunnr install gold-set
 |----------|-------|
 | **Path** | `skills/gold-set/SKILL.md` |
 | **Size** | 6.2 KB |
-| **SHA-256** | `1311ddf82b906e0f205a6edc49cbddd8cfa86ced2582fea72cd2ca2acba257e4` |
+| **SHA-256** | `0ef02c310fd0035b20a41407dd84455f4725bd5d591ab0012a678dd9951a5572` |
 | **README** | `skills/gold-set/README.md` |
 
 ---
@@ -137,11 +137,11 @@ sia:
     leakageChecks: ["no vendor on both sides of a split", "demos drawn from train only"]
   recommendations:
     - id: gs-1
+      effort: M
+      impact: high
       title: "<imperative, one line>"
       why: "<one line tied to evidence>"
       do: "<a step an agent or engineer can do without rereading the report>"
-      effort: M
-      impact: high
       evidence: ["<path:line>"]   # or "unknown (ask: <question>)"
       next_skill: eval-power
       links: []

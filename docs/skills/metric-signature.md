@@ -32,7 +32,7 @@ brunnr install metric-signature
 |----------|-------|
 | **Path** | `skills/metric-signature/SKILL.md` |
 | **Size** | 7.1 KB |
-| **SHA-256** | `82967782ecf09b90282c3a9fdef7529a495447d9354fce16e66ea0acaeec44ce` |
+| **SHA-256** | `cf7e6725cc7894914240e86576f9c7b27a2ae9d2eecdc15d82411d3ce3466f5c` |
 | **README** | `skills/metric-signature/README.md` |
 
 ---
@@ -150,11 +150,11 @@ sia:
     fieldsUnscored: [notes, currency]
   recommendations:
     - id: ms-1
+      effort: S                   # S | M | L
+      impact: high                # high | medium | low
       title: "<imperative, one line>"
       why: "<one line tied to evidence>"
       do: "<a step an agent or engineer can do without rereading the report>"
-      effort: S                   # S | M | L
-      impact: high                # high | medium | low
       evidence: ["<path:line>"]   # or "unknown (ask: <question>)"
       next_skill: gold-set
       links: []
