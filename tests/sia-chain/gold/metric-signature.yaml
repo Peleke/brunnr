@@ -5,7 +5,7 @@ skill: metric-signature
 rows:
 - agent: review-bot
   drafted_by: DA
-  adjudicated_by: null
+  adjudicated_by: principal
   note: resolved (not dismissed) per comment is a stored boolean.
   out:
     metrics[].tier:
@@ -19,7 +19,7 @@ rows:
       - resolution
 - agent: home-assistant
   drafted_by: DA
-  adjudicated_by: null
+  adjudicated_by: principal
   note: whether a correction followed within the conversation.
   out:
     metrics[].tier:
@@ -33,7 +33,7 @@ rows:
       - corrected
 - agent: support-triage
   drafted_by: DA
-  adjudicated_by: null
+  adjudicated_by: principal
   note: queue exact match against the final queue.
   out:
     metrics[].tier:
@@ -51,7 +51,7 @@ rows:
       - final_queue
 - agent: intent-classifier
   drafted_by: DA
-  adjudicated_by: null
+  adjudicated_by: principal
   note: the existing exact_match, scored on a held-out split.
   out:
     metrics[].tier:
@@ -65,7 +65,7 @@ rows:
       - intent
 - agent: sales-gpt
   drafted_by: DA
-  adjudicated_by: null
+  adjudicated_by: principal
   note: token overlap between draft and sent version.
   out:
     metrics[].tier:

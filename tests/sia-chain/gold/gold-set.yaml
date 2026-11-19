@@ -5,7 +5,7 @@ skill: gold-set
 rows:
 - agent: review-bot
   drafted_by: DA
-  adjudicated_by: null
+  adjudicated_by: principal
   note: past PR comments with resolved/dismissed outcomes.
   out:
     sources[].kind:
@@ -18,7 +18,7 @@ rows:
       groupBy: pull request
 - agent: home-assistant
   drafted_by: DA
-  adjudicated_by: null
+  adjudicated_by: principal
   note: channel log requests plus hand-written edge cases (relative dates).
   out:
     sources[].kind:
@@ -32,7 +32,7 @@ rows:
       groupBy: conversation
 - agent: support-triage
   drafted_by: DA
-  adjudicated_by: null
+  adjudicated_by: principal
   note: helpdesk export with final queues.
   out:
     sources[].kind:
@@ -45,7 +45,7 @@ rows:
       groupBy: customer
 - agent: intent-classifier
   drafted_by: DA
-  adjudicated_by: null
+  adjudicated_by: principal
   note: real customer messages added to the 40 hand-written examples.
   out:
     sources[].kind:
@@ -59,7 +59,7 @@ rows:
       groupBy: source
 - agent: sales-gpt
   drafted_by: DA
-  adjudicated_by: null
+  adjudicated_by: principal
   note: draft/sent pairs from the email tool.
   out:
     sources[].kind:

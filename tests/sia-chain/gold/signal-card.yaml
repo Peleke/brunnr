@@ -5,7 +5,7 @@ skill: signal-card
 rows:
 - agent: review-bot
   drafted_by: DA
-  adjudicated_by: null
+  adjudicated_by: principal
   note: share of comments authors resolve rather than dismiss.
   out:
     slots:
@@ -19,7 +19,7 @@ rows:
       artifact: skill file
 - agent: home-assistant
   drafted_by: DA
-  adjudicated_by: null
+  adjudicated_by: principal
   note: corrections in chat; rate of requests needing no correction.
   out:
     slots:
@@ -33,7 +33,7 @@ rows:
       artifact: memory
 - agent: support-triage
   drafted_by: DA
-  adjudicated_by: null
+  adjudicated_by: principal
   note: share of tickets not moved to another queue.
   out:
     slots:
@@ -47,7 +47,7 @@ rows:
       artifact: instructions
 - agent: intent-classifier
   drafted_by: DA
-  adjudicated_by: null
+  adjudicated_by: principal
   note: exact-match accuracy on held-out messages.
   out:
     slots:
@@ -61,7 +61,7 @@ rows:
       artifact: demos
 - agent: sales-gpt
   drafted_by: DA
-  adjudicated_by: null
+  adjudicated_by: principal
   note: similarity of draft to the sent version; reply rate is a slow proxy.
   out:
     slots:

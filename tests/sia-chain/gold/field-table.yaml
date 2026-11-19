@@ -5,7 +5,7 @@ skill: field-table
 rows:
 - agent: review-bot
   drafted_by: DA
-  adjudicated_by: null
+  adjudicated_by: principal
   note: per-comment fields plus the closing summary.
   out:
     fields[].field:
@@ -16,7 +16,7 @@ rows:
     - summary
 - agent: home-assistant
   drafted_by: DA
-  adjudicated_by: null
+  adjudicated_by: principal
   note: reminders skill output.
   out:
     fields[].field:
@@ -25,7 +25,7 @@ rows:
     - recurrence
 - agent: support-triage
   drafted_by: DA
-  adjudicated_by: null
+  adjudicated_by: principal
   note: TriageOut; urgency and tags have no consumer.
   out:
     fields[].field:
@@ -35,14 +35,14 @@ rows:
     - tags
 - agent: intent-classifier
   drafted_by: DA
-  adjudicated_by: null
+  adjudicated_by: principal
   note: single output field.
   out:
     fields[].field:
     - intent
 - agent: sales-gpt
   drafted_by: DA
-  adjudicated_by: null
+  adjudicated_by: principal
   note: one free-text output.
   out:
     fields[].field:
