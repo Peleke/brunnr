@@ -25,7 +25,7 @@ Agents* (Manning).
 - **The signal comes from outside the model.** It has one of four types, decided by what is
   recorded per output:
   - **score:** a number or pass/fail per output, whether a test computes it or a person's action
-    implies it (accepted vs rejected, a thumbs click, reassigned by hand, kept vs rewritten).
+    implies it (a refund issued or not, an order returned, a link clicked, a file downloaded).
   - **preference:** which of two or more outputs for the same input won (A/B, a ranking).
   - **feedback:** words a person wrote about an output ("that date is wrong, use the invoice date").
   - **confidence:** the agent's own estimate, checked against something external.

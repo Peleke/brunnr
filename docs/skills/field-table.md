@@ -32,7 +32,7 @@ brunnr install field-table
 |----------|-------|
 | **Path** | `skills/field-table/SKILL.md` |
 | **Size** | 6.2 KB |
-| **SHA-256** | `43a24bb1c2d65f2e8852a80b875993a6e1662e668a9dd05c72bb778e19df2aae` |
+| **SHA-256** | `1c1cc5d6363dfdc6d34a69eae58160437e8e90c4038ba06dcab9d1f279709863` |
 | **README** | `skills/field-table/README.md` |
 
 ---
@@ -48,8 +48,8 @@ shows which is which.
 #### Rules
 
 - **Read-only.** No edits, no runs, no model or API calls.
-- **One row per leaf field the model fills**, named as the model emits it (`severity`, not
-  `comment.severity` or `severity=blocker`). A container (a list of items, a nested object) is
+- **One row per leaf field the model fills**, named as the model emits it (`amount`, not
+  `invoice.amount` or `currency=USD`). A container (a list of items, a nested object) is
   not a row; its leaves are. Enum values go in the Definition column of their field, not in rows
   of their own.
 - **A consumer is code or a metric that reads the field.** Logging it or showing it in a debug
@@ -156,8 +156,8 @@ sia:
 - Size each item (S, M, L) for everything its `do` includes, prerequisites too.
 - Each `do` stands alone: no "see above", one named choice rather than an either/or.
 - A claim resting on one incident is a hypothesis; say "one case" and what would confirm it. A
-  claim that something is absent (no reader, never measured) names where you searched. A contract test that fails CI when an output field has no named
-consumer is a good candidate.
+  claim that something is absent (no reader, never measured) names where you searched.
+- A contract test that fails CI when an output field has no named consumer is a good candidate.
 
 #### Gotchas
 

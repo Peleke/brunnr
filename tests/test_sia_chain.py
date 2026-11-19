@@ -188,6 +188,19 @@ def test_envelope_pins_skill_and_deployment_type():
     assert sia_chain.check_envelope(_env(deploymentType=None))
 
 
+def test_envelope_fence_handles_crlf_and_backticks_in_values():
+    report = _report(_env()).replace("\n", "\r\n")
+    assert sia_chain.extract_envelope(report) is not None
+    env = _env(agent={"name": "a", "summary": "writes ```yaml blocks into docs"})
+    assert sia_chain.extract_envelope(_report(env)) == env  # not cut off at the inner backticks
+
+
+def test_hard_check_score_applies_the_pins():
+    report = _report(_env(skill="signal-card"))  # an echoed upstream envelope
+    assert sia_chain.hard_check_score(report, LC_WRITES)[0] == 1.0
+    assert sia_chain.hard_check_score(report, LC_WRITES, "learning-check", "framework-app")[0] < 1.0
+
+
 def test_envelope_must_be_the_last_yaml_block():
     report = _report(_env()) + "\n```yaml\nnot: an envelope\n```\n"
     assert sia_chain.extract_envelope(report) is None
@@ -252,6 +265,25 @@ def test_gold_includes_allows_extras_but_not_omissions():
         sia_chain.gold_agreement(env("real"), {"sources[].kind@subset": ["real"]})
 
 
+def test_gold_mentions_pins_which_claim_was_graded():
+    gold = {"claimVerdicts[].verdict": ["unsupported"], "claimVerdicts[].claim@mentions": ["0.850"]}
+    real = {"out": {"claimVerdicts": [{"claim": "accuracy rose from 0.825 to 0.850", "verdict": "unsupported"}]}}
+    invented = {"out": {"claimVerdicts": [{"claim": "the new prompt is better", "verdict": "unsupported"}]}}
+    assert sia_chain.gold_agreement(real, gold) == (1.0, [])
+    assert sia_chain.gold_agreement(invented, gold)[0] == 0.5
+
+
+@pytest.mark.parametrize("op", ["includes", "mentions"])
+def test_gold_operators_need_a_list(op):
+    with pytest.raises(ValueError, match="needs a list"):
+        sia_chain.gold_agreement({"out": {"k": "real"}}, {f"k@{op}": "real"})
+
+
+def test_gold_numbers_and_empty_values_normalize():
+    assert sia_chain.gold_agreement({"out": {"split": {"train": 30.0}}}, {"split": {"train": 30}})[0] == 1.0
+    assert sia_chain.gold_agreement({"out": {"claimVerdicts": None}}, {"claimVerdicts": []})[0] == 1.0
+
+
 def test_gold_missing_leaf_is_a_miss_even_for_none():
     assert sia_chain.gold_agreement({"out": {}}, {"consumer": "none"})[0] == 0.0
     assert sia_chain.gold_agreement({"out": {"consumer": None}}, {"consumer": "none"})[0] == 1.0
@@ -286,6 +318,49 @@ def test_spec_requires_exactly_the_chain_writes(skill):
         for a in case["assertions"]:
             if a["type"] == "sia_out_fields":
                 assert a["expected"] == writes, case["id"]
+
+
+@pytest.mark.parametrize("skill", CHAIN_SKILLS)
+def test_chain_cases_assert_the_pinned_checks(skill):
+    spec = json.loads((REPO / f"tests/{skill}/test-spec.json").read_text())
+    agents = _agents()
+    writes = next(link["writes"] for link in CHAIN if link["skill"] == skill)
+    for case in (c for c in spec["cases"] if c["id"].startswith("chain-")):
+        agent = agents[case["fixture"].rsplit("/", 1)[-1][:-5]]
+        by_type = {a["type"]: a["expected"] for a in case["assertions"]}
+        assert len(by_type) == len(case["assertions"]), case["id"]
+        assert set(by_type) == {"sia_envelope_valid", "sia_out_fields", "sia_recommendations", "sia_gold", "judge"}, case["id"]
+        assert by_type["sia_envelope_valid"] == {"skill": skill, "deploymentType": agent["deploymentType"]}, case["id"]
+        assert by_type["sia_out_fields"] == writes, case["id"]
+        assert by_type["sia_recommendations"] is True, case["id"]
+        assert by_type["sia_gold"] == {"skill": skill, "agent": agent["agent"]}, case["id"]
+
+
+# Strings that identify one fixture agent. If one shows up in skill prose, the gold result on that
+# agent partly measures recall of the patch rather than the skill.
+FIXTURE_MARKERS = {
+    "home-assistant": ["Noted for next time", "next week's friday", "shared list", "call the vet"],
+    "intent-classifier": ["0.825", "0.850", "airline", "BootstrapFewShot(metric=exact_match)"],
+    "review-bot": ["blocker|major|minor", "resolved or dismissed", "missing docstrings", "review #44"],
+    "sales-gpt": ["SaaStr", "90-word email", "CTA rewritten", "Hi Dana"],
+    "support-triage": ["moved_to", "TriageOut", "thumbs=down", "draft_reply", "ROUTER_PROMPT"],
+}
+
+
+def test_fixture_markers_are_real():
+    agents = _agents()
+    assert set(FIXTURE_MARKERS) == set(agents)
+    for name, markers in FIXTURE_MARKERS.items():
+        for m in markers:
+            assert m in agents[name]["input"], (name, m)
+
+
+@pytest.mark.parametrize("skill", CHAIN_SKILLS + ["_sia-chain"])
+def test_skill_prose_does_not_quote_fixtures(skill):
+    path = REPO / "skills" / (f"{skill}.md" if skill.startswith("_") else f"{skill}/SKILL.md")
+    text = path.read_text()
+    leaks = [(name, m) for name, ms in FIXTURE_MARKERS.items() for m in ms if m in text]
+    assert leaks == []
 
 
 @pytest.mark.parametrize("skill", CHAIN_SKILLS)
@@ -360,19 +435,95 @@ def test_s2_gate_fails_when_a_key_is_removed(key):
 JUDGE = {"type": "judge", "expected": {"rubric": "tests/sia-chain/buyer-rubric.md"}}
 
 
+OK = '{"score": 0.86, "signOff": "yes", "criteria": {"correct": true, "actionable": true, "honest": true}}'
+
+
 @pytest.mark.parametrize(
     "reply,passed",
     [
-        ('{"score": 0.86, "signOff": "yes"}', True),
-        ('```json\n{"score": 0.86, "signOff": "yes"}\n```', True),
-        ('{"score": 0.86, "signOff": "yes"}\n{"note": "second object"}', True),  # run 5 reply
-        ('Here you go: {"score": 0.5, "signOff": "no"} done', False),
+        (OK, True),
+        (f"```json\n{OK}\n```", True),
+        (f'{OK}\n{{"note": "second object"}}', True),  # run 5 reply
+        (f"Here you go: {OK} done", True),
         ("no json at all", False),
     ],
 )
 def test_judge_reads_the_first_json_object(monkeypatch, reply, passed):
     monkeypatch.setattr(harness, "call_model", lambda *a: reply)
+    result = harness.run_judge("cli", JUDGE, "report", "m")
+    assert result["passed"] is passed
+    assert ("judge" in result) is passed and ("no parseable JSON" in result["detail"]) is not passed
+
+
+@pytest.mark.parametrize(
+    "verdict,passed",
+    [
+        ({"score": 0.3, "signOff": "yes", "criteria": {"correct": False}}, False),
+        ({"score": 0.9, "signOff": "yes", "criteria": {"correct": True, "actionable": True}}, False),
+        ({"score": 0.6, "signOff": "yes", "criteria": {"correct": True, "actionable": True, "honest": True}}, False),
+        ({"score": 0.9, "signOff": "no", "criteria": {"correct": True, "actionable": True, "honest": True}}, True),
+        ({"signOff": "yes", "criteria": {"correct": True, "actionable": True, "honest": True}}, False),
+    ],
+)
+def test_judge_sign_off_is_recomputed_from_criteria(monkeypatch, verdict, passed):
+    monkeypatch.setattr(harness, "call_model", lambda *a: json.dumps(verdict))
     assert harness.run_judge("cli", JUDGE, "report", "m")["passed"] is passed
+
+
+def test_judge_sees_the_agent_input(monkeypatch):
+    seen = {}
+    def fake(runner, system, message, model):
+        seen["message"] = message
+        return OK
+    monkeypatch.setattr(harness, "call_model", fake)
+    harness.run_judge("cli", JUDGE, "THE REPORT", "m", agent_input="workspace/skills/x.md:5")
+    assert "workspace/skills/x.md:5" in seen["message"] and "THE REPORT" in seen["message"]
+    assert seen["message"].index("workspace/skills") < seen["message"].index("THE REPORT")
+
+
+# ---------------------------------------------------------------------------
+# Harness runners (no model calls: subprocess and the SDK are replaced)
+# ---------------------------------------------------------------------------
+
+
+def test_cli_runner_keeps_private_context_out(monkeypatch):
+    for var in ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN", "ANTHROPIC_BASE_URL", "CLAUDECODE",
+                "CLAUDE_CODE_USE_BEDROCK"):
+        monkeypatch.setenv(var, "x")
+    seen = {}
+    def fake_run(argv, **kw):
+        seen.update(argv=argv, **kw)
+        return type("P", (), {"returncode": 0, "stdout": "ok", "stderr": ""})()
+    monkeypatch.setattr(harness.subprocess, "run", fake_run)
+    assert harness.call_cli("SYS", "USER", "m") == "ok"
+    argv = seen["argv"]
+    for flag in ("--safe-mode", "--strict-mcp-config", "--disable-slash-commands", "--print"):
+        assert flag in argv, flag
+    assert "--bare" not in argv  # forces API-key auth
+    assert argv[argv.index("--setting-sources") + 1] == "" and argv[argv.index("--tools") + 1] == ""
+    assert not [k for k in seen["env"] if k.startswith(("ANTHROPIC_", "CLAUDE_CODE_USE_")) or k == "CLAUDECODE"]
+    cwd = Path(seen["cwd"]).resolve()
+    assert cwd != REPO and REPO not in cwd.parents and Path.cwd().resolve() != cwd
+
+
+def test_api_runner_errors_on_a_truncated_report(monkeypatch):
+    class Msg:
+        stop_reason = "max_tokens"
+        content = [type("B", (), {"text": "# cut off"})()]
+    class Client:
+        messages = type("M", (), {"create": staticmethod(lambda **kw: Msg())})()
+    fake = type(sys)("anthropic")
+    fake.Anthropic = lambda: Client()
+    monkeypatch.setitem(sys.modules, "anthropic", fake)
+    with pytest.raises(RuntimeError, match="max_tokens"):
+        harness.call_claude("SYS", "USER", "m")
+
+
+def test_upstream_envelope_drops_scoring_keys(monkeypatch):
+    row = {"out": {"signals@includes": ["a"], "fields[].field": ["x"], "kept": 1}, "context": {"c": 2}}
+    monkeypatch.setattr(harness, "load_gold_row", lambda skill, agent: row)
+    out = harness.upstream_sia("signal-card", _agents()["intent-classifier"])["out"]
+    assert out == {"kept": 1, "c": 2}
 
 
 def test_judge_error_fails_the_assertion_not_the_run(monkeypatch):

@@ -32,7 +32,7 @@ brunnr install signal-card
 |----------|-------|
 | **Path** | `skills/signal-card/SKILL.md` |
 | **Size** | 6.6 KB |
-| **SHA-256** | `f3a476460dd99438a4ccaff4d629bb72c11391e9bd4075c5e3161b88575977d6` |
+| **SHA-256** | `0986d1a5028463842385eb02ea10312c38e52666bc99d3d95525c073f1466b11` |
 | **README** | `skills/signal-card/README.md` |
 
 ---
@@ -54,7 +54,7 @@ Agents* (Manning).
 - **The signal comes from outside the model.** It has one of four types, decided by what is
   recorded per output:
   - **score:** a number or pass/fail per output, whether a test computes it or a person's action
-    implies it (accepted vs rejected, a thumbs click, reassigned by hand, kept vs rewritten).
+    implies it (a refund issued or not, an order returned, a link clicked, a file downloaded).
   - **preference:** which of two or more outputs for the same input won (A/B, a ranking).
   - **feedback:** words a person wrote about an output ("that date is wrong, use the invoice date").
   - **confidence:** the agent's own estimate, checked against something external.

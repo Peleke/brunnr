@@ -17,6 +17,11 @@ Runners:
     cli  `claude --print` on the logged-in subscription. API-key, gateway (ANTHROPIC_BASE_URL) and
          cloud-provider (CLAUDE_CODE_USE_*) env vars are removed from the subprocess, and
          settings files are not loaded, so it runs on the login rather than a key or account.
+         `--safe-mode`, `--strict-mcp-config` and `--disable-slash-commands` keep CLAUDE.md,
+         auto-memory, skills, plugins, hooks and MCP servers out of the model's context, and the
+         call runs from an empty temp directory so no repo or git state is visible. Never
+         `--bare`: it forces API-key auth. What remains is Claude Code's own environment block
+         (platform, date, the temp cwd) and the signed-in account's email.
 
     The judge uses --judge-model (default: same as --model). Pass a different model to avoid
     grading a report with the model that wrote it.
@@ -27,6 +32,7 @@ import json
 import os
 import subprocess
 import sys
+import tempfile
 import time
 from pathlib import Path
 from typing import Any
@@ -95,7 +101,8 @@ def upstream_sia(skill: str, fixture: dict[str, Any]) -> dict[str, Any]:
     row = load_gold_row(skill, agent)
     if row is None:
         raise FileNotFoundError(f"No gold row for upstream {skill}/{agent}")
-    out = {k: v for k, v in row["out"].items() if "[]" not in k}
+    # Projection keys (`a[].b`, `x@includes`) are scoring paths, not envelope fields.
+    out = {k: v for k, v in row["out"].items() if "[]" not in k and "@" not in k}
     out.update(row.get("context") or {})
     return {
         "skill": skill,
@@ -138,24 +145,37 @@ def call_claude(
     client = Anthropic()
     response = client.messages.create(
         model=model,
-        max_tokens=4096,
+        max_tokens=16000,
         system=system_prompt,
         messages=[{"role": "user", "content": user_message}],
     )
-
+    if response.stop_reason == "max_tokens":
+        # A cut-off report would fail every envelope check and be blamed on the skill.
+        raise RuntimeError("response hit max_tokens; report truncated")
     return response.content[0].text
+
+
+CLI_ISOLATION = ["--safe-mode", "--strict-mcp-config", "--disable-slash-commands"]
+CLI_STRIPPED_ENV = ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN", "ANTHROPIC_BASE_URL", "CLAUDECODE")
+
+
+def cli_command(system_prompt: str, model: str) -> list[str]:
+    return ["claude", "--print", "--model", model, "--tools", "", "--output-format", "text",
+            "--setting-sources", "", *CLI_ISOLATION, "--system-prompt", system_prompt]
+
+
+def cli_env() -> dict[str, str]:
+    return {k: v for k, v in os.environ.items()
+            if k not in CLI_STRIPPED_ENV and not k.startswith("CLAUDE_CODE_USE_")}
 
 
 def call_cli(system_prompt: str, user_message: str, model: str) -> str:
     """Run one turn through `claude --print` on the subscription (no API key billing)."""
-    env = {k: v for k, v in os.environ.items()
-           if k not in ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN", "ANTHROPIC_BASE_URL", "CLAUDECODE")
-           and not k.startswith("CLAUDE_CODE_USE_")}
-    proc = subprocess.run(
-        ["claude", "--print", "--model", model, "--tools", "", "--output-format", "text",
-         "--setting-sources", "", "--system-prompt", system_prompt],
-        input=user_message, capture_output=True, text=True, env=env, timeout=600,
-    )
+    with tempfile.TemporaryDirectory(prefix="brunnr-cli-") as cwd:
+        proc = subprocess.run(
+            cli_command(system_prompt, model),
+            input=user_message, capture_output=True, text=True, env=cli_env(), cwd=cwd, timeout=600,
+        )
     if proc.returncode != 0:
         raise RuntimeError(f"claude exited {proc.returncode}: {proc.stderr.strip()[:300]}")
     return proc.stdout
@@ -167,13 +187,44 @@ def call_model(runner: str, system_prompt: str, user_message: str, model: str) -
     return call_claude(system_prompt, user_message, model=model)
 
 
-def run_judge(runner: str, assertion: dict[str, Any], output: str, model: str) -> dict[str, Any]:
+JUDGE_REQUIRED = ("correct", "actionable", "honest")  # buyer rubric: sign-off needs 2, 4 and 5
+JUDGE_MIN_SCORE = 0.7
+
+
+def judge_message(report: str, agent_input: str | None) -> str:
+    """What the judge reads: the agent material the skill saw, then the report."""
+    if not agent_input:
+        return report
+    return ("## What the skill was given (the agent's files, logs and upstream envelopes)\n\n"
+            f"{agent_input}\n\n## The report to grade\n\n{report}")
+
+
+def judge_passes(verdict: dict[str, Any]) -> tuple[bool, str]:
+    """Recompute sign-off from the criteria instead of trusting the judge's own `signOff`."""
+    criteria = verdict.get("criteria") or {}
+    try:
+        score = float(verdict.get("score"))
+    except (TypeError, ValueError):
+        return False, "no numeric score"
+    failed = [c for c in JUDGE_REQUIRED if criteria.get(c) is not True]
+    ok = not failed and score >= JUDGE_MIN_SCORE
+    said = str(verdict.get("signOff", "")).lower() == "yes"
+    note = "" if ok == said else f" (judge said signOff={verdict.get('signOff')}; recomputed)"
+    if failed:
+        return False, f"failed required {', '.join(failed)}{note}"
+    if score < JUDGE_MIN_SCORE:
+        return False, f"score {score} < {JUDGE_MIN_SCORE}{note}"
+    return True, note.strip()
+
+
+def run_judge(runner: str, assertion: dict[str, Any], output: str, model: str,
+              agent_input: str | None = None) -> dict[str, Any]:
     """Grade a report with a rubric file; record {score, signOff, feedback}."""
     result: dict[str, Any] = {"assertion": assertion, "passed": False, "detail": ""}
     result["judge_model"] = model
     rubric = (REPO_ROOT / assertion["expected"]["rubric"]).read_text()
     try:
-        raw = call_model(runner, rubric, output, model)
+        raw = call_model(runner, rubric, judge_message(output, agent_input), model)
     except Exception as e:  # a judge failure fails this assertion, not the whole run
         result["detail"] = f"judge error: {e}"
         return result
@@ -184,9 +235,13 @@ def run_judge(runner: str, assertion: dict[str, Any], output: str, model: str) -
         result["detail"] = f"judge returned no parseable JSON ({e}): {raw[:200]}"
         result["judge_raw"] = raw
         return result
+    if not isinstance(verdict, dict):
+        result["detail"] = f"judge returned JSON that is not an object: {raw[:200]}"
+        result["judge_raw"] = raw
+        return result
     result["judge"] = verdict
-    result["passed"] = str(verdict.get("signOff", "")).lower() == "yes"
-    result["detail"] = f"score={verdict.get('score')} signOff={verdict.get('signOff')}"
+    result["passed"], why = judge_passes(verdict)
+    result["detail"] = f"score={verdict.get('score')} signOff={verdict.get('signOff')}" + (f" {why}" if why else "")
     return result
 
 
@@ -274,7 +329,7 @@ def run_test_case(
     assertion_results = []
     for assertion in case.get("assertions", []):
         if assertion["type"] == "judge":
-            result = run_judge(runner, assertion, output, judge_model or model)
+            result = run_judge(runner, assertion, output, judge_model or model, input_text)
         else:
             result = run_assertion(assertion, output)
         status = "PASS" if result["passed"] else "FAIL"

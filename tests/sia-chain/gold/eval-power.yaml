@@ -24,10 +24,13 @@ rows:
 - agent: intent-classifier
   drafted_by: DA
   adjudicated_by: principal
-  note: 0.825 -> 0.850 on the set the demos came from, n=40, one run each.
+  note: 0.825 -> 0.850 on the set the demos came from, n=40, one run each. The @mentions key pins
+    which claim was graded, so an invented claim graded unsupported does not pass (added 2026-11-19).
   out:
     claimVerdicts[].verdict:
     - unsupported
+    claimVerdicts[].claim@mentions:
+    - '0.850'
 - agent: sales-gpt
   drafted_by: DA
   adjudicated_by: principal

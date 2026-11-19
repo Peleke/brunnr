@@ -23,7 +23,9 @@ OUTCOMES = ("no loop found", "not learning", "learning, unmeasured", "learning, 
 ENVELOPE_KEYS = ("skill", "version", "agent", "deploymentType", "in_ref", "out", "recommendations")
 RECOMMENDATION_KEYS = ("id", "title", "why", "do", "effort", "impact", "evidence", "next_skill")
 
-_FENCE = re.compile(r"```ya?ml[ \t]*\n(.*?)```", re.DOTALL | re.IGNORECASE)
+# Opening fence at a line start, CRLF or LF; the closing fence must also start a line, so a
+# literal ``` inside a quoted value does not end the block.
+_FENCE = re.compile(r"^[ \t]*```ya?ml[ \t]*\r?\n(.*?)^[ \t]*```", re.DOTALL | re.IGNORECASE | re.MULTILINE)
 
 
 def _yaml():
@@ -157,13 +159,23 @@ def check_recommendations(env: dict[str, Any] | None) -> list[str]:
     return problems
 
 
-def hard_check_score(report: str, required_out: list[str]) -> tuple[float, list[str]]:
+def hard_check_score(
+    report: str,
+    required_out: list[str],
+    skill: str | None = None,
+    deployment_type: str | None = None,
+) -> tuple[float, list[str]]:
     """Fraction of the three hard checks passed (envelope, out fields, recommendations).
 
-    This is the code metric every chain skill declares for S2.
+    This is the code metric every chain skill declares for S2. Pass `skill` and
+    `deployment_type` to apply the same pins the harness's sia_envelope_valid assertion uses.
     """
     env = extract_envelope(report)
-    groups = [check_envelope(env), check_out_fields(env, required_out), check_recommendations(env)]
+    groups = [
+        check_envelope(env, skill, deployment_type),
+        check_out_fields(env, required_out),
+        check_recommendations(env),
+    ]
     passed = sum(1 for g in groups if not g)
     return passed / len(groups), [p for g in groups for p in g]
 
@@ -175,6 +187,8 @@ def _norm(value: Any) -> Any:
         return sorted({"<nested>" if isinstance(v, (list, dict)) else _norm(v) for v in value})
     if isinstance(value, bool):  # YAML 1.1 reads unquoted yes/no as booleans
         return "yes" if value else "no"
+    if isinstance(value, float) and value.is_integer():  # 30 and 30.0 are the same count
+        value = int(value)
     return re.sub(r"\s+", " ", str(value).strip().lower())
 
 
@@ -195,7 +209,9 @@ def gold_agreement(env: dict[str, Any] | None, gold_out: dict[str, Any]) -> tupl
     Lists compare as sets of scalars; `[]` in the gold means "no items" (a missing key counts as
     none). Any other missing leaf is a miss, even when the gold value is the string "none".
     A key ending in `@includes` passes when the output's set contains every gold item (extras
-    allowed), e.g. `sources[].kind@includes: [real]`.
+    allowed), e.g. `sources[].kind@includes: [real]`. A key ending in `@mentions` passes when each
+    gold string appears inside at least one output item, e.g. `claimVerdicts[].claim@mentions:
+    ["0.850"]` pins which claim was graded. Both operators take a list.
     """
     flat = _flatten(gold_out)
     if not flat:
@@ -204,18 +220,29 @@ def gold_agreement(env: dict[str, Any] | None, gold_out: dict[str, Any]) -> tupl
     misses = []
     for key, want in flat.items():
         path, _, op = key.partition("@")
-        if op not in ("", "includes"):
+        if op not in ("", "includes", "mentions"):
             raise ValueError(f"unknown gold operator @{op} in {key}")
+        if op and not isinstance(want, list):
+            raise ValueError(f"gold operator @{op} needs a list in {key}, got {want!r}")
         got = get_path(out, path)
+        if got is None and want == [] and not op:  # `claimVerdicts:` with no value means none
+            continue
         if got is _MISSING:
             if want == [] and not op:
                 continue
             misses.append(f"out.{path}: expected {want!r}, missing")
             continue
+        items = got if isinstance(got, list) else [got]
         if op == "includes":
-            lacking = sorted(set(_norm(want)) - set(_norm(got if isinstance(got, list) else [got])))
+            lacking = sorted(set(_norm(want)) - set(_norm(items)))
             if lacking:
                 misses.append(f"out.{path}: expected to include {lacking}, got {got!r}")
+            continue
+        if op == "mentions":
+            texts = [_norm(i) for i in items if not isinstance(i, (list, dict))]
+            lacking = [w for w in want if not any(_norm(w) in s for s in texts)]
+            if lacking:
+                misses.append(f"out.{path}: no item mentions {lacking}, got {got!r}")
             continue
         if _norm(got) != _norm(want):
             misses.append(f"out.{path}: expected {want!r}, got {got!r}")

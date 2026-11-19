@@ -104,6 +104,23 @@ jobs:
             exit 1
           fi
 
+  unit-tests:
+    name: Unit Tests (S2 gate, gold, chain check)
+    needs: [security-scan]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -e ".[eval]" pytest jinja2
+
+      - name: Run the unit suite
+        run: python -m pytest tests/ -q
+
   discover-skills:
     name: Discover Testable Skills
     needs: [security-scan]
@@ -202,7 +219,8 @@ jobs:
             PASS=$(python3 -c "import json; r=json.load(open('$result_file')); print(r['summary']['pass'])")
             FAIL=$(python3 -c "import json; r=json.load(open('$result_file')); print(r['summary']['fail'])")
             TOTAL=$(python3 -c "import json; r=json.load(open('$result_file')); print(r['summary']['total'])")
-            OK=$(python3 -c "import json; r=json.load(open('$result_file')); print('Pass' if r['summary']['fail']==0 else 'FAIL')")
+            # A run with no API key validates cases only (dry_run); report that as skipped, not Pass.
+            OK=$(python3 -c "import json; r=json.load(open('$result_file')); s=r['summary']; print('FAIL' if s['fail'] else 'SKIPPED (no model run)' if r.get('dry_run') or s['total']==0 else 'Pass')")
 
             if [ "$OK" = "FAIL" ]; then
               OVERALL_PASS=false

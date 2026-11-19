@@ -72,7 +72,7 @@ run (pre-registration).
 
 For each improvement claim a person on the team made (in notes, PRs, commit messages, or the
 operator's words): `supported`, `inconclusive` or `unsupported`, with one line why. The agent's own
-messages ("Fixed", "Noted for next time") and claims you infer from an edit are not claims; leave
+messages ("Done", "I'll remember that") and claims you infer from an edit are not claims; leave
 them out. A score on training data, a single run per
 condition, or no baseline makes a claim `unsupported` as stated.
 

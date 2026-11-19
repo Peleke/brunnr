@@ -93,7 +93,7 @@ Then the envelope as the last fenced block, then the footer line. The envelope m
 YAML: put double quotes around every free-text value (names, `title`, `why`, `do`, each
 `evidence` item, claims), because a `: ` or a leading quote inside an unquoted value breaks the
 parse. Every key keeps its colon, as in the template (`effort: S`, `impact: medium`); write `medium`,
-not `med`. `verdicts` are the headline
+not `med`. Quote `"no"` in YAML so it stays a string. `verdicts` are the headline
 loop's answers; `loops` lists every loop.
 
 ```yaml
@@ -128,7 +128,7 @@ sia:
 - Size each item (S, M, L) for everything its `do` includes, prerequisites too.
 - Each `do` stands alone: no "see above", one named choice rather than an either/or.
 - A claim resting on one incident is a hypothesis; say "one case" and what would confirm it. A
-  claim that something is absent (no reader, never measured) names where you searched. Quote `"no"` in YAML so it stays a string.
+  claim that something is absent (no reader, never measured) names where you searched.
 
 ## Gotchas
 

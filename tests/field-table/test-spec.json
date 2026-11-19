@@ -230,7 +230,7 @@
   ],
   "s2": {
     "capture": "the report's `sia:` envelope (last fenced YAML block), saved per case in the harness results JSON",
-    "metric": "brunnr.sia_chain.hard_check_score (envelope, required out fields, recommendations) and brunnr.sia_chain.gold_agreement against the gold row",
+    "metric": "brunnr.sia_chain.hard_check_score with skill and deploymentType pins (envelope, required out fields, recommendations) and brunnr.sia_chain.gold_agreement against the gold row",
     "gold": "tests/sia-chain/gold/field-table.yaml"
   }
 }
