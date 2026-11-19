@@ -351,3 +351,33 @@ def test_s2_gate_fails_when_a_key_is_removed(key):
     spec = json.loads((REPO / "tests/gold-set/test-spec.json").read_text())
     del spec["s2"][key]
     assert s2_problems(spec, "gold-set")
+
+
+# ---------------------------------------------------------------------------
+# Harness judge parsing (no model calls: call_model is replaced)
+# ---------------------------------------------------------------------------
+
+JUDGE = {"type": "judge", "expected": {"rubric": "tests/sia-chain/buyer-rubric.md"}}
+
+
+@pytest.mark.parametrize(
+    "reply,passed",
+    [
+        ('{"score": 0.86, "signOff": "yes"}', True),
+        ('```json\n{"score": 0.86, "signOff": "yes"}\n```', True),
+        ('{"score": 0.86, "signOff": "yes"}\n{"note": "second object"}', True),  # run 5 reply
+        ('Here you go: {"score": 0.5, "signOff": "no"} done', False),
+        ("no json at all", False),
+    ],
+)
+def test_judge_reads_the_first_json_object(monkeypatch, reply, passed):
+    monkeypatch.setattr(harness, "call_model", lambda *a: reply)
+    assert harness.run_judge("cli", JUDGE, "report", "m")["passed"] is passed
+
+
+def test_judge_error_fails_the_assertion_not_the_run(monkeypatch):
+    def boom(*a):
+        raise RuntimeError("claude exited 1")
+    monkeypatch.setattr(harness, "call_model", boom)
+    result = harness.run_judge("cli", JUDGE, "report", "m")
+    assert result["passed"] is False and "judge error" in result["detail"]

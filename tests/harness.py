@@ -178,8 +178,8 @@ def run_judge(runner: str, assertion: dict[str, Any], output: str, model: str) -
         result["detail"] = f"judge error: {e}"
         return result
     try:
-        start, end = raw.index("{"), raw.rindex("}") + 1
-        verdict = json.loads(raw[start:end], strict=False)
+        # first JSON object in the reply; anything after it (a second object, prose) is ignored
+        verdict, _ = json.JSONDecoder(strict=False).raw_decode(raw[raw.index("{"):])
     except ValueError as e:
         result["detail"] = f"judge returned no parseable JSON ({e}): {raw[:200]}"
         result["judge_raw"] = raw
