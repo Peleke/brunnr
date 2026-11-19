@@ -21,15 +21,15 @@ rows:
 - agent: home-assistant
   drafted_by: DA
   adjudicated_by: principal
-  note: corrections in chat; rate of requests needing no correction.
+  note: corrections in chat; rate of requests needing no correction. Each request records corrected or not, so the raw form is a score (was feedback; changed and re-adjudicated 2026-11-19).
   out:
     slots:
-      signal: feedback
+      signal: score
       artifact: memory
   context:
     chosenSignal: share of requests that need no correction
     slots:
-      signal: feedback
+      signal: score
       search: person reviewing proposals
       artifact: memory
 - agent: support-triage

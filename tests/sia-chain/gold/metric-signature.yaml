@@ -20,9 +20,9 @@ rows:
 - agent: home-assistant
   drafted_by: DA
   adjudicated_by: principal
-  note: whether a correction followed within the conversation.
+  note: whether a correction followed within the conversation. @includes so an extra partial-tier metric is allowed; a code-tier metric is still required (changed from exact match 2026-11-19, adjudicated by principal).
   out:
-    metrics[].tier:
+    metrics[].tier@includes:
     - code
   context:
     metrics:

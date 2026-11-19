@@ -17,9 +17,9 @@ rows:
 - agent: home-assistant
   drafted_by: DA
   adjudicated_by: principal
-  note: reminders skill output.
+  note: reminders skill output. @includes because the fixture's list and memory-line outputs are legitimate extra leaf rows (changed from exact match 2026-11-19, adjudicated by principal).
   out:
-    fields[].field:
+    fields[].field@includes:
     - when
     - what
     - recurrence
