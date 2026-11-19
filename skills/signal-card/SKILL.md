@@ -22,8 +22,15 @@ Agents* (Manning).
 ## Rules
 
 - **Read-only.** No edits, no agent runs, no model or API calls.
-- **The signal comes from outside the model.** A score from a test, a preference between two
-  outputs, written feedback from a person, or a confidence value that something external checks.
+- **The signal comes from outside the model.** It has one of four types, decided by what is
+  recorded per output:
+  - **score:** a number or pass/fail per output, whether a test computes it or a person's action
+    implies it (accepted vs rejected, a thumbs click, reassigned by hand, kept vs rewritten).
+  - **preference:** which of two or more outputs for the same input won (A/B, a ranking).
+  - **feedback:** words a person wrote about an output ("that date is wrong, use the invoice date").
+  - **confidence:** the agent's own estimate, checked against something external.
+  Type a signal by its raw form as recorded, not by the number you compute from it: notes a
+  reviewer writes are feedback even when you count them.
 - **One signal first.** Propose up to three candidates, then recommend one and say why.
 - **Cite what exists.** For each slot, prefer options already present in the code (path:line).
   Mark anything new as "to build".
@@ -63,7 +70,7 @@ defined set of examples.
 | Slot | Options | Pick for now |
 |---|---|---|
 | Signal | score · preference · feedback · confidence | the recommended candidate's type |
-| Search | hill-climbing · an evolutionary optimizer such as GEPA · person reviewing proposals | the cheapest that fits |
+| Search | hill-climbing · demo selection (bootstrap few-shot) · an evolutionary optimizer such as GEPA · person reviewing proposals | the cheapest that fits |
 | Artifact | instructions · demos · skill file · memory · code | what the search will change |
 
 ## Output
@@ -81,7 +88,10 @@ defined set of examples.
 **Slots:** Signal = … · Search = … · Artifact = …
 ```
 
-Then the envelope as the last fenced block, then the footer line.
+Then the envelope as the last fenced block, then the footer line. The envelope must parse as
+YAML: put double quotes around every free-text value (names, `title`, `why`, `do`, each
+`evidence` item, claims), because a `: ` or a leading quote inside an unquoted value breaks the
+parse. Write `effort` as `S`, `M` or `L` and `impact` as `high`, `medium` or `low`, in full.
 
 ```yaml
 sia:
@@ -92,15 +102,15 @@ sia:
   in_ref: learning-check#v1       # or "none"
   out:
     candidates:
-      - { quantity: "<what is measured>", type: preference, source: "<path:line or system>", frequency: "per PR", cost: "free; already recorded" }
+      - { quantity: "<what is measured>", type: score, source: "<path:line or system>", frequency: "per release", cost: "free; already recorded" }
     chosenSignal: "<the recommended candidate's quantity>"
     oneLine: "My agent gets better when <quantity> goes up."
-    slots: { signal: preference, search: "person reviewing proposals", artifact: "skill file" }
+    slots: { signal: score, search: "person reviewing proposals", artifact: instructions }
   recommendations:
     - id: sc-1
-      title: <imperative, one line>
-      why: <one line tied to evidence>
-      do: <a step an agent or engineer can do without rereading the report>
+      title: "<imperative, one line>"
+      why: "<one line tied to evidence>"
+      do: "<a step an agent or engineer can do without rereading the report>"
       effort: S                   # S | M | L
       impact: high                # high | medium | low
       evidence: ["<path:line>"]   # or "unknown (ask: <question>)"
@@ -110,20 +120,25 @@ sia:
 
 > Series and help: peleke.me · LinkedIn
 
-**Recommendations:** at most seven, ordered by leverage, each with evidence or
-`unknown (ask: …)`. No pitching.
+**Recommendations:** at most seven, each with evidence or `unknown (ask: …)`. No pitching.
+- Order by what each item unblocks: item 1 is the one the others depend on.
+- Size `effort` for everything the `do` includes, prerequisites too.
+- Each `do` stands alone: no "see above", one named choice rather than an either/or.
+- A claim resting on one incident is a hypothesis; say "one case" and what would confirm it. A
+  claim that something is absent (no reader, never measured) names where you searched.
 
 ## Gotchas
 
 - "User satisfaction" is not a signal until you say how it's recorded per output.
 - A signal that arrives once a quarter can't drive search; pair it with a faster proxy and say so.
 - If the honest answer is "when I edit the prompt", that is the finding. Don't dress it up.
-- `slots.signal` is the type (score, preference, feedback, confidence), not the quantity.
+- `slots.signal` is the chosen signal's type (score, preference, feedback, confidence), not the
+  quantity.
 
 ## Examples
 
-- Code-review bot: "My agent gets better when the share of its comments that authors resolve
-  (not dismiss) goes up." Type: preference. Search: person reviews proposed instruction changes.
-  Artifact: skill file.
+- Release-notes bot: "My agent gets better when the share of bullets the release manager
+  publishes unedited goes up." Type: score. Search: person reviews proposed instruction changes.
+  Artifact: instructions.
 - Changelog summarizer: "…when the share of summary quotes found verbatim in the source goes up."
-  Type: score. Search: bootstrap demos. Artifact: demos.
+  Type: score. Search: demo selection (bootstrap few-shot). Artifact: demos.

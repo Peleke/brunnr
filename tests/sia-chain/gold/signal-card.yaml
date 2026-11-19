@@ -5,16 +5,18 @@ skill: signal-card
 rows:
 - agent: review-bot
   drafted_by: DA
-  adjudicated_by: principal
-  note: share of comments authors resolve rather than dismiss.
+  adjudicated_by: null
+  note: share of comments authors resolve rather than dismiss. Resolved/dismissed is recorded per
+    comment, so the type is score (was preference; changed 2026-11-18 after the audit, needs
+    re-adjudication).
   out:
     slots:
-      signal: preference
+      signal: score
       artifact: skill file
   context:
     chosenSignal: share of review comments resolved rather than dismissed
     slots:
-      signal: preference
+      signal: score
       search: person reviewing proposals
       artifact: skill file
 - agent: home-assistant

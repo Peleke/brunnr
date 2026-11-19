@@ -31,8 +31,8 @@ brunnr install eval-power
 | Property | Value |
 |----------|-------|
 | **Path** | `skills/eval-power/SKILL.md` |
-| **Size** | 5.4 KB |
-| **SHA-256** | `b723d3a08316d6db79b113f32d0b82739ff264e064a88952f74748379c157965` |
+| **Size** | 6.1 KB |
+| **SHA-256** | `6644e66d40ec522f794cbe30f41a92b5ebadb4e6c059236b044a38728c56f51e` |
 | **README** | `skills/eval-power/README.md` |
 
 ---
@@ -41,7 +41,7 @@ brunnr install eval-power
 
 ### Eval Power
 
-A score that moved from 0.82 to 0.85 may be noise. This skill works out how much the score moves
+A score that moved from 0.71 to 0.74 may be noise. This skill works out how much the score moves
 on its own, how many runs a comparison needs, and how to state the result so the claim never goes
 further than the interval.
 
@@ -116,7 +116,10 @@ condition, or no baseline makes a claim `unsupported` as stated.
 |---|---|---|---|
 ```
 
-Then the envelope as the last fenced block, then the footer line.
+Then the envelope as the last fenced block, then the footer line. The envelope must parse as
+YAML: put double quotes around every free-text value (names, `title`, `why`, `do`, each
+`evidence` item, claims), because a `: ` or a leading quote inside an unquoted value breaks the
+parse. Write `effort` as `S`, `M` or `L` and `impact` as `high`, `medium` or `low`, in full.
 
 ```yaml
 sia:
@@ -127,17 +130,17 @@ sia:
   in_ref: gold-set#v1             # or "none"
   out:
     reps: { zeroChange: 2, perCondition: 3 }
-    interval: { method: percentile bootstrap of the difference, unit: customer }
+    interval: { method: "percentile bootstrap of the difference", unit: vendor }
     interpretation:
       - "interval above zero: supported"
       - "interval spans zero: inconclusive"
     claimVerdicts:
-      - { claim: "compile improved accuracy 0.825 to 0.850", verdict: unsupported, why: "scored on the trainset, one run each" }
+      - { claim: "prompt v3 raised exact match from 0.71 to 0.74", verdict: unsupported, why: "one run per condition, no zero-change run" }
   recommendations:
     - id: ep-1
-      title: <imperative, one line>
-      why: <one line tied to evidence>
-      do: <a step an agent or engineer can do without rereading the report>
+      title: "<imperative, one line>"
+      why: "<one line tied to evidence>"
+      do: "<a step an agent or engineer can do without rereading the report>"
       effort: S
       impact: high
       evidence: ["<path:line>"]   # or "unknown (ask: <question>)"
@@ -147,8 +150,12 @@ sia:
 
 > Series and help: peleke.me · LinkedIn
 
-**Recommendations:** at most seven, ordered by leverage, each with evidence or
-`unknown (ask: …)`. No pitching.
+**Recommendations:** at most seven, each with evidence or `unknown (ask: …)`. No pitching.
+- Order by what each item unblocks: item 1 is the one the others depend on.
+- Size `effort` for everything the `do` includes, prerequisites too.
+- Each `do` stands alone: no "see above", one named choice rather than an either/or.
+- A claim resting on one incident is a hypothesis; say "one case" and what would confirm it. A
+  claim that something is absent (no reader, never measured) names where you searched.
 
 #### Gotchas
 
@@ -160,10 +167,10 @@ sia:
 
 #### Examples
 
-- DSPy classifier scored 0.825 then 0.850 on the 40 examples its demos came from → claim
+- Extraction prompt scored 0.71 then 0.74 on the 25 examples its demos came from → claim
   `unsupported`; recommend a held-out split, two zero-change runs, and a bootstrap over sources.
-- Ticket router with no results yet → empty `claimVerdicts`; plan zero-change runs on the
-  validation split and a bootstrap over customers.
+- Invoice extractor with no results yet → empty `claimVerdicts`; plan zero-change runs on the
+  validation split and a bootstrap over vendors.
 
 ---
 
@@ -239,7 +246,7 @@ Each report ends with at most seven recommendations, ordered by leverage. Each h
 File them as GitHub issues (needs `yq` and `gh`; save the envelope as `report.yaml`):
 
 ```bash
-yq -o=json '.sia.recommendations[]' report.yaml | jq -c '.' | while read -r r; do gh issue create --title "$(jq -r .title <<<"$r")" --body "$(jq -r '"Why: \(.why)\n\nDo: \(.do)\n\nEffort: \(.effort) · Impact: \(.impact)\nEvidence: \(.evidence|join(", "))\nNext: \(.next_skill)"' <<<"$r")"; done
+yq -o=json '.sia.recommendations[]' report.yaml | jq -c '.' | while read -r r; do gh issue create --title "$(jq -r .title <<<"$r")" --body "$(jq -r '"Why: \(.why)\n\nDo: \(.do)\n\nEffort: \(.effort) · Impact: \(.impact)\nEvidence: \(.evidence|if type=="array" then join(", ") else . end)\nNext: \(.next_skill)"' <<<"$r")"; done
 ```
 
 #### 7. Run it anywhere

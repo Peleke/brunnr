@@ -86,10 +86,13 @@ want, mark it "proposed", and answer no to all three.
 
 **Memory vs learning:** <one sentence: does any "memory" feature here record how much it changed?>
 
-**First fix:** <start at the first question that isn't "yes" in the best loop; one concrete step>
+**First fix:** <start at the first question that isn't "yes" in the best loop; one concrete step; it is recommendation 1>
 ```
 
-Then the envelope as the last fenced block, then the footer line. `verdicts` are the headline
+Then the envelope as the last fenced block, then the footer line. The envelope must parse as
+YAML: put double quotes around every free-text value (names, `title`, `why`, `do`, each
+`evidence` item, claims), because a `: ` or a leading quote inside an unquoted value breaks the
+parse. Write `effort` as `S`, `M` or `L` and `impact` as `high`, `medium` or `low`, in full. `verdicts` are the headline
 loop's answers; `loops` lists every loop.
 
 ```yaml
@@ -107,9 +110,9 @@ sia:
     firstFix: "<one concrete step>"
   recommendations:
     - id: lc-1
-      title: <imperative, one line>
-      why: <one line tied to evidence>
-      do: <a step an agent or engineer can do without rereading the report>
+      title: "<imperative, one line>"
+      why: "<one line tied to evidence>"
+      do: "<a step an agent or engineer can do without rereading the report>"
       effort: S                   # S | M | L
       impact: high                # high | medium | low
       evidence: ["<path:line>"]   # or "unknown (ask: <question>)"
@@ -119,8 +122,12 @@ sia:
 
 > Series and help: peleke.me · LinkedIn
 
-**Recommendations:** at most seven, ordered by leverage, each with evidence or
-`unknown (ask: …)`. No pitching. Quote `"no"` in YAML so it stays a string.
+**Recommendations:** at most seven, each with evidence or `unknown (ask: …)`. No pitching.
+- Order by what each item unblocks: item 1 is the one the others depend on.
+- Size `effort` for everything the `do` includes, prerequisites too.
+- Each `do` stands alone: no "see above", one named choice rather than an either/or.
+- A claim resting on one incident is a hypothesis; say "one case" and what would confirm it. A
+  claim that something is absent (no reader, never measured) names where you searched. Quote `"no"` in YAML so it stays a string.
 
 ## Gotchas
 
@@ -134,7 +141,7 @@ sia:
 
 - "Run a learning check on this repo" → locate the agent in code, find its loops, fill one table
   per loop from the files.
-- "My assistant appends a line to its memory file when I correct it in chat. Does it learn?" →
-  Q1 yes (corrections reach it), Q2 partial (the file persists; nothing records how much changed),
-  Q3 no. Outcome: learning, unmeasured (partial loop). First fix: record per correction which
-  memory line it added, and count repeat corrections.
+- "Our release-notes bot drafts notes from merged PRs; the release manager rewrites them before
+  publishing." → one loop, proposed: the rewrite exists, but a person would have to carry it back
+  (Q1 partial) and nothing changes (Q2 no), Q3 no. Outcome: not learning. First fix: save each
+  draft next to its published version so the rewrites become labeled pairs.

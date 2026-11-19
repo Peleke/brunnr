@@ -31,8 +31,8 @@ brunnr install field-table
 | Property | Value |
 |----------|-------|
 | **Path** | `skills/field-table/SKILL.md` |
-| **Size** | 5.2 KB |
-| **SHA-256** | `1395fe022880f067c08e9da3b329603a630517a2cab7efdfc10946cc5e050385` |
+| **Size** | 6.2 KB |
+| **SHA-256** | `d87c88bd587e73bb87db9983c16bf8960bc439bd83ffdbf1b3bc7df4afe39a65` |
 | **README** | `skills/field-table/README.md` |
 
 ---
@@ -48,7 +48,10 @@ shows which is which.
 #### Rules
 
 - **Read-only.** No edits, no runs, no model or API calls.
-- **Every model output field gets a row**, including nested fields and enum labels.
+- **One row per leaf field the model fills**, named as the model emits it (`severity`, not
+  `comment.severity` or `severity=blocker`). A container (a list of items, a nested object) is
+  not a row; its leaves are. Enum values go in the Definition column of their field, not in rows
+  of their own.
 - **A consumer is code or a metric that reads the field.** Logging it or showing it in a debug
   view is not a consumer. Cite path:line for each consumer.
 - **A definition counts only if both sides see it:** the text the model gets (schema description,
@@ -60,7 +63,8 @@ shows which is which.
 #### Step 0: Read upstream and place the agent
 
 If a `metric-signature` envelope is in context, read `deploymentType` and `metrics[].outputField`;
-those fields already have a metric. Otherwise place the agent in one deployment type:
+those fields already have a metric. When an `outputField` names a container, its metric applies to
+the container's leaf fields; don't add a row for the container. Otherwise place the agent in one deployment type:
 
 | type | outputs are shaped in |
 |---|---|
@@ -109,14 +113,17 @@ works) and mark it "to build".
 
 | Output | Type | Consumer | Definition | Examples | Metric |
 |---|---|---|---|---|---|
-| quoteText | string | path:line | "verbatim span that states the claim" (model + code) | 5 | verbatim rate |
+| vendor_id | string | path:line | "the supplier's ID from the vendor master" (model + code) | 5 | vendor exact match |
 
 **Delete (no consumer):** …
 **Gaps (no definition / examples / metric):** …
 **Optimizable now:** outputs with all four columns filled.
 ```
 
-Then the envelope as the last fenced block, then the footer line.
+Then the envelope as the last fenced block, then the footer line. The envelope must parse as
+YAML: put double quotes around every free-text value (names, `title`, `why`, `do`, each
+`evidence` item, claims), because a `: ` or a leading quote inside an unquoted value breaks the
+parse. Write `effort` as `S`, `M` or `L` and `impact` as `high`, `medium` or `low`, in full.
 
 ```yaml
 sia:
@@ -127,13 +134,13 @@ sia:
   in_ref: metric-signature#v1     # or "none"
   out:
     fields:
-      - { field: queue, consumer: "src/router.py:88", definition: "both", examples: 0, metric: "queue_exact (to build)" }
-      - { field: tags, consumer: none, definition: "model only", examples: 0, metric: none }
+      - { field: vendor_id, consumer: "src/ap/post.py:31", definition: "both", examples: 0, metric: "vendor_exact (to build)" }
+      - { field: notes, consumer: none, definition: "model only", examples: 0, metric: none }
   recommendations:
     - id: ft-1
-      title: <imperative, one line>
-      why: <one line tied to evidence>
-      do: <a step an agent or engineer can do without rereading the report>
+      title: "<imperative, one line>"
+      why: "<one line tied to evidence>"
+      do: "<a step an agent or engineer can do without rereading the report>"
       effort: S                   # S | M | L
       impact: medium              # high | medium | low
       evidence: ["<path:line>"]   # or "unknown (ask: <question>)"
@@ -143,8 +150,12 @@ sia:
 
 > Series and help: peleke.me · LinkedIn
 
-**Recommendations:** at most seven, ordered by leverage, each with evidence or
-`unknown (ask: …)`. No pitching. A contract test that fails CI when an output field has no named
+**Recommendations:** at most seven, each with evidence or `unknown (ask: …)`. No pitching.
+- Order by what each item unblocks: item 1 is the one the others depend on.
+- Size `effort` for everything the `do` includes, prerequisites too.
+- Each `do` stands alone: no "see above", one named choice rather than an either/or.
+- A claim resting on one incident is a hypothesis; say "one case" and what would confirm it. A
+  claim that something is absent (no reader, never measured) names where you searched. A contract test that fails CI when an output field has no named
 consumer is a good candidate.
 
 #### Gotchas
@@ -233,7 +244,7 @@ Each report ends with at most seven recommendations, ordered by leverage. Each h
 File them as GitHub issues (needs `yq` and `gh`; save the envelope as `report.yaml`):
 
 ```bash
-yq -o=json '.sia.recommendations[]' report.yaml | jq -c '.' | while read -r r; do gh issue create --title "$(jq -r .title <<<"$r")" --body "$(jq -r '"Why: \(.why)\n\nDo: \(.do)\n\nEffort: \(.effort) · Impact: \(.impact)\nEvidence: \(.evidence|join(", "))\nNext: \(.next_skill)"' <<<"$r")"; done
+yq -o=json '.sia.recommendations[]' report.yaml | jq -c '.' | while read -r r; do gh issue create --title "$(jq -r .title <<<"$r")" --body "$(jq -r '"Why: \(.why)\n\nDo: \(.do)\n\nEffort: \(.effort) · Impact: \(.impact)\nEvidence: \(.evidence|if type=="array" then join(", ") else . end)\nNext: \(.next_skill)"' <<<"$r")"; done
 ```
 
 #### 7. Run it anywhere

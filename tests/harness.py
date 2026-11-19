@@ -14,8 +14,12 @@ Usage:
 
 Runners:
     api  Anthropic SDK; needs ANTHROPIC_API_KEY and bills that key (default).
-    cli  `claude --print` on the logged-in subscription. API-key env vars are removed from the
-         subprocess so it cannot fall back to key billing.
+    cli  `claude --print` on the logged-in subscription. API-key, gateway (ANTHROPIC_BASE_URL) and
+         cloud-provider (CLAUDE_CODE_USE_*) env vars are removed from the subprocess, and
+         settings files are not loaded, so it runs on the login rather than a key or account.
+
+    The judge uses --judge-model (default: same as --model). Pass a different model to avoid
+    grading a report with the model that wrote it.
 """
 
 import argparse
@@ -85,18 +89,32 @@ def load_fixtures(skill_slug: str) -> list[dict[str, Any]]:
     return fixtures
 
 
-def upstream_envelopes(skills: list[str], agent: str) -> str:
-    """Build upstream envelopes for a chain case from the gold rows (gold stands in for upstream)."""
+def upstream_sia(skill: str, fixture: dict[str, Any]) -> dict[str, Any]:
+    """One upstream `sia` envelope built from a gold row (gold stands in for the upstream run)."""
+    agent = fixture["agent"]
+    row = load_gold_row(skill, agent)
+    if row is None:
+        raise FileNotFoundError(f"No gold row for upstream {skill}/{agent}")
+    out = {k: v for k, v in row["out"].items() if "[]" not in k}
+    out.update(row.get("context") or {})
+    return {
+        "skill": skill,
+        "version": 1,
+        "agent": {"name": agent, "summary": fixture["input"].splitlines()[0]},
+        "deploymentType": fixture.get("deploymentType"),
+        "in_ref": "gold",
+        "out": out,
+        "recommendations": [],
+    }
+
+
+def upstream_envelopes(skills: list[str], fixture: dict[str, Any]) -> str:
+    """Upstream envelopes for a chain case, as the user would paste them."""
     import yaml
 
     blocks = []
     for skill in skills:
-        row = load_gold_row(skill, agent)
-        if row is None:
-            raise FileNotFoundError(f"No gold row for upstream {skill}/{agent}")
-        out = {k: v for k, v in row["out"].items() if "[]" not in k}
-        out.update(row.get("context") or {})
-        env = {"sia": {"skill": skill, "version": 1, "in_ref": "gold", "out": out}}
+        env = {"sia": upstream_sia(skill, fixture)}
         blocks.append(f"Upstream envelope from {skill}:\n\n```yaml\n{yaml.safe_dump(env, sort_keys=False)}```")
     return "\n\n".join(blocks)
 
@@ -131,7 +149,8 @@ def call_claude(
 def call_cli(system_prompt: str, user_message: str, model: str) -> str:
     """Run one turn through `claude --print` on the subscription (no API key billing)."""
     env = {k: v for k, v in os.environ.items()
-           if k not in ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN", "CLAUDECODE")}
+           if k not in ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN", "ANTHROPIC_BASE_URL", "CLAUDECODE")
+           and not k.startswith("CLAUDE_CODE_USE_")}
     proc = subprocess.run(
         ["claude", "--print", "--model", model, "--tools", "", "--output-format", "text",
          "--setting-sources", "", "--system-prompt", system_prompt],
@@ -151,13 +170,19 @@ def call_model(runner: str, system_prompt: str, user_message: str, model: str) -
 def run_judge(runner: str, assertion: dict[str, Any], output: str, model: str) -> dict[str, Any]:
     """Grade a report with a rubric file; record {score, signOff, feedback}."""
     result: dict[str, Any] = {"assertion": assertion, "passed": False, "detail": ""}
+    result["judge_model"] = model
     rubric = (REPO_ROOT / assertion["expected"]["rubric"]).read_text()
-    raw = call_model(runner, rubric, output, model)
+    try:
+        raw = call_model(runner, rubric, output, model)
+    except Exception as e:  # a judge failure fails this assertion, not the whole run
+        result["detail"] = f"judge error: {e}"
+        return result
     try:
         start, end = raw.index("{"), raw.rindex("}") + 1
-        verdict = json.loads(raw[start:end])
-    except ValueError:
-        result["detail"] = f"judge returned no JSON: {raw[:200]}"
+        verdict = json.loads(raw[start:end], strict=False)
+    except ValueError as e:
+        result["detail"] = f"judge returned no parseable JSON ({e}): {raw[:200]}"
+        result["judge_raw"] = raw
         return result
     result["judge"] = verdict
     result["passed"] = str(verdict.get("signOff", "")).lower() == "yes"
@@ -193,6 +218,7 @@ def run_test_case(
     model: str,
     dry_run: bool = False,
     runner: str = "api",
+    judge_model: str | None = None,
 ) -> dict[str, Any]:
     """Run a single test case and return results."""
     case_id = case["id"]
@@ -228,8 +254,7 @@ def run_test_case(
         return result
 
     if case.get("upstream"):
-        agent = case["_fixture_data"]["agent"]
-        input_text = f"{input_text}\n\n{upstream_envelopes(case['upstream'], agent)}"
+        input_text = f"{input_text}\n\n{upstream_envelopes(case['upstream'], case['_fixture_data'])}"
 
     # Call Claude with the skill prompt
     start = time.time()
@@ -249,7 +274,7 @@ def run_test_case(
     assertion_results = []
     for assertion in case.get("assertions", []):
         if assertion["type"] == "judge":
-            result = run_judge(runner, assertion, output, model)
+            result = run_judge(runner, assertion, output, judge_model or model)
         else:
             result = run_assertion(assertion, output)
         status = "PASS" if result["passed"] else "FAIL"
@@ -259,7 +284,7 @@ def run_test_case(
     return {
         "case_id": case_id,
         "description": description,
-        "output": output[:2000],
+        "output": output,
         "assertions": assertion_results,
         "duration_s": duration,
         "all_passed": all(r["passed"] for r in assertion_results),
@@ -272,6 +297,7 @@ def run_skill_tests(
     output_path: str | None = None,
     dry_run: bool = False,
     runner: str = "api",
+    judge_model: str | None = None,
 ) -> dict[str, Any]:
     """Run all test cases for a skill."""
     print(f"=== Testing skill: {skill_slug} ===")
@@ -281,22 +307,30 @@ def run_skill_tests(
     cases = load_fixtures(skill_slug)
 
     print(f"  Loaded {len(cases)} test cases")
-    print(f"  Model: {model}")
+    print(f"  Model: {model}" + (f" (judge: {judge_model})" if judge_model else ""))
+    if runner == "api" and not dry_run and not os.environ.get("ANTHROPIC_API_KEY"):
+        print("  No ANTHROPIC_API_KEY: validating cases only, as in --dry-run")
+        dry_run = True
 
     results = []
     for case in cases:
-        result = run_test_case(skill_slug, skill_prompt, case, model, dry_run, runner)
+        result = run_test_case(skill_slug, skill_prompt, case, model, dry_run, runner, judge_model)
         results.append(result)
 
     # Summary
     passed = sum(1 for r in results if r.get("all_passed", False))
-    failed = sum(1 for r in results if not r.get("all_passed", True) and not r.get("skipped", False))
+    # A case whose model call raised has no `all_passed`; count it as a failure, not a pass.
+    failed = sum(1 for r in results
+                 if not r.get("skipped", False) and ("error" in r or not r.get("all_passed", True)))
     skipped = sum(1 for r in results if r.get("skipped", False))
     total = len(results) - skipped
 
     report = {
         "skill": skill_slug,
         "model": model,
+        "judge_model": judge_model or model,
+        "runner": runner,
+        "dry_run": dry_run,
         "spec_version": spec.get("version", "1.0"),
         "summary": {
             "pass": passed,
@@ -355,6 +389,10 @@ def main():
         default="api",
         help="api: Anthropic SDK (bills ANTHROPIC_API_KEY). cli: `claude --print` on the subscription.",
     )
+    parser.add_argument(
+        "--judge-model",
+        help="Model for `judge` assertions (default: --model). Use a different one to avoid self-grading.",
+    )
     args = parser.parse_args()
 
     report = run_skill_tests(
@@ -363,6 +401,7 @@ def main():
         output_path=args.output,
         dry_run=args.dry_run,
         runner=args.runner,
+        judge_model=args.judge_model,
     )
 
     if report["summary"]["fail"] > 0:

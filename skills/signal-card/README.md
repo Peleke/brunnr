@@ -33,7 +33,7 @@ The signal comes first because search has nothing to climb without it. Candidate
 Sources:
 
 - Micheal Lanham, *Self-Improving Agents* (Manning): the act → signal → search → apply loop (vocabulary only; not re-read for this README)
-- [DSPy: GEPA overview](https://dspy.ai/api/optimizers/GEPA/overview/): GEPA expects the metric to return `dspy.Prediction(score=..., feedback=...)` (read 2026-11-18)
+- [DSPy: GEPA overview](https://dspy.ai/api/optimizers/GEPA/overview/): a GEPA metric returns a float or `dspy.Prediction(score=..., feedback=...)`; the feedback text is what GEPA reflects on (`GEPAFeedbackMetric` in `dspy/teleprompt/gepa/gepa.py` returns `Union[float, ScoreWithFeedback]`) (read 2026-11-18)
 
 ## 4. Rubric
 
@@ -67,7 +67,7 @@ Each report ends with at most seven recommendations, ordered by leverage. Each h
 File them as GitHub issues (needs `yq` and `gh`; save the envelope as `report.yaml`):
 
 ```bash
-yq -o=json '.sia.recommendations[]' report.yaml | jq -c '.' | while read -r r; do gh issue create --title "$(jq -r .title <<<"$r")" --body "$(jq -r '"Why: \(.why)\n\nDo: \(.do)\n\nEffort: \(.effort) · Impact: \(.impact)\nEvidence: \(.evidence|join(", "))\nNext: \(.next_skill)"' <<<"$r")"; done
+yq -o=json '.sia.recommendations[]' report.yaml | jq -c '.' | while read -r r; do gh issue create --title "$(jq -r .title <<<"$r")" --body "$(jq -r '"Why: \(.why)\n\nDo: \(.do)\n\nEffort: \(.effort) · Impact: \(.impact)\nEvidence: \(.evidence|if type=="array" then join(", ") else . end)\nNext: \(.next_skill)"' <<<"$r")"; done
 ```
 
 ## 7. Run it anywhere

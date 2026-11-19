@@ -23,7 +23,7 @@ OUTCOMES = ("no loop found", "not learning", "learning, unmeasured", "learning, 
 ENVELOPE_KEYS = ("skill", "version", "agent", "deploymentType", "in_ref", "out", "recommendations")
 RECOMMENDATION_KEYS = ("id", "title", "why", "do", "effort", "impact", "evidence", "next_skill")
 
-_FENCE = re.compile(r"```ya?ml[ \t]*\n(.*?)```", re.DOTALL)
+_FENCE = re.compile(r"```ya?ml[ \t]*\n(.*?)```", re.DOTALL | re.IGNORECASE)
 
 
 def _yaml():
@@ -88,14 +88,26 @@ class _Missing:
 _MISSING = _Missing()
 
 
-def check_envelope(env: dict[str, Any] | None) -> list[str]:
-    """Structural problems with an envelope (empty list means valid)."""
+def check_envelope(
+    env: dict[str, Any] | None,
+    skill: str | None = None,
+    deployment_type: str | None = None,
+) -> list[str]:
+    """Structural problems with an envelope (empty list means valid).
+
+    skill: when given, `sia.skill` must equal it (catches an echoed upstream envelope).
+    deployment_type: when given, `sia.deploymentType` must equal it (the fixture's known type).
+    """
     if env is None:
         return ["no `sia:` envelope in the last fenced YAML block"]
     problems = [f"missing top-level key `{k}`" for k in ENVELOPE_KEYS if k not in env]
     dt = env.get("deploymentType")
-    if dt is not None and dt not in DEPLOYMENT_TYPES:
+    if "deploymentType" in env and dt not in DEPLOYMENT_TYPES:
         problems.append(f"deploymentType `{dt}` not in {DEPLOYMENT_TYPES}")
+    elif deployment_type is not None and dt != deployment_type:
+        problems.append(f"deploymentType `{dt}`, expected `{deployment_type}`")
+    if skill is not None and env.get("skill") != skill:
+        problems.append(f"skill `{env.get('skill')}`, expected `{skill}`")
     if "out" in env and not isinstance(env["out"], dict):
         problems.append("`out` is not a mapping")
     return problems
@@ -125,6 +137,8 @@ def check_recommendations(env: dict[str, Any] | None) -> list[str]:
     if not isinstance(recs, list):
         return ["`recommendations` is not a list"]
     problems: list[str] = []
+    if not recs:
+        problems.append("no recommendations; at least one is required")
     if len(recs) > MAX_RECOMMENDATIONS:
         problems.append(f"{len(recs)} recommendations; at most {MAX_RECOMMENDATIONS}")
     for n, item in enumerate(recs, 1):
@@ -156,7 +170,9 @@ def hard_check_score(report: str, required_out: list[str]) -> tuple[float, list[
 
 def _norm(value: Any) -> Any:
     if isinstance(value, list):
-        return sorted({_norm(v) for v in value if not isinstance(v, (list, dict))})
+        # Lists compare as sets of scalars. A nested mapping or list can't be a set member, so it
+        # becomes a marker that never equals a scalar: `[]` in gold then rejects a list of dicts.
+        return sorted({"<nested>" if isinstance(v, (list, dict)) else _norm(v) for v in value})
     if isinstance(value, bool):  # YAML 1.1 reads unquoted yes/no as booleans
         return "yes" if value else "no"
     return re.sub(r"\s+", " ", str(value).strip().lower())
@@ -176,7 +192,8 @@ def _flatten(out: dict[str, Any], prefix: str = "") -> dict[str, Any]:
 def gold_agreement(env: dict[str, Any] | None, gold_out: dict[str, Any]) -> tuple[float, list[str]]:
     """Fraction of gold `out` leaves the envelope matches (case- and order-insensitive).
 
-    Lists compare as sets of scalars; `[]` in the gold means "no items".
+    Lists compare as sets of scalars; `[]` in the gold means "no items" (a missing key counts as
+    none). Any other missing leaf is a miss, even when the gold value is the string "none".
     """
     flat = _flatten(gold_out)
     if not flat:
@@ -186,7 +203,10 @@ def gold_agreement(env: dict[str, Any] | None, gold_out: dict[str, Any]) -> tupl
     for path, want in flat.items():
         got = get_path(out, path)
         if got is _MISSING:
-            got = [] if want == [] else None
+            if want == []:
+                continue
+            misses.append(f"out.{path}: expected {want!r}, missing")
+            continue
         if _norm(got) != _norm(want):
             misses.append(f"out.{path}: expected {want!r}, got {got!r}")
     return 1 - len(misses) / len(flat), misses

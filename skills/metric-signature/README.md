@@ -35,7 +35,7 @@ Cheaper tiers come first because they're deterministic and free to run thousands
 Sources:
 
 - [DSPy: Metrics](https://dspy.ai/learn/evaluation/metrics/): a metric takes `example` and `pred` and returns a `float`, `int` or `bool`; the optional `trace` argument switches it to bootstrapping mode (read 2026-11-18)
-- [DSPy: GEPA overview](https://dspy.ai/api/optimizers/GEPA/overview/): GEPA expects the metric to return `dspy.Prediction(score=..., feedback=...)` (read 2026-11-18)
+- [DSPy: GEPA overview](https://dspy.ai/api/optimizers/GEPA/overview/): a GEPA metric returns a float or `dspy.Prediction(score=..., feedback=...)`; the feedback text is what GEPA reflects on (`GEPAFeedbackMetric` in `dspy/teleprompt/gepa/gepa.py` returns `Union[float, ScoreWithFeedback]`) (read 2026-11-18)
 - [Ax: Optimization](https://axllm.dev/typescript/concepts/optimization/): "Normalize scores to `0..1` when possible" and "Use distinct validation examples when selecting a best candidate" (read 2026-11-18)
 - [Ax source, `AxMetricFn`](https://github.com/ax-llm/ax/blob/main/src/ax/dsp/common_types.ts): `({ prediction, example }) => number` (read 2026-11-18)
 
@@ -73,7 +73,7 @@ Each report ends with at most seven recommendations, ordered by leverage. Each h
 File them as GitHub issues (needs `yq` and `gh`; save the envelope as `report.yaml`):
 
 ```bash
-yq -o=json '.sia.recommendations[]' report.yaml | jq -c '.' | while read -r r; do gh issue create --title "$(jq -r .title <<<"$r")" --body "$(jq -r '"Why: \(.why)\n\nDo: \(.do)\n\nEffort: \(.effort) · Impact: \(.impact)\nEvidence: \(.evidence|join(", "))\nNext: \(.next_skill)"' <<<"$r")"; done
+yq -o=json '.sia.recommendations[]' report.yaml | jq -c '.' | while read -r r; do gh issue create --title "$(jq -r .title <<<"$r")" --body "$(jq -r '"Why: \(.why)\n\nDo: \(.do)\n\nEffort: \(.effort) · Impact: \(.impact)\nEvidence: \(.evidence|if type=="array" then join(", ") else . end)\nNext: \(.next_skill)"' <<<"$r")"; done
 ```
 
 ## 7. Run it anywhere

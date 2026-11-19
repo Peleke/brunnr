@@ -144,7 +144,9 @@ def _run_sia_assertion(atype: str, expected: Any, output: str, result: dict[str,
 
     env = sia_chain.extract_envelope(output)
     if atype == "sia_envelope_valid":
-        problems = sia_chain.check_envelope(env)
+        # expected: true, or {skill, deploymentType} to also pin the envelope to this case
+        pins = expected if isinstance(expected, dict) else {}
+        problems = sia_chain.check_envelope(env, pins.get("skill"), pins.get("deploymentType"))
     elif atype == "sia_out_fields":
         problems = sia_chain.check_out_fields(env, list(expected))
     elif atype == "sia_recommendations":
@@ -156,6 +158,6 @@ def _run_sia_assertion(atype: str, expected: Any, output: str, result: dict[str,
             return
         score, problems = sia_chain.gold_agreement(env, row["out"])
         result["score"] = score
-        result["adjudicated"] = row.get("adjudicated_by") is not None
+        result["adjudicated"] = bool(row.get("adjudicated_by"))
     result["passed"] = not problems
     result["detail"] = "ok" if not problems else "; ".join(problems[:5])

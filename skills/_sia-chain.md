@@ -71,18 +71,19 @@ The most important part of every report. YAML, inside the envelope:
 ```yaml
 recommendations:
   - id: ms-1                       # <skill initials>-<n>, ordered by leverage
-    title: Score triage labels with exact match before trying a judge
-    why: the chosen signal is a correct/incorrect label; a code metric is enough
-    do: add metric(example, pred) -> float returning 1.0 on label match; run it on 30 tickets
+    title: "Score vendor IDs with exact match before trying a judge"
+    why: "the chosen signal is a correct/incorrect vendor; a code metric is enough"
+    do: "add metric(example, pred) -> float returning 1.0 on vendor match; run it on 30 invoices"
     effort: S                      # S | M | L
-    impact: high                   # high | medium | low
-    evidence: ["src/triage/graph.py:41"]
+    impact: high                   # high | medium | low, spelled out
+    evidence: ["src/ap/extract.py:41"]
     next_skill: gold-set
     links: []
 ```
 
 **Rules:**
 - Order by leverage: the item that unblocks the most comes first.
+- Double-quote free-text values so the envelope parses as YAML.
 - At most seven items.
 - Every item has `evidence` (paths with line numbers, or quotes from the operator), or
   `evidence: "unknown (ask: <the question that would settle it>)"`.
@@ -92,7 +93,7 @@ recommendations:
 **File them as issues** (needs `yq` and `gh`; save the envelope as `report.yaml`):
 
 ```bash
-yq -o=json '.sia.recommendations[]' report.yaml | jq -c '.' | while read -r r; do gh issue create --title "$(jq -r .title <<<"$r")" --body "$(jq -r '"Why: \(.why)\n\nDo: \(.do)\n\nEffort: \(.effort) · Impact: \(.impact)\nEvidence: \(.evidence|join(", "))\nNext: \(.next_skill)"' <<<"$r")"; done
+yq -o=json '.sia.recommendations[]' report.yaml | jq -c '.' | while read -r r; do gh issue create --title "$(jq -r .title <<<"$r")" --body "$(jq -r '"Why: \(.why)\n\nDo: \(.do)\n\nEffort: \(.effort) · Impact: \(.impact)\nEvidence: \(.evidence|if type=="array" then join(", ") else . end)\nNext: \(.next_skill)"' <<<"$r")"; done
 ```
 
 ## Footer

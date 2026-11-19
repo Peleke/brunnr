@@ -31,8 +31,8 @@ brunnr install metric-signature
 | Property | Value |
 |----------|-------|
 | **Path** | `skills/metric-signature/SKILL.md` |
-| **Size** | 6.3 KB |
-| **SHA-256** | `76cb0dae07cac16d32b82afae8379f4a4a6087bd2a8b317e0a087923bcbc40cb` |
+| **Size** | 7.1 KB |
+| **SHA-256** | `c28f1554c56aa7dcf630f6695f3d75294eebc724f3bbe2519a55e838f703c263` |
 | **README** | `skills/metric-signature/README.md` |
 
 ---
@@ -121,7 +121,10 @@ For GEPA, say whether the metric can also return feedback text
 **Unscored fields:** <fields the signal doesn't touch>
 ```
 
-Then the envelope as the last fenced block, then the footer line.
+Then the envelope as the last fenced block, then the footer line. The envelope must parse as
+YAML: put double quotes around every free-text value (names, `title`, `why`, `do`, each
+`evidence` item, claims), because a `: ` or a leading quote inside an unquoted value breaks the
+parse. Write `effort` as `S`, `M` or `L` and `impact` as `high`, `medium` or `low`, in full.
 
 ```yaml
 sia:
@@ -132,23 +135,23 @@ sia:
   in_ref: signal-card#v1          # or "none"
   out:
     metrics:
-      - name: queue_exact
-        outputField: queue
+      - name: vendor_exact
+        outputField: vendor_id
         tier: code                # code | partial | judge
         range: "0..1"
         feedbackText: true
-        labelsNeeded: [final_queue]
+        labelsNeeded: [approved_vendor_id]
         signature:
-          python: "def metric(example, pred, trace=None) -> float: return float(pred.queue == example.final_queue)"
-          typescript: "({ prediction, example }) => (prediction.queue === example.final_queue ? 1 : 0)"
-          plain: "1 when the routed queue equals the queue the ticket ended in, else 0"
-    baseline: "always 'how-to' (most common queue)"
-    fieldsUnscored: [urgency, tags]
+          python: "def metric(example, pred, trace=None) -> float: return float(pred.vendor_id == example.approved_vendor_id)"
+          typescript: "({ prediction, example }) => (prediction.vendor_id === example.approved_vendor_id ? 1 : 0)"
+          plain: "1 when the extracted vendor equals the vendor the AP clerk approved, else 0"
+    baseline: "always the most frequent vendor"
+    fieldsUnscored: [notes, currency]
   recommendations:
     - id: ms-1
-      title: <imperative, one line>
-      why: <one line tied to evidence>
-      do: <a step an agent or engineer can do without rereading the report>
+      title: "<imperative, one line>"
+      why: "<one line tied to evidence>"
+      do: "<a step an agent or engineer can do without rereading the report>"
       effort: S                   # S | M | L
       impact: high                # high | medium | low
       evidence: ["<path:line>"]   # or "unknown (ask: <question>)"
@@ -158,8 +161,12 @@ sia:
 
 > Series and help: peleke.me · LinkedIn
 
-**Recommendations:** at most seven, ordered by leverage, each with evidence or
-`unknown (ask: …)`. No pitching.
+**Recommendations:** at most seven, each with evidence or `unknown (ask: …)`. No pitching.
+- Order by what each item unblocks: item 1 is the one the others depend on.
+- Size `effort` for everything the `do` includes, prerequisites too.
+- Each `do` stands alone: no "see above", one named choice rather than an either/or.
+- A claim resting on one incident is a hypothesis; say "one case" and what would confirm it. A
+  claim that something is absent (no reader, never measured) names where you searched.
 
 #### Gotchas
 
@@ -170,10 +177,12 @@ sia:
 
 #### Examples
 
-- Ticket router with a `queue` enum and a logged final queue → one `code` metric (queue exact
-  match), labels = final queue, baseline = majority queue; `urgency` and `tags` unscored.
-- Sales-email drafter whose reps edit drafts before sending → a `partial` metric (token overlap of
-  the draft with the sent version); reply rate noted as a slower signal, not the metric.
+- Invoice extractor with a `vendor_id` field and the clerk's approved value → one `code` metric
+  (vendor exact match), labels = approved vendor, baseline = most frequent vendor; every other
+  output field the signal doesn't touch goes in `fieldsUnscored`.
+- Meeting-summary bot whose users edit the summary before posting → a `partial` metric (token
+  overlap of the draft with the posted version); "summary was useful" ratings noted as a slower
+  signal, not the metric.
 
 ---
 
@@ -216,7 +225,7 @@ Cheaper tiers come first because they're deterministic and free to run thousands
 Sources:
 
 - [DSPy: Metrics](https://dspy.ai/learn/evaluation/metrics/): a metric takes `example` and `pred` and returns a `float`, `int` or `bool`; the optional `trace` argument switches it to bootstrapping mode (read 2026-11-18)
-- [DSPy: GEPA overview](https://dspy.ai/api/optimizers/GEPA/overview/): GEPA expects the metric to return `dspy.Prediction(score=..., feedback=...)` (read 2026-11-18)
+- [DSPy: GEPA overview](https://dspy.ai/api/optimizers/GEPA/overview/): a GEPA metric returns a float or `dspy.Prediction(score=..., feedback=...)`; the feedback text is what GEPA reflects on (`GEPAFeedbackMetric` in `dspy/teleprompt/gepa/gepa.py` returns `Union[float, ScoreWithFeedback]`) (read 2026-11-18)
 - [Ax: Optimization](https://axllm.dev/typescript/concepts/optimization/): "Normalize scores to `0..1` when possible" and "Use distinct validation examples when selecting a best candidate" (read 2026-11-18)
 - [Ax source, `AxMetricFn`](https://github.com/ax-llm/ax/blob/main/src/ax/dsp/common_types.ts): `({ prediction, example }) => number` (read 2026-11-18)
 
@@ -254,7 +263,7 @@ Each report ends with at most seven recommendations, ordered by leverage. Each h
 File them as GitHub issues (needs `yq` and `gh`; save the envelope as `report.yaml`):
 
 ```bash
-yq -o=json '.sia.recommendations[]' report.yaml | jq -c '.' | while read -r r; do gh issue create --title "$(jq -r .title <<<"$r")" --body "$(jq -r '"Why: \(.why)\n\nDo: \(.do)\n\nEffort: \(.effort) · Impact: \(.impact)\nEvidence: \(.evidence|join(", "))\nNext: \(.next_skill)"' <<<"$r")"; done
+yq -o=json '.sia.recommendations[]' report.yaml | jq -c '.' | while read -r r; do gh issue create --title "$(jq -r .title <<<"$r")" --body "$(jq -r '"Why: \(.why)\n\nDo: \(.do)\n\nEffort: \(.effort) · Impact: \(.impact)\nEvidence: \(.evidence|if type=="array" then join(", ") else . end)\nNext: \(.next_skill)"' <<<"$r")"; done
 ```
 
 #### 7. Run it anywhere

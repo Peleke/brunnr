@@ -5,7 +5,10 @@ from __future__ import annotations
 import itertools
 import json
 import re
+import sys
 from pathlib import Path
+
+import importlib.util
 
 import pytest
 import yaml
@@ -17,6 +20,9 @@ REPO = Path(__file__).resolve().parent.parent
 CHAIN = yaml.safe_load((REPO / "tests/sia-chain/chain.yaml").read_text())["links"]
 CHAIN_SKILLS = [link["skill"] for link in CHAIN]
 AGENTS_DIR = REPO / "tests/sia-chain/agents"
+_spec = importlib.util.spec_from_file_location("harness", REPO / "tests/harness.py")
+harness = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(harness)
 GOLD_DIR = REPO / "tests/sia-chain/gold"
 
 
@@ -49,6 +55,28 @@ def test_chain_check_catches_a_planted_read(bad_read):
     links[-1]["reads"].append(bad_read)
     gaps = sia_chain.chain_gaps(links)
     assert any(bad_read in g for g in gaps), gaps
+
+
+def _fixture(agent: str) -> dict:
+    return json.loads((AGENTS_DIR / f"{agent}.json").read_text())
+
+
+@pytest.mark.parametrize("skill", CHAIN_SKILLS[1:])
+def test_upstream_envelopes_supply_every_read(skill):
+    """The harness feeds each chain case upstream envelopes built from gold; every read must resolve.
+
+    chain_gaps checks the table. This checks the data the model actually receives.
+    """
+    link = next(link for link in CHAIN if link["skill"] == skill)
+    spec = json.loads((REPO / f"tests/{skill}/test-spec.json").read_text())
+    for case in (c for c in spec["cases"] if c["id"].startswith("chain-")):
+        fixture = _fixture(case["fixture"].rsplit("/", 1)[-1][:-5])
+        envs = [harness.upstream_sia(up, fixture) for up in case["upstream"]]
+        for env in envs:
+            assert sia_chain.check_envelope(env) == [], (case["id"], env["skill"])
+        for read in link["reads"]:
+            assert any(sia_chain.get_path(e["out"], read) is not sia_chain._MISSING for e in envs), (
+                case["id"], read)
 
 
 def test_chain_check_rejects_reading_your_own_write():
@@ -147,6 +175,19 @@ def test_good_report_scores_one():
     assert (score, problems) == (1.0, [])
 
 
+def test_envelope_fence_is_case_insensitive():
+    report = _report(_env()).replace("```yaml", "```YAML")
+    assert sia_chain.extract_envelope(report) is not None
+
+
+def test_envelope_pins_skill_and_deployment_type():
+    env = _env()
+    assert sia_chain.check_envelope(env, "learning-check", "framework-app") == []
+    assert sia_chain.check_envelope(env, "signal-card")  # an echoed upstream envelope
+    assert sia_chain.check_envelope(env, deployment_type="coding-harness")
+    assert sia_chain.check_envelope(_env(deploymentType=None))
+
+
 def test_envelope_must_be_the_last_yaml_block():
     report = _report(_env()) + "\n```yaml\nnot: an envelope\n```\n"
     assert sia_chain.extract_envelope(report) is None
@@ -165,6 +206,10 @@ def test_envelope_must_be_the_last_yaml_block():
         ("sia_recommendations", True, _env(recommendations=[dict(GOOD_REC, evidence=[])]), False),
         ("sia_recommendations", True, _env(recommendations=[dict(GOOD_REC, evidence="unknown (ask: who labels?)")]), True),
         ("sia_recommendations", True, _env(recommendations=[dict(GOOD_REC, effort="XL")]), False),
+        ("sia_recommendations", True, _env(recommendations=[dict(GOOD_REC, impact="med")]), False),
+        ("sia_recommendations", True, _env(recommendations=[]), False),
+        ("sia_envelope_valid", {"skill": "learning-check", "deploymentType": "framework-app"}, _env(), True),
+        ("sia_envelope_valid", {"skill": "learning-check", "deploymentType": "hosted-nocode"}, _env(), False),
     ],
 )
 def test_sia_assertions(atype, expected, env, should_pass):
@@ -188,6 +233,17 @@ def test_gold_agreement_lists_are_sets_and_empty_means_none():
     assert sia_chain.gold_agreement(env, {"fields[].field": ["a", "b"]})[0] == 1.0
     assert sia_chain.gold_agreement({"out": {}}, {"claimVerdicts": []})[0] == 1.0
     assert sia_chain.gold_agreement(env, {"fields[].field": ["a"]})[0] == 0.0
+
+
+def test_gold_empty_list_rejects_invented_items():
+    """eval-power gold `claimVerdicts: []` must fail a report that invents a claim."""
+    env = {"out": {"claimVerdicts": [{"claim": "the edit helped", "verdict": "supported"}]}}
+    assert sia_chain.gold_agreement(env, {"claimVerdicts": []})[0] == 0.0
+
+
+def test_gold_missing_leaf_is_a_miss_even_for_none():
+    assert sia_chain.gold_agreement({"out": {}}, {"consumer": "none"})[0] == 0.0
+    assert sia_chain.gold_agreement({"out": {"consumer": None}}, {"consumer": "none"})[0] == 1.0
 
 
 # ---------------------------------------------------------------------------
@@ -253,6 +309,8 @@ def s2_problems(spec: dict, skill: str) -> list[str]:
         for key in ("agent", "drafted_by", "adjudicated_by", "out"):
             if key not in row:
                 problems.append(f"{skill}: gold row {row.get('agent')} missing {key}")
+        if not row.get("adjudicated_by"):  # a drafted row is not gold until the owner adjudicates
+            problems.append(f"{skill}: gold row {row.get('agent')} not adjudicated")
     if {r.get("agent") for r in rows} != set(_agents()):
         problems.append(f"{skill}: gold rows don't cover every fixture agent")
     for fn in ("hard_check_score", "gold_agreement"):
@@ -265,6 +323,16 @@ def s2_problems(spec: dict, skill: str) -> list[str]:
 def test_s2_declared(skill):
     spec = json.loads((REPO / f"tests/{skill}/test-spec.json").read_text())
     assert s2_problems(spec, skill) == []
+
+
+def test_s2_gate_fails_on_an_unadjudicated_row(tmp_path, monkeypatch):
+    spec = json.loads((REPO / "tests/gold-set/test-spec.json").read_text())
+    gold = yaml.safe_load((GOLD_DIR / "gold-set.yaml").read_text())
+    gold["rows"][0]["adjudicated_by"] = None
+    (tmp_path / "g.yaml").write_text(yaml.safe_dump(gold))
+    spec["s2"]["gold"] = "g.yaml"
+    monkeypatch.setattr(sys.modules[__name__], "REPO", tmp_path)
+    assert any("not adjudicated" in p for p in s2_problems(spec, "gold-set"))
 
 
 @pytest.mark.parametrize("key", S2_KEYS)

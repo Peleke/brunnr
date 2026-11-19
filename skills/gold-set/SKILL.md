@@ -85,7 +85,10 @@ with no written definition is a gap.
 **Leakage checks:** <list>
 ```
 
-Then the envelope as the last fenced block, then the footer line.
+Then the envelope as the last fenced block, then the footer line. The envelope must parse as
+YAML: put double quotes around every free-text value (names, `title`, `why`, `do`, each
+`evidence` item, claims), because a `: ` or a leading quote inside an unquoted value breaks the
+parse. Write `effort` as `S`, `M` or `L` and `impact` as `high`, `medium` or `low`, in full.
 
 ```yaml
 sia:
@@ -95,17 +98,17 @@ sia:
   deploymentType: <type>
   in_ref: metric-signature#v1     # or "none"
   out:
-    exampleSchema: { inputs: [ticket_text], labels: [final_queue] }
+    exampleSchema: { inputs: [invoice_text], labels: [approved_vendor_id] }
     sources:
-      - { kind: real, location: "helpdesk export", targetCount: 200 }
-    labelingPlan: { drafter: "model", checker: "support lead", guide: "docs/labels.md (to write)" }
-    split: { train: 40, validation: 120, test: 40, groupBy: customer }
-    leakageChecks: ["no customer on both sides of a split", "demos drawn from train only"]
+      - { kind: real, location: "AP system export", targetCount: 160 }
+    labelingPlan: { drafter: "model", checker: "AP lead", guide: "docs/labels.md (to write)" }
+    split: { train: 30, validation: 100, test: 30, groupBy: vendor }
+    leakageChecks: ["no vendor on both sides of a split", "demos drawn from train only"]
   recommendations:
     - id: gs-1
-      title: <imperative, one line>
-      why: <one line tied to evidence>
-      do: <a step an agent or engineer can do without rereading the report>
+      title: "<imperative, one line>"
+      why: "<one line tied to evidence>"
+      do: "<a step an agent or engineer can do without rereading the report>"
       effort: M
       impact: high
       evidence: ["<path:line>"]   # or "unknown (ask: <question>)"
@@ -115,8 +118,12 @@ sia:
 
 > Series and help: peleke.me · LinkedIn
 
-**Recommendations:** at most seven, ordered by leverage, each with evidence or
-`unknown (ask: …)`. No pitching.
+**Recommendations:** at most seven, each with evidence or `unknown (ask: …)`. No pitching.
+- Order by what each item unblocks: item 1 is the one the others depend on.
+- Size `effort` for everything the `do` includes, prerequisites too.
+- Each `do` stands alone: no "see above", one named choice rather than an either/or.
+- A claim resting on one incident is a hypothesis; say "one case" and what would confirm it. A
+  claim that something is absent (no reader, never measured) names where you searched.
 
 ## Gotchas
 
@@ -127,7 +134,7 @@ sia:
 
 ## Examples
 
-- Ticket router with a helpdesk export of final queues → real source, labels already exist (the
-  final queue), group by customer, draft-by-model unnecessary.
-- DSPy classifier with 40 hand-written examples and no test set → add real customer messages,
-  split by source before the next compile, keep the 40 as one group.
+- Invoice extractor whose AP system keeps the approved vendor per invoice → real source, labels
+  already exist (the approved vendor), group by vendor, draft-by-model unnecessary.
+- Ax extractor with 25 hand-written examples and no test set → add real documents, split by source
+  before the next optimizer run, keep the 25 as one group.

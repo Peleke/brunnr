@@ -34,7 +34,10 @@
       "assertions": [
         {
           "type": "sia_envelope_valid",
-          "expected": true
+          "expected": {
+            "skill": "signal-card",
+            "deploymentType": "coding-harness"
+          }
         },
         {
           "type": "sia_out_fields",
@@ -76,7 +79,10 @@
       "assertions": [
         {
           "type": "sia_envelope_valid",
-          "expected": true
+          "expected": {
+            "skill": "signal-card",
+            "deploymentType": "gateway-agent"
+          }
         },
         {
           "type": "sia_out_fields",
@@ -118,7 +124,10 @@
       "assertions": [
         {
           "type": "sia_envelope_valid",
-          "expected": true
+          "expected": {
+            "skill": "signal-card",
+            "deploymentType": "framework-app"
+          }
         },
         {
           "type": "sia_out_fields",
@@ -160,7 +169,10 @@
       "assertions": [
         {
           "type": "sia_envelope_valid",
-          "expected": true
+          "expected": {
+            "skill": "signal-card",
+            "deploymentType": "prompt-program"
+          }
         },
         {
           "type": "sia_out_fields",
@@ -202,7 +214,10 @@
       "assertions": [
         {
           "type": "sia_envelope_valid",
-          "expected": true
+          "expected": {
+            "skill": "signal-card",
+            "deploymentType": "hosted-nocode"
+          }
         },
         {
           "type": "sia_out_fields",

@@ -31,8 +31,8 @@ brunnr install gold-set
 | Property | Value |
 |----------|-------|
 | **Path** | `skills/gold-set/SKILL.md` |
-| **Size** | 5.5 KB |
-| **SHA-256** | `fddd6db7f672c2042d3afdfbc298844f79ec2c79d3f59f41859a85cfd1fbf2ca` |
+| **Size** | 6.2 KB |
+| **SHA-256** | `5b9bf2672a18df14ccf59ead9f873d73060623d0ea97e1640e18f4a13f8bca26` |
 | **README** | `skills/gold-set/README.md` |
 
 ---
@@ -115,7 +115,10 @@ with no written definition is a gap.
 **Leakage checks:** <list>
 ```
 
-Then the envelope as the last fenced block, then the footer line.
+Then the envelope as the last fenced block, then the footer line. The envelope must parse as
+YAML: put double quotes around every free-text value (names, `title`, `why`, `do`, each
+`evidence` item, claims), because a `: ` or a leading quote inside an unquoted value breaks the
+parse. Write `effort` as `S`, `M` or `L` and `impact` as `high`, `medium` or `low`, in full.
 
 ```yaml
 sia:
@@ -125,17 +128,17 @@ sia:
   deploymentType: <type>
   in_ref: metric-signature#v1     # or "none"
   out:
-    exampleSchema: { inputs: [ticket_text], labels: [final_queue] }
+    exampleSchema: { inputs: [invoice_text], labels: [approved_vendor_id] }
     sources:
-      - { kind: real, location: "helpdesk export", targetCount: 200 }
-    labelingPlan: { drafter: "model", checker: "support lead", guide: "docs/labels.md (to write)" }
-    split: { train: 40, validation: 120, test: 40, groupBy: customer }
-    leakageChecks: ["no customer on both sides of a split", "demos drawn from train only"]
+      - { kind: real, location: "AP system export", targetCount: 160 }
+    labelingPlan: { drafter: "model", checker: "AP lead", guide: "docs/labels.md (to write)" }
+    split: { train: 30, validation: 100, test: 30, groupBy: vendor }
+    leakageChecks: ["no vendor on both sides of a split", "demos drawn from train only"]
   recommendations:
     - id: gs-1
-      title: <imperative, one line>
-      why: <one line tied to evidence>
-      do: <a step an agent or engineer can do without rereading the report>
+      title: "<imperative, one line>"
+      why: "<one line tied to evidence>"
+      do: "<a step an agent or engineer can do without rereading the report>"
       effort: M
       impact: high
       evidence: ["<path:line>"]   # or "unknown (ask: <question>)"
@@ -145,8 +148,12 @@ sia:
 
 > Series and help: peleke.me · LinkedIn
 
-**Recommendations:** at most seven, ordered by leverage, each with evidence or
-`unknown (ask: …)`. No pitching.
+**Recommendations:** at most seven, each with evidence or `unknown (ask: …)`. No pitching.
+- Order by what each item unblocks: item 1 is the one the others depend on.
+- Size `effort` for everything the `do` includes, prerequisites too.
+- Each `do` stands alone: no "see above", one named choice rather than an either/or.
+- A claim resting on one incident is a hypothesis; say "one case" and what would confirm it. A
+  claim that something is absent (no reader, never measured) names where you searched.
 
 #### Gotchas
 
@@ -157,10 +164,10 @@ sia:
 
 #### Examples
 
-- Ticket router with a helpdesk export of final queues → real source, labels already exist (the
-  final queue), group by customer, draft-by-model unnecessary.
-- DSPy classifier with 40 hand-written examples and no test set → add real customer messages,
-  split by source before the next compile, keep the 40 as one group.
+- Invoice extractor whose AP system keeps the approved vendor per invoice → real source, labels
+  already exist (the approved vendor), group by vendor, draft-by-model unnecessary.
+- Ax extractor with 25 hand-written examples and no test set → add real documents, split by source
+  before the next optimizer run, keep the 25 as one group.
 
 ---
 
@@ -235,7 +242,7 @@ Each report ends with at most seven recommendations, ordered by leverage. Each h
 File them as GitHub issues (needs `yq` and `gh`; save the envelope as `report.yaml`):
 
 ```bash
-yq -o=json '.sia.recommendations[]' report.yaml | jq -c '.' | while read -r r; do gh issue create --title "$(jq -r .title <<<"$r")" --body "$(jq -r '"Why: \(.why)\n\nDo: \(.do)\n\nEffort: \(.effort) · Impact: \(.impact)\nEvidence: \(.evidence|join(", "))\nNext: \(.next_skill)"' <<<"$r")"; done
+yq -o=json '.sia.recommendations[]' report.yaml | jq -c '.' | while read -r r; do gh issue create --title "$(jq -r .title <<<"$r")" --body "$(jq -r '"Why: \(.why)\n\nDo: \(.do)\n\nEffort: \(.effort) · Impact: \(.impact)\nEvidence: \(.evidence|if type=="array" then join(", ") else . end)\nNext: \(.next_skill)"' <<<"$r")"; done
 ```
 
 #### 7. Run it anywhere

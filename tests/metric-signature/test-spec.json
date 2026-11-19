@@ -11,7 +11,10 @@
       "assertions": [
         {
           "type": "sia_envelope_valid",
-          "expected": true
+          "expected": {
+            "skill": "metric-signature",
+            "deploymentType": "coding-harness"
+          }
         },
         {
           "type": "sia_out_fields",
@@ -54,7 +57,10 @@
       "assertions": [
         {
           "type": "sia_envelope_valid",
-          "expected": true
+          "expected": {
+            "skill": "metric-signature",
+            "deploymentType": "gateway-agent"
+          }
         },
         {
           "type": "sia_out_fields",
@@ -97,7 +103,10 @@
       "assertions": [
         {
           "type": "sia_envelope_valid",
-          "expected": true
+          "expected": {
+            "skill": "metric-signature",
+            "deploymentType": "framework-app"
+          }
         },
         {
           "type": "sia_out_fields",
@@ -140,7 +149,10 @@
       "assertions": [
         {
           "type": "sia_envelope_valid",
-          "expected": true
+          "expected": {
+            "skill": "metric-signature",
+            "deploymentType": "prompt-program"
+          }
         },
         {
           "type": "sia_out_fields",
@@ -183,7 +195,10 @@
       "assertions": [
         {
           "type": "sia_envelope_valid",
-          "expected": true
+          "expected": {
+            "skill": "metric-signature",
+            "deploymentType": "hosted-nocode"
+          }
         },
         {
           "type": "sia_out_fields",
