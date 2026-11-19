@@ -94,7 +94,8 @@ For GEPA, say whether the metric can also return feedback text
 Then the envelope as the last fenced block, then the footer line. The envelope must parse as
 YAML: put double quotes around every free-text value (names, `title`, `why`, `do`, each
 `evidence` item, claims), because a `: ` or a leading quote inside an unquoted value breaks the
-parse. Write `effort` as `S`, `M` or `L` and `impact` as `high`, `medium` or `low`, in full.
+parse. Keep the colon on every key: `effort: S` (or `M`, `L`) and `impact: medium` (or `high`,
+`low`), with `medium` spelled out.
 
 ```yaml
 sia:

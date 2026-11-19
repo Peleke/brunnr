@@ -32,7 +32,7 @@ brunnr install signal-card
 |----------|-------|
 | **Path** | `skills/signal-card/SKILL.md` |
 | **Size** | 6.6 KB |
-| **SHA-256** | `504754236a6da6581c6eb3029470168e0295022223273e168cce5c9c6b2f67c6` |
+| **SHA-256** | `01d785026ce843bbfe85b3585b03831570c48eafa242bf9f1072cb2ac46dda1c` |
 | **README** | `skills/signal-card/README.md` |
 
 ---
@@ -120,7 +120,8 @@ defined set of examples.
 Then the envelope as the last fenced block, then the footer line. The envelope must parse as
 YAML: put double quotes around every free-text value (names, `title`, `why`, `do`, each
 `evidence` item, claims), because a `: ` or a leading quote inside an unquoted value breaks the
-parse. Write `effort` as `S`, `M` or `L` and `impact` as `high`, `medium` or `low`, in full.
+parse. Keep the colon on every key: `effort: S` (or `M`, `L`) and `impact: medium` (or `high`,
+`low`), with `medium` spelled out.
 
 ```yaml
 sia:

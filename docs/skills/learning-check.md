@@ -32,7 +32,7 @@ brunnr install learning-check
 |----------|-------|
 | **Path** | `skills/learning-check/SKILL.md` |
 | **Size** | 7.7 KB |
-| **SHA-256** | `19001ef40e51c1dd9524796ae9ede427e17cb8b0fe5bee59ec8731e0d13bad5e` |
+| **SHA-256** | `a170c967359a66111903da59d3ce08b5783d1442a754f972e9d41de8986e626e` |
 | **README** | `skills/learning-check/README.md` |
 
 ---
@@ -121,7 +121,8 @@ want, mark it "proposed", and answer no to all three.
 Then the envelope as the last fenced block, then the footer line. The envelope must parse as
 YAML: put double quotes around every free-text value (names, `title`, `why`, `do`, each
 `evidence` item, claims), because a `: ` or a leading quote inside an unquoted value breaks the
-parse. Write `effort` as `S`, `M` or `L` and `impact` as `high`, `medium` or `low`, in full. `verdicts` are the headline
+parse. Keep the colon on every key: `effort: S` (or `M`, `L`) and `impact: medium` (or `high`,
+`low`), with `medium` spelled out. `verdicts` are the headline
 loop's answers; `loops` lists every loop.
 
 ```yaml

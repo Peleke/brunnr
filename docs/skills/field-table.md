@@ -31,8 +31,8 @@ brunnr install field-table
 | Property | Value |
 |----------|-------|
 | **Path** | `skills/field-table/SKILL.md` |
-| **Size** | 6.2 KB |
-| **SHA-256** | `d87c88bd587e73bb87db9983c16bf8960bc439bd83ffdbf1b3bc7df4afe39a65` |
+| **Size** | 6.3 KB |
+| **SHA-256** | `39b30d139a10ee4f0bcd1103af7071fe38227380d170ee1849d5ef704411e77a` |
 | **README** | `skills/field-table/README.md` |
 
 ---
@@ -123,7 +123,8 @@ works) and mark it "to build".
 Then the envelope as the last fenced block, then the footer line. The envelope must parse as
 YAML: put double quotes around every free-text value (names, `title`, `why`, `do`, each
 `evidence` item, claims), because a `: ` or a leading quote inside an unquoted value breaks the
-parse. Write `effort` as `S`, `M` or `L` and `impact` as `high`, `medium` or `low`, in full.
+parse. Keep the colon on every key: `effort: S` (or `M`, `L`) and `impact: medium` (or `high`,
+`low`), with `medium` spelled out.
 
 ```yaml
 sia:

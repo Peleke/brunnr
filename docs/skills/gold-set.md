@@ -32,7 +32,7 @@ brunnr install gold-set
 |----------|-------|
 | **Path** | `skills/gold-set/SKILL.md` |
 | **Size** | 6.2 KB |
-| **SHA-256** | `5b9bf2672a18df14ccf59ead9f873d73060623d0ea97e1640e18f4a13f8bca26` |
+| **SHA-256** | `50d9b879f4fc4566d0ba50b8b3fcb1688ada7485a8c40f0cd9ca019f1110e810` |
 | **README** | `skills/gold-set/README.md` |
 
 ---
@@ -118,7 +118,8 @@ with no written definition is a gap.
 Then the envelope as the last fenced block, then the footer line. The envelope must parse as
 YAML: put double quotes around every free-text value (names, `title`, `why`, `do`, each
 `evidence` item, claims), because a `: ` or a leading quote inside an unquoted value breaks the
-parse. Write `effort` as `S`, `M` or `L` and `impact` as `high`, `medium` or `low`, in full.
+parse. Keep the colon on every key: `effort: S` (or `M`, `L`) and `impact: medium` (or `high`,
+`low`), with `medium` spelled out.
 
 ```yaml
 sia:

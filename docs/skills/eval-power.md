@@ -32,7 +32,7 @@ brunnr install eval-power
 |----------|-------|
 | **Path** | `skills/eval-power/SKILL.md` |
 | **Size** | 6.2 KB |
-| **SHA-256** | `bc41081bcdc6e627ac2bccdf20a1dec05a4d3939d88594b29d623577a1ac380f` |
+| **SHA-256** | `4cd642d4a1a79c17c3714a5edee6cfedb432b74b6aa26b7fd68b620471c12cbc` |
 | **README** | `skills/eval-power/README.md` |
 
 ---
@@ -121,7 +121,8 @@ condition, or no baseline makes a claim `unsupported` as stated.
 Then the envelope as the last fenced block, then the footer line. The envelope must parse as
 YAML: put double quotes around every free-text value (names, `title`, `why`, `do`, each
 `evidence` item, claims), because a `: ` or a leading quote inside an unquoted value breaks the
-parse. Write `effort` as `S`, `M` or `L` and `impact` as `high`, `medium` or `low`, in full.
+parse. Keep the colon on every key: `effort: S` (or `M`, `L`) and `impact: medium` (or `high`,
+`low`), with `medium` spelled out.
 
 ```yaml
 sia:

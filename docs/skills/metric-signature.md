@@ -32,7 +32,7 @@ brunnr install metric-signature
 |----------|-------|
 | **Path** | `skills/metric-signature/SKILL.md` |
 | **Size** | 7.1 KB |
-| **SHA-256** | `c28f1554c56aa7dcf630f6695f3d75294eebc724f3bbe2519a55e838f703c263` |
+| **SHA-256** | `37e874a0ac7f954be6718197a6e3cf3805799ad0afff6263795c58b33e52305e` |
 | **README** | `skills/metric-signature/README.md` |
 
 ---
@@ -124,7 +124,8 @@ For GEPA, say whether the metric can also return feedback text
 Then the envelope as the last fenced block, then the footer line. The envelope must parse as
 YAML: put double quotes around every free-text value (names, `title`, `why`, `do`, each
 `evidence` item, claims), because a `: ` or a leading quote inside an unquoted value breaks the
-parse. Write `effort` as `S`, `M` or `L` and `impact` as `high`, `medium` or `low`, in full.
+parse. Keep the colon on every key: `effort: S` (or `M`, `L`) and `impact: medium` (or `high`,
+`low`), with `medium` spelled out.
 
 ```yaml
 sia:
