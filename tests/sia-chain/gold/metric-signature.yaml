@@ -1,0 +1,79 @@
+# Gold rows: expected `out` values per fixture agent. Drafted by the DA; not gold until the owner
+# adjudicates (adjudicated_by set). gold_agreement() compares only the keys under `out`;
+# `context` holds extra upstream fields fed to the next link and is never scored.
+skill: metric-signature
+rows:
+- agent: review-bot
+  drafted_by: DA
+  adjudicated_by: principal
+  note: resolved (not dismissed) per comment is a stored boolean.
+  out:
+    metrics[].tier:
+    - code
+  context:
+    metrics:
+    - name: comment_resolved
+      outputField: comment
+      tier: code
+      labelsNeeded:
+      - resolution
+- agent: home-assistant
+  drafted_by: DA
+  adjudicated_by: principal
+  note: whether a correction followed within the conversation. @includes so an extra partial-tier metric is allowed; a code-tier metric is still required (changed from exact match 2026-11-19, adjudicated by principal).
+  out:
+    metrics[].tier@includes:
+    - code
+  context:
+    metrics:
+    - name: no_correction
+      outputField: when
+      tier: code
+      labelsNeeded:
+      - corrected
+- agent: support-triage
+  drafted_by: DA
+  adjudicated_by: principal
+  note: queue exact match against the final queue.
+  out:
+    metrics[].tier:
+    - code
+    fieldsUnscored:
+    - urgency
+    - tags
+    - draft_reply
+  context:
+    metrics:
+    - name: queue_exact
+      outputField: queue
+      tier: code
+      labelsNeeded:
+      - final_queue
+- agent: intent-classifier
+  drafted_by: DA
+  adjudicated_by: principal
+  note: the existing exact_match, scored on a held-out split.
+  out:
+    metrics[].tier:
+    - code
+  context:
+    metrics:
+    - name: exact_match
+      outputField: intent
+      tier: code
+      labelsNeeded:
+      - intent
+- agent: sales-gpt
+  drafted_by: DA
+  adjudicated_by: principal
+  note: token overlap between draft and sent version.
+  out:
+    metrics[].tier:
+    - partial
+  context:
+    metrics:
+    - name: draft_sent_overlap
+      outputField: email
+      tier: partial
+      labelsNeeded:
+      - sent_email

@@ -1,0 +1,29 @@
+# Machine-readable copy of the reads/writes table in skills/_sia-chain.md.
+# tests/test_sia_chain.py checks that every read has a writer in an earlier link,
+# and that each chain skill's test-spec requires exactly these writes.
+# deploymentType is a top-level envelope field, read by every link.
+links:
+  - skill: learning-check
+    link: "1"
+    reads: []
+    writes: [verdicts.signal, verdicts.update, verdicts.convergence, loops, outcome, firstFix]
+  - skill: signal-card
+    link: "2"
+    reads: [verdicts.signal, firstFix]
+    writes: [candidates, chosenSignal, oneLine, slots.signal, slots.search, slots.artifact]
+  - skill: metric-signature
+    link: "3"
+    reads: [chosenSignal, slots.artifact]
+    writes: [metrics, "metrics[].outputField", "metrics[].tier", "metrics[].labelsNeeded", "metrics[].signature", baseline, fieldsUnscored]
+  - skill: field-table
+    link: "3b"
+    reads: ["metrics[].outputField"]
+    writes: [fields]
+  - skill: gold-set
+    link: "4"
+    reads: ["metrics[].labelsNeeded", "metrics[].outputField"]
+    writes: [exampleSchema, sources, labelingPlan, split, leakageChecks]
+  - skill: eval-power
+    link: "5"
+    reads: [split, metrics]
+    writes: [reps, interval, interpretation, claimVerdicts]

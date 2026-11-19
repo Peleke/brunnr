@@ -1,0 +1,5 @@
+{
+  "agent": "review-bot",
+  "deploymentType": "coding-harness",
+  "input": "Agent: review-bot. A Claude Code project that reviews pull requests in our monorepo.\n\nCLAUDE.md (excerpt):\n  12  ## Review rules\n  13  - Comment only on correctness and security. No style nits.\n  14  - Use the pr-review skill for every review.\n\n.claude/skills/pr-review/SKILL.md (excerpt):\n   8  Read the diff. For each finding, post one comment with file, line, severity (blocker|major|minor), and a fix.\n  21  End with a summary: approve / request changes.\n\n.github/workflows/review.yml (excerpt):\n  15  - run: claude -p \"/pr-review ${{ github.event.pull_request.number }}\"\n\nHow it improves today: when authors complain about a bad comment, I edit CLAUDE.md or the skill.\nGitHub records whether each review comment was resolved or dismissed, and whether the PR merged,\nbut nothing reads that data. No eval set. No record of which edits helped.\n\nLog lines:\n  2026-11-02 review #4411: 6 comments (2 blocker); author dismissed 4, resolved 2\n  2026-11-03 review #4419: 3 comments; author resolved 3\n  2026-11-05 CLAUDE.md edited: \"stop flagging missing docstrings\"\n"
+}

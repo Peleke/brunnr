@@ -83,6 +83,96 @@
       "keywords": ["sales", "positioning", "roi", "deal-flow", "packaging", "case-study"],
       "category": "sales",
       "tags": ["dossier", "build-to-deal", "pitch", "go-to-market"]
+    },
+    {
+      "name": "learning-check",
+      "source": "learning-check",
+      "description": "Audit an agent for the three properties of learning: an outside signal, a lasting update, and held-out improvement. Per-loop verdicts with evidence and an outcome. Link 1 of the SIA audit chain.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Peleke Sengstacke"
+      },
+      "homepage": "https://peleke.github.io/brunnr/skills/learning-check/",
+      "repository": "https://github.com/Peleke/brunnr",
+      "license": "MIT",
+      "keywords": ["learning", "self-improving-agents", "audit"],
+      "category": "agent-evaluation",
+      "tags": ["sia", "self-improving-agents", "sia-chain"]
+    },
+    {
+      "name": "signal-card",
+      "source": "signal-card",
+      "description": "Name the signal an agent should learn from in one line, then fill the signal, search and artifact slots of its improvement loop. Link 2 of the SIA audit chain.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Peleke Sengstacke"
+      },
+      "homepage": "https://peleke.github.io/brunnr/skills/signal-card/",
+      "repository": "https://github.com/Peleke/brunnr",
+      "license": "MIT",
+      "keywords": ["signal", "self-improving-agents", "feedback"],
+      "category": "agent-evaluation",
+      "tags": ["sia", "self-improving-agents", "sia-chain"]
+    },
+    {
+      "name": "metric-signature",
+      "source": "metric-signature",
+      "description": "Turn a learning signal into 0..1 metric functions (DSPy and Ax signatures, plain language) at the cheapest adequate tier, with a do-nothing baseline. Link 3 of the SIA audit chain.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Peleke Sengstacke"
+      },
+      "homepage": "https://peleke.github.io/brunnr/skills/metric-signature/",
+      "repository": "https://github.com/Peleke/brunnr",
+      "license": "MIT",
+      "keywords": ["metrics", "evals", "dspy", "ax"],
+      "category": "agent-evaluation",
+      "tags": ["sia", "self-improving-agents", "sia-chain"]
+    },
+    {
+      "name": "field-table",
+      "source": "field-table",
+      "description": "List every agent output with its consumer, definition, labeled examples and metric; flag fields to delete and gaps where optimization would guess. Side link 3b of the SIA audit chain.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Peleke Sengstacke"
+      },
+      "homepage": "https://peleke.github.io/brunnr/skills/field-table/",
+      "repository": "https://github.com/Peleke/brunnr",
+      "license": "MIT",
+      "keywords": ["outputs", "schema", "evals"],
+      "category": "agent-evaluation",
+      "tags": ["sia", "self-improving-agents", "sia-chain"]
+    },
+    {
+      "name": "gold-set",
+      "source": "gold-set",
+      "description": "Plan an agent's reference set: example schema, real sources, labeling plan, and a grouped train/validation/test split with leakage checks. Link 4 of the SIA audit chain.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Peleke Sengstacke"
+      },
+      "homepage": "https://peleke.github.io/brunnr/skills/gold-set/",
+      "repository": "https://github.com/Peleke/brunnr",
+      "license": "MIT",
+      "keywords": ["gold-set", "datasets", "evals"],
+      "category": "agent-evaluation",
+      "tags": ["sia", "self-improving-agents", "sia-chain"]
+    },
+    {
+      "name": "eval-power",
+      "source": "eval-power",
+      "description": "Decide whether an eval can detect the change you care about: noise floor, reps, bootstrap interval, and verdicts on existing improvement claims. Link 5 of the SIA audit chain.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Peleke Sengstacke"
+      },
+      "homepage": "https://peleke.github.io/brunnr/skills/eval-power/",
+      "repository": "https://github.com/Peleke/brunnr",
+      "license": "MIT",
+      "keywords": ["statistics", "evals", "bootstrap"],
+      "category": "agent-evaluation",
+      "tags": ["sia", "self-improving-agents", "sia-chain"]
     }
   ]
 }

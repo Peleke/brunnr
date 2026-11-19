@@ -1,0 +1,5 @@
+{
+  "agent": "sales-gpt",
+  "deploymentType": "hosted-nocode",
+  "input": "Agent: sales-gpt. A custom GPT that drafts first-touch sales emails from a prospect's LinkedIn\nsummary and our product one-pager.\n\nInstructions (in the GPT builder UI, excerpt):\n  \"Write a 90-word email. Open with something specific from the prospect's profile. One call to\n   action. No buzzwords.\"\nKnowledge files: product-onepager.pdf, tone-guide.md\n\nHow it's used: six reps paste a profile, copy the draft into the email tool, edit it, and send.\nThe email tool keeps the sent version. Reply rates are in the CRM per sent email. Nobody compares\ndrafts with sent versions. I update the instructions every few weeks based on what reps say in\nstandup.\n\nSample (conversation export, 2026-11-06):\n  draft:  \"Hi Dana, saw your talk on onboarding at SaaStr...\" (94 words)\n  sent:   \"Hi Dana, your SaaStr talk on onboarding...\" (61 words; CTA rewritten)\n"
+}

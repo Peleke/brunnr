@@ -1,0 +1,53 @@
+# Gold rows: expected `out` values per fixture agent. Drafted by the DA; not gold until the owner
+# adjudicates (adjudicated_by set). gold_agreement() compares only the keys under `out`;
+# `context` holds extra upstream fields fed to the next link and is never scored.
+skill: field-table
+rows:
+- agent: review-bot
+  drafted_by: DA
+  adjudicated_by: principal
+  note: "per-comment fields plus the closing summary. The fixture never names the closing field
+    (it says: End with a summary, approve / request changes), so summary or verdict both pass
+    (principal, 2026-11-19)."
+  out:
+    fields[].field@includes:
+    - file
+    - line
+    - severity
+    - fix
+    fields[].field@anyOf:
+    - summary
+    - verdict
+- agent: home-assistant
+  drafted_by: DA
+  adjudicated_by: principal
+  note: reminders skill output. @includes because the fixture's list and memory-line outputs are legitimate extra leaf rows (changed from exact match 2026-11-19, adjudicated by principal).
+  out:
+    fields[].field@includes:
+    - when
+    - what
+    - recurrence
+- agent: support-triage
+  drafted_by: DA
+  adjudicated_by: principal
+  note: TriageOut; urgency and tags have no consumer.
+  out:
+    fields[].field:
+    - queue
+    - urgency
+    - draft_reply
+    - tags
+- agent: intent-classifier
+  drafted_by: DA
+  adjudicated_by: principal
+  note: single output field.
+  out:
+    fields[].field:
+    - intent
+- agent: sales-gpt
+  drafted_by: DA
+  adjudicated_by: principal
+  note: one free-text output.
+  out:
+    fields[].field:
+    - email

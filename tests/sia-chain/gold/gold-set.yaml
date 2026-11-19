@@ -1,0 +1,74 @@
+# Gold rows: expected `out` values per fixture agent. Drafted by the DA; not gold until the owner
+# adjudicates (adjudicated_by set). gold_agreement() compares only the keys under `out`;
+# `context` holds extra upstream fields fed to the next link and is never scored.
+# sources[].kind@includes: the plan must use these kinds; extra kinds (hand-written edge cases on
+# top of real data) are allowed. Changed from exact match 2026-11-18, adjudicated by principal.
+skill: gold-set
+rows:
+- agent: review-bot
+  drafted_by: DA
+  adjudicated_by: principal
+  note: past PR comments with resolved/dismissed outcomes.
+  out:
+    sources[].kind@includes:
+    - real
+  context:
+    split:
+      train: 30
+      validation: 90
+      test: 30
+      groupBy: pull request
+- agent: home-assistant
+  drafted_by: DA
+  adjudicated_by: principal
+  note: channel log requests plus hand-written edge cases (relative dates).
+  out:
+    sources[].kind@includes:
+    - real
+    - hand
+  context:
+    split:
+      train: 20
+      validation: 60
+      test: 20
+      groupBy: conversation
+- agent: support-triage
+  drafted_by: DA
+  adjudicated_by: principal
+  note: helpdesk export with final queues.
+  out:
+    sources[].kind@includes:
+    - real
+  context:
+    split:
+      train: 40
+      validation: 120
+      test: 40
+      groupBy: customer
+- agent: intent-classifier
+  drafted_by: DA
+  adjudicated_by: principal
+  note: real customer messages added to the 40 hand-written examples.
+  out:
+    sources[].kind@includes:
+    - real
+    - hand
+  context:
+    split:
+      train: 40
+      validation: 120
+      test: 40
+      groupBy: source
+- agent: sales-gpt
+  drafted_by: DA
+  adjudicated_by: principal
+  note: draft/sent pairs from the email tool.
+  out:
+    sources[].kind@includes:
+    - real
+  context:
+    split:
+      train: 30
+      validation: 90
+      test: 30
+      groupBy: prospect

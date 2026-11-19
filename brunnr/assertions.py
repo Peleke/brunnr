@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from pathlib import Path
 from typing import Any
 
 from brunnr.frontmatter import parse_frontmatter  # noqa: F401 — re-export for backwards compat
@@ -107,7 +108,56 @@ def run_assertion(assertion: dict[str, Any], output: str) -> dict[str, Any]:
         result["passed"] = all([has_header, has_score, has_table])
         result["detail"] = f"header={has_header} score={has_score} table={has_table}"
 
+    elif atype in SIA_TYPES:
+        _run_sia_assertion(atype, expected, output, result)
+
+    elif atype == "judge":
+        result["detail"] = "judge assertions run in the harness (needs a runner)"
+
     else:
         result["detail"] = f"Unknown assertion type: {atype}"
 
     return result
+
+
+# SIA chain assertions (envelope convention: skills/_sia-chain.md)
+SIA_TYPES = ("sia_envelope_valid", "sia_out_fields", "sia_recommendations", "sia_gold")
+KNOWN_TYPES = (
+    "score_range", "score_exact", "has_table", "has_rewrite", "contains",
+    "criteria_pass", "criteria_fail", "format_valid", "judge", *SIA_TYPES,
+)
+GOLD_DIR = Path(__file__).resolve().parent.parent / "tests" / "sia-chain" / "gold"
+
+
+def load_gold_row(skill: str, agent: str) -> dict[str, Any] | None:
+    import yaml
+
+    path = GOLD_DIR / f"{skill}.yaml"
+    if not path.is_file():
+        return None
+    rows = (yaml.safe_load(path.read_text()) or {}).get("rows", [])
+    return next((r for r in rows if r.get("agent") == agent), None)
+
+
+def _run_sia_assertion(atype: str, expected: Any, output: str, result: dict[str, Any]) -> None:
+    from brunnr import sia_chain
+
+    env = sia_chain.extract_envelope(output)
+    if atype == "sia_envelope_valid":
+        # expected: true, or {skill, deploymentType} to also pin the envelope to this case
+        pins = expected if isinstance(expected, dict) else {}
+        problems = sia_chain.check_envelope(env, pins.get("skill"), pins.get("deploymentType"))
+    elif atype == "sia_out_fields":
+        problems = sia_chain.check_out_fields(env, list(expected))
+    elif atype == "sia_recommendations":
+        problems = sia_chain.check_recommendations(env)
+    else:  # sia_gold
+        row = load_gold_row(expected["skill"], expected["agent"])
+        if row is None:
+            result["detail"] = f"no gold row for {expected['skill']}/{expected['agent']}"
+            return
+        score, problems = sia_chain.gold_agreement(env, row["out"])
+        result["score"] = score
+        result["adjudicated"] = bool(row.get("adjudicated_by"))
+    result["passed"] = not problems
+    result["detail"] = "ok" if not problems else "; ".join(problems[:5])

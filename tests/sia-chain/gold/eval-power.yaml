@@ -1,0 +1,39 @@
+# Gold rows: expected `out` values per fixture agent. Drafted by the DA; not gold until the owner
+# adjudicates (adjudicated_by set). gold_agreement() compares only the keys under `out`;
+# `context` holds extra upstream fields fed to the next link and is never scored.
+skill: eval-power
+rows:
+- agent: review-bot
+  drafted_by: DA
+  adjudicated_by: principal
+  note: no quantitative claim to grade.
+  out:
+    claimVerdicts: []
+- agent: home-assistant
+  drafted_by: DA
+  adjudicated_by: principal
+  note: no quantitative claim to grade.
+  out:
+    claimVerdicts: []
+- agent: support-triage
+  drafted_by: DA
+  adjudicated_by: principal
+  note: no quantitative claim to grade.
+  out:
+    claimVerdicts: []
+- agent: intent-classifier
+  drafted_by: DA
+  adjudicated_by: principal
+  note: 0.825 -> 0.850 on the set the demos came from, n=40, one run each. The @mentions key pins
+    which claim was graded, so an invented claim graded unsupported does not pass (added 2026-11-19, confirmed by principal).
+  out:
+    claimVerdicts[].verdict:
+    - unsupported
+    claimVerdicts[].claim@mentions:
+    - '0.850'
+- agent: sales-gpt
+  drafted_by: DA
+  adjudicated_by: principal
+  note: no quantitative claim to grade.
+  out:
+    claimVerdicts: []

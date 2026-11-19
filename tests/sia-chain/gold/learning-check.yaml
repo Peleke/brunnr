@@ -1,0 +1,69 @@
+# Gold rows: expected `out` values per fixture agent. Drafted by the DA; not gold until the owner
+# adjudicates (adjudicated_by set). gold_agreement() compares only the keys under `out`;
+# `context` holds extra upstream fields fed to the next link and is never scored.
+skill: learning-check
+rows:
+- agent: review-bot
+  drafted_by: DA
+  adjudicated_by: principal
+  note: resolved/dismissed is recorded by GitHub but a person carries it; a person edits CLAUDE.md; no
+    eval. Person-both case.
+  out:
+    verdicts:
+      signal: partial
+      update: partial
+      convergence: 'no'
+    outcome: not learning
+  context:
+    firstFix: Record resolved vs dismissed per review comment and feed it to the review skill's instructions.
+- agent: home-assistant
+  drafted_by: DA
+  adjudicated_by: principal
+  note: user corrections reach the agent directly; preferences.md persists but size isn't recorded; no
+    held-out score.
+  out:
+    verdicts:
+      signal: 'yes'
+      update: partial
+      convergence: 'no'
+    outcome: learning, unmeasured (partial loop)
+  context:
+    firstFix: Log which memory line each correction added and count repeat corrections.
+- agent: support-triage
+  drafted_by: DA
+  adjudicated_by: principal
+  note: thumbs and queue moves are logged but feed no artifact; proposed loop answers are no (template
+    rule).
+  out:
+    verdicts:
+      signal: 'no'
+      update: 'no'
+      convergence: 'no'
+    outcome: no loop found
+  context:
+    firstFix: Feed queue moves back as labels; nothing uses them today.
+- agent: intent-classifier
+  drafted_by: DA
+  adjudicated_by: principal
+  note: labels + exact_match carry the signal; demos recomputed on compile, never saved, person reruns;
+    scored on the trainset, so no held-out number.
+  out:
+    verdicts:
+      signal: 'yes'
+      update: partial
+      convergence: 'no'
+    outcome: learning, unmeasured (partial loop)
+  context:
+    firstFix: Split a held-out set before the next compile and save results with dates.
+- agent: sales-gpt
+  drafted_by: DA
+  adjudicated_by: principal
+  note: reps carry feedback to standup; a person edits the instructions; no eval. Person-both case.
+  out:
+    verdicts:
+      signal: partial
+      update: partial
+      convergence: 'no'
+    outcome: not learning
+  context:
+    firstFix: Store each draft next to its sent version so edits become a signal.
